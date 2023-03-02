@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SmartRecord</string>
+
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="grant_permission">Please grant those permissions to continue using this app!</string>
+    <string name="list_type">Microphone, Storage, Location, Internet</string>
+
+</resources>

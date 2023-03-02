@@ -1,0 +1,43 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# APK
+*.apk
+*.ap_
+
+# VDM
+*.dex
+
+# File Java
+*.class
+
+bin/
+gen/
+out/
+
+# Các file Proguard sinh ra bởi Eclipse
+proguard/
+
+# Các file log
+*.log
+
+.navigation/
+
+# Android Studio captures folder
+captures/
+
+# Keystore file
+*.jks
