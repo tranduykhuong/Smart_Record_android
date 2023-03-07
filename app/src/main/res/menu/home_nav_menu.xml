@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_folder"
+        android:icon="@drawable/ic_folder"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:title="@string/title_folder" />
+
+    <item
+        android:id="@+id/navigation_alarm"
+        android:icon="@drawable/ic_alarm_clock"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:title="@string/title_alarm" />
+
+    <item
+        android:id="@+id/navigation_trash"
+        android:icon="@drawable/ic_trash"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:title="@string/title_trash" />
+
+</menu>

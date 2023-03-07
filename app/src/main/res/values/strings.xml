@@ -6,4 +6,9 @@
     <string name="grant_permission">Please grant those permissions to continue using this app!</string>
     <string name="list_type">Microphone, Storage, Location, Internet</string>
 
+    <string name="title_home">Home</string>
+    <string name="title_folder">Folder</string>
+    <string name="title_alarm">Alarm</string>
+    <string name="title_trash">Trash</string>
+
 </resources>
