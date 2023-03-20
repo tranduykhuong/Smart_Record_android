@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/bg_adjust"
+    >
+
+    <LinearLayout
+        android:id="@+id/nav_adjust"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:background="@color/pink_500"
+        android:weightSum="5"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_back_adjust"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:background="@color/pink_500"
+            android:elevation="0dp"
+            android:outlineProvider="none"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="40dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:layout_weight="3"
+            android:text="Record Studio"
+            android:paddingRight="40dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="10dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:background="@color/bg_adjust">
+
+        <Button
+            android:id="@+id/btn_cut_adjust"
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/btn_custom_adjust"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_cut"
+            android:text="Cắt xén"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:drawablePadding="10dp"
+            android:elevation="4dp"
+            android:textAllCaps="false"
+            android:drawableBottom="@drawable/ic_line"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/btn_custom_adjust"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_adjust_1"
+            android:text="Điều chỉnh"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:drawablePadding="10dp"
+            android:elevation="4dp"
+            android:textAllCaps="false"
+            android:drawableBottom="@drawable/ic_line"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="10dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:background="@color/bg_adjust">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/btn_custom_adjust"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_insert"
+            android:text="Chèn"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:drawablePadding="10dp"
+            android:elevation="4dp"
+            android:textAllCaps="false"
+            android:drawableBottom="@drawable/ic_line"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/btn_custom_adjust"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_low_sound"
+            android:text="Giảm tiếng ồn"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:drawablePadding="10dp"
+            android:elevation="4dp"
+            android:textAllCaps="false"
+            android:drawableBottom="@drawable/ic_line"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="10dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:background="@color/bg_adjust">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/btn_custom_adjust"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_divide"
+            android:text="Chia"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:drawablePadding="10dp"
+            android:elevation="4dp"
+            android:textAllCaps="false"
+            android:drawableBottom="@drawable/ic_line"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:background="@drawable/btn_custom_adjust"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:drawableTop="@drawable/ic_mixture"
+            android:text="Hợp nhất"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:drawablePadding="10dp"
+            android:elevation="4dp"
+            android:textAllCaps="false"
+            android:drawableBottom="@drawable/ic_line"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
