@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray_500">#989494</color>
+    <color name="little_gray">#EFEFEF</color>
+    <color name="bg_progressbar">#EEEEEE</color>
+    <color name="text_time">#A4A1A1</color>
+    <color name="red">#FF0000</color>
+    <color name="bg_adjust">#D9D7D7</color>
 </resources>
