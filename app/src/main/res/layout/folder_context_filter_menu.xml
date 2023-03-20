@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    android:gravity="bottom"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/folder_filder_item_above"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_radius_white_filter_folder"
+        android:layout_marginHorizontal="6dp"
+        >
+
+        <TextView
+            android:id="@+id/folder_filer_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sắp xếp theo"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+
+        <TextView
+            android:id="@+id/folder_filer_item_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="20dp"
+            android:textColor="@color/pink_500"
+            android:text="Ngày"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+
+        <TextView
+            android:id="@+id/folder_filer_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="20dp"
+            android:textColor="@color/pink_500"
+            android:text="Tên"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+
+        <TextView
+            android:id="@+id/folder_filer_item_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/pink_500"
+            android:text="Kích thước"
+            android:padding="20dp"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/folder_filer_item_destroy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="6dp"
+        android:padding="18dp"
+        android:textSize="20dp"
+        android:textColor="@color/pink_500"
+        android:text="Hủy"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/bg_radius_white_filter_folder"
+        android:layout_below="@+id/folder_filder_item_above"
+        />
+</RelativeLayout>
