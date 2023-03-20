@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingTop="12dp"
+    >
+
+    <ImageView
+        android:id="@+id/folder_item_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/folder_item_amount"
+        android:layout_alignTop="@id/folder_item_title"
+        android:layout_marginHorizontal="10dp"
+        android:src="@drawable/ic_pink500_folder" />
+
+    <TextView
+        android:id="@+id/folder_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@id/folder_item_image"
+        />
+
+    <TextView
+        android:id="@+id/folder_item_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_toRightOf="@id/folder_item_image"
+        android:layout_below="@id/folder_item_title"
+        />
+
+
+    <TextView
+        android:id="@+id/folder_item_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_toRightOf="@id/folder_item_amount"
+        android:layout_below="@id/folder_item_title"
+        />
+
+    <TextView
+        android:id="@+id/folder_item_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentRight="true"
+
+        android:layout_below="@id/folder_item_title"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/bg_solid_bottom_filter_folder"
+        android:layout_below="@id/folder_item_amount"
+        android:layout_marginTop="12dp"
+        />
+</RelativeLayout>

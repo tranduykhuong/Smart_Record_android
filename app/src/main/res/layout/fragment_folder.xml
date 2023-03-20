@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/folder_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="120dp"
+    android:background="#efefef"
     tools:context=".ui.folder.FolderFragment">
 
     <TextView
@@ -20,4 +22,159 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/search_folder_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tìm kiếm"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/ic_search_folder"
+            android:padding="10dp"
+            android:drawablePadding="16dp"
+            android:textCursorDrawable="@null"
+            android:background="@drawable/bg_search_folder"
+            tools:ignore="MissingConstraints"
+            />
+
+        <RelativeLayout
+            android:id="@+id/folder_wrap_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_below="@id/search_folder_edt"
+            android:layout_marginLeft="26dp"
+            >
+            <TextView
+                android:id="@+id/folder_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="2"
+                />
+            <TextView
+                android:id="@+id/folder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Thư mục - "
+                android:textSize="15sp"
+                android:layout_toRightOf="@id/folder_amount"
+                />
+            <TextView
+                android:id="@+id/folder_capacity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11"
+                android:textSize="15sp"
+                android:layout_toRightOf="@id/folder"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MB KB"
+                android:textSize="15sp"
+                android:layout_toRightOf="@id/folder_capacity"
+                />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/folder_rcv_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/folder_wrap_info"
+            android:layout_above="@id/folder_wrap_record"
+            ></androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/folder_wrap_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_folder_edt"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="26dp"
+            >
+
+            <TextView
+                android:id="@+id/folder_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="Ngày"
+                android:textColor="@color/pink_500"
+                />
+            <ImageView
+                android:id="@+id/folder_icon_cvd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/ic_chevon_down_folder"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/folder_wrap_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/bg_record_wrap_feature_folder"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/folder_icon_cvup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/ic_chevon_up_folder" />
+
+            <TextView
+                android:id="@+id/folder_regime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="Chế độ"
+                android:textSize="16sp"
+                tools:ignore="NotSibling" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/folder_bluetooth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_bluetooth_folder" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="65dp"
+                    android:background="@drawable/bg_record_btn_folder"
+                    android:src="@drawable/ic_microphone_folder" />
+
+                <ImageButton
+                    android:id="@+id/folder_voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_voice_folder" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
