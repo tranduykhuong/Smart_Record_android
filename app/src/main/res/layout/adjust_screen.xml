@@ -128,7 +128,7 @@
             android:backgroundTint="@color/white"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_low_sound"
-            android:text="Giảm tiếng ồn"
+            android:text="Giảm ồn"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:drawablePadding="10dp"
