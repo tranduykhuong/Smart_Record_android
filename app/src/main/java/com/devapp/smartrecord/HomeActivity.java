@@ -2,13 +2,17 @@ package com.devapp.smartrecord;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.Manifest;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -23,9 +27,11 @@ import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
+    private final int SETTING_CODE = 10; // SETTING CODE
 
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
+    private Button btn_setting;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -45,9 +51,23 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        btn_setting = findViewById(R.id.btn_setting);
+        btn_setting.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
+            startActivityForResult(intent, SETTING_CODE);
+        });
 //        askForPermission();
     }
 
+    public void navigate_onclick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_setting: {
+                Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
+                startActivityForResult(intent, SETTING_CODE);
+                break;
+            }
+        }
+    }
 
     private void askForPermission() {
         String[] permissions = new String[]{
