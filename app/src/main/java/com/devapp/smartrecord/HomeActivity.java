@@ -22,12 +22,14 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.devapp.smartrecord.ui.WaveformView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
     private final int SETTING_CODE = 10; // SETTING CODE
+    private final int RECORDING_CODE = 11; // SETTING CODE
 
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
@@ -56,14 +58,19 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
             startActivityForResult(intent, SETTING_CODE);
         });
-//        askForPermission();
+        askForPermission();
     }
 
     public void navigate_onclick(View view) {
         switch (view.getId()) {
-            case R.id.btn_setting: {
-                Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
-                startActivityForResult(intent, SETTING_CODE);
+            case R.id.home_btn_record: {
+                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+                startActivityForResult(intent, RECORDING_CODE);
+                break;
+            }
+            case R.id.folder_btn_record: {
+                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+                startActivityForResult(intent, RECORDING_CODE);
                 break;
             }
         }

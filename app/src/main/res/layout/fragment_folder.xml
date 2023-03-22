@@ -161,8 +161,10 @@
                     android:src="@drawable/ic_bluetooth_folder" />
 
                 <ImageButton
+                    android:id="@+id/folder_btn_record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="navigate_onclick"
                     android:layout_marginHorizontal="65dp"
                     android:background="@drawable/bg_record_btn_folder"
                     android:src="@drawable/ic_microphone_folder" />

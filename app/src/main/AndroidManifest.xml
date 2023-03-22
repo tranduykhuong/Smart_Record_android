@@ -36,6 +36,9 @@
         <activity
             android:name=".SettingActivity"
             android:exported="true" />
+        <activity
+            android:name=".RecordActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
