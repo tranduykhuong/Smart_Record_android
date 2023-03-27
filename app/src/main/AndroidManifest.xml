@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature android:name="android.hardware.microphone" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -26,10 +26,12 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.NoActionBar"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+<<<<<<< HEAD
         <receiver android:name=".ui.alarm.ReminderReceiver"
             android:exported="true">
             <intent-filter>
@@ -41,6 +43,8 @@
             android:name=".ui.alarm.AlarmService"
             android:enabled="true"
             android:exported="false" />
+=======
+>>>>>>> c38914b (Vinh: Code logic Home UI + UI Cut)
 
         <activity
             android:name=".HomeActivity"
@@ -60,6 +64,8 @@
         <activity
             android:name=".EditInsertionActivity"
             android:exported="true" />
+        <activity android:name=".editmenuv.cut.CutActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -16,6 +16,10 @@ public class Audio {
         this.image = image;
     }
 
+    public Audio() {
+
+    }
+
     public String getName() {
         return name;
     }
@@ -55,4 +59,6 @@ public class Audio {
     public void setImage(int image) {
         this.image = image;
     }
+
+
 }

@@ -13,22 +13,24 @@
         android:id="@+id/layout_swipe_reveal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
         <ImageView
             android:id="@+id/home_btn_share"
             android:layout_width="70dp"
             android:layout_height="match_parent"
+            android:paddingHorizontal="20dp"
             android:background="@color/gray_500"
             android:gravity="center"
-            android:padding="15dp"
-            android:src="@drawable/ic_share_rounded"/>
+            android:src="@drawable/ic_share_rounded"
+            />
 
         <ImageView
             android:id="@+id/home_btn_more"
             android:layout_width="70dp"
             android:layout_height="match_parent"
+            android:paddingHorizontal="20dp"
             android:background="@color/gray_500"
-            android:padding="15dp"
             android:gravity="center"
             android:src="@drawable/ic_view_more"/>
 
@@ -37,7 +39,7 @@
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:background="@color/pink_500"
-            android:padding="15dp"
+            android:paddingHorizontal="20dp"
             android:gravity="center"
             android:src="@drawable/ic_trash_home"/>
     </LinearLayout>
@@ -90,8 +92,19 @@
             android:textSize="12sp"
             android:layout_toRightOf="@id/home_item_time_of_audio"
             android:layout_below="@id/home_item_name_audio"
-            android:text="100KB"
+            android:text="100"
             android:layout_marginLeft="20dp"
+            />
+
+        <TextView
+            android:id="@+id/home_item_size_KB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_toRightOf="@id/home_item_size"
+            android:layout_below="@id/home_item_name_audio"
+            android:text="KB"
+            android:layout_marginLeft="2dp"
             />
 
         <TextView
@@ -110,7 +123,6 @@
             android:background="@drawable/bg_solid_bottom_item_home"
             android:layout_below="@id/home_item_time_of_audio"
             android:layout_marginTop="12dp"
-            android:text="26/02/2023 10:11"
             />
     </RelativeLayout>
 </com.chauthai.swipereveallayout.SwipeRevealLayout>
