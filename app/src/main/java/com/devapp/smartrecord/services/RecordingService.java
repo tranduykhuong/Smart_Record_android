@@ -125,6 +125,7 @@ public class RecordingService extends Service {
         } catch (IOException e)
         {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
 
