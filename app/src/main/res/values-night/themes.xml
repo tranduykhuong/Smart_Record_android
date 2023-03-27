@@ -22,5 +22,6 @@
         <item name="actionBarColor">#24272C</item>
 
         <item name="backgroundState">@color/black</item>
+        <item name="android:backgroundTint">@null</item>
     </style>
 </resources>

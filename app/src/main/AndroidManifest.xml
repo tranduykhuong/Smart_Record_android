@@ -65,6 +65,22 @@
             android:name=".EditInsertionActivity"
             android:exported="true" />
         <activity android:name=".editmenuv.cut.CutActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ReplayActivity"
+            android:exported="true" />
+        <activity
+            android:name=".AdjustActivity"
+            android:exported="true" />
+        <activity
+            android:name=".WaveformView"
+            android:exported="true" />
+        <activity
+            android:name=".editmenu.combine.CombineActivity"
+            android:exported="true" />
+
+        <service
+            android:name=".services.RecordingService"
             android:exported="true"/>
     </application>
 

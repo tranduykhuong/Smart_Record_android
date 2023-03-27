@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,7 +25,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.devapp.smartrecord.ui.WaveformView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
@@ -93,6 +91,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivityForResult(intent, RECORDING_CODE);
                 break;
             }
+//            case R.id.record_btn_back: {
+//                Intent intent = new Intent(RecordActivity.class, ReplayActivity.class);
+//                startActivityForResult(intent, RECORDING_CODE);
+//                break;
+//            }
         }
     }
 

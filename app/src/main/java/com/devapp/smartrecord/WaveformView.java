@@ -1,4 +1,4 @@
-package com.devapp.smartrecord.ui;
+package com.devapp.smartrecord;
 
 import android.content.Context;
 import android.graphics.Canvas;

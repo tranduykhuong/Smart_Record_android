@@ -22,5 +22,6 @@
         <item name="actionBarColor">@color/pink_500</item>
 
         <item name="backgroundState">#EFEFEF</item>
+        <item name="android:backgroundTint">@null</item>
     </style>
 </resources>
