@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                Manifest.permission.INTERNET
+                Manifest.permission.INTERNET,
         };
 
         int permissionRecordAudio = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.RECORD_AUDIO);
