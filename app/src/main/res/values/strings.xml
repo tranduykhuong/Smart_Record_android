@@ -11,6 +11,11 @@
     <string name="title_folder">Folder</string>
     <string name="title_alarm">Alarm</string>
     <string name="title_trash">Trash</string>
+    
+    <string-array name="rangeSlider">
+        <item>20</item>
+        <item>70</item>
+    </string-array>
 
     <string name="title_search">Search</string>
     <string name="question_delete">Are you sure you want to move it to the trash?</string>

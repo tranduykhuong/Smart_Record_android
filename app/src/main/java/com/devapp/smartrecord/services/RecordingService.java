@@ -177,4 +177,8 @@ public class RecordingService extends Service {
         }
         super.onDestroy();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b936a05 (Khoi: Logic Record - UI Combine)
