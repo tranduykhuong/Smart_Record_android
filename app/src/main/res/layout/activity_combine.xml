@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
 
     <LinearLayout
-        android:id="@+id/nav_replay"
+        android:id="@+id/nav_adjust"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="80dp"
         android:gravity="center"
         android:background="@color/pink_500"
         android:weightSum="5"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/btn_back_replay"
+            android:id="@+id/combine_btn_back"
+            android:onClick="changeLayoutFromCombine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -34,7 +36,7 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:layout_weight="3"
-            android:text="Replay"
+            android:text="Hợp nhất"
             android:paddingRight="40dp"/>
 
         <TextView
@@ -47,77 +49,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:background="@color/pink_500"
-        android:gravity="center">
-
-        <ImageButton
-            android:id="@+id/replay_btn_adjust"
-            android:onClick="changeLayoutFromReplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:elevation="0dp"
-            android:background="@color/pink_500"
-            android:outlineProvider="none"
-            android:layout_weight="1"
-            android:src="@drawable/ic_adjust"
-            android:layout_marginLeft="50dp"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:elevation="0dp"
-            android:background="@color/pink_500"
-            android:outlineProvider="none"
-            android:layout_weight="1"
-            android:src="@drawable/ic_app_record" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:elevation="0dp"
-            android:layout_weight="1"
-            android:background="@color/pink_500"
-            android:outlineProvider="none"
-            android:src="@drawable/ic_speed_to_text"
-            android:layout_marginRight="50dp"/>
-
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/little_gray">
 
         <TextView
-            android:id="@+id/name_recording"
+            android:id="@+id/combine_txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="40dp"
-            android:textSize="17sp"
-            android:textColor="@color/black"
             android:layout_gravity="center"
-            android:gravity="center_horizontal"
             android:layout_weight="3"
-            android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
-            android:paddingRight="40dp"/>
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="40dp"
+            android:paddingRight="40dp"
+            android:text="08_08_56, ngày 18 tháng 3, 2023"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
 
     </LinearLayout>
 
-<!--    Part Sound Graph-->
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/combine_rcv_audio_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/test_replay_grp">
-    </LinearLayout>
+        ></androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -134,37 +89,19 @@
             android:background="@color/white"
             android:gravity="center">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:elevation="0dp"
-                android:background="@color/white"
-                android:outlineProvider="none"
-                android:layout_weight="1"
-                android:src="@drawable/ic_audio_wave" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:elevation="0dp"
-                android:background="@color/white"
-                android:outlineProvider="none"
-                android:layout_weight="1"
-                android:src="@drawable/ic_voice_change" />
-
             <Button
                 android:id="@+id/btn_increase_speed"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
                 android:outlineProvider="none"
                 android:background="@android:color/transparent"
                 android:textColor="@color/x1_text"
-                android:layout_weight="0.1"
-                android:textSize="20sp"
+                android:layout_weight="1"
+                android:textSize="18sp"
                 android:textAllCaps="false"
+                android:textAlignment="textStart"
+                android:layout_marginLeft="15dp"
                 android:text="x1"/>
 
             <ImageButton
@@ -175,17 +112,23 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_time" />
+                android:layout_marginHorizontal="20dp"
+                android:src="@drawable/ic_play_combine_main" />
 
-            <ImageButton
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:elevation="0dp"
-                android:background="@color/white"
-                android:outlineProvider="none"
+                android:layout_gravity="right|center|end"
                 android:layout_weight="1"
-                android:src="@drawable/ic_repeat" />
+                android:maxWidth="60dp"
+                android:text="00:01:39"
+                android:layout_marginRight="15dp"
+                android:paddingRight="12dp"
+                android:textAlignment="textEnd"
+                android:textColor="@color/x1_text"
+                android:textSize="17sp" />
+
+
 
         </LinearLayout>
 
@@ -206,8 +149,8 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="13dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:backgroundTint="@color/bg_progressbar"
                 android:progressTint="@color/pink_500"
                 android:progressDrawable="@drawable/replay_prb_custom" />
@@ -227,7 +170,7 @@
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
                     android:textStyle="bold"
-                    android:text="00:12" />
+                    android:text="00:00:50" />
 
                 <TextView
                     android:id="@+id/timetotal_replay"
@@ -239,7 +182,7 @@
                     android:gravity="right"
                     android:textStyle="bold"
                     android:layout_marginRight="24dp"
-                    android:text="00:21" />
+                    android:text="00:01:39" />
 
             </LinearLayout>
 
@@ -252,16 +195,18 @@
             android:background="@color/white"
             android:gravity="center">
 
-            <ImageButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:maxWidth="30dp"
                 android:outlineProvider="none"
+                android:background="@android:color/transparent"
+                android:textColor="@color/black"
                 android:layout_weight="1"
-                android:src="@drawable/ic_first"
-                android:layout_marginLeft="20dp"/>
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                android:text="Hủy"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -271,41 +216,25 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_5_prev_replay" />
+                android:src="@drawable/ic_cbine_combine" />
 
-            <ImageButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
+                android:maxWidth="30dp"
                 android:elevation="0dp"
-                android:background="@color/white"
                 android:outlineProvider="none"
+                android:background="@android:color/transparent"
+                android:textColor="@color/pink_500"
                 android:layout_weight="1"
-                android:src="@drawable/ic_play_replay" />
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                android:text="Hợp nhất"/>
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:elevation="0dp"
-                android:background="@color/white"
-                android:outlineProvider="none"
-                android:layout_weight="1"
-                android:src="@drawable/ic_5_next_replay" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:elevation="0dp"
-                android:background="@color/white"
-                android:outlineProvider="none"
-                android:layout_weight="1"
-                android:src="@drawable/ic_last"
-                android:layout_marginRight="20dp"/>
-
-        </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
+
+</LinearLayout>

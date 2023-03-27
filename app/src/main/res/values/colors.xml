@@ -20,6 +20,6 @@
     <color name="text_time">#A4A1A1</color>
     <color name="red">#FF0000</color>
     <color name="bg_adjust">#D9D7D7</color>
-
     <color name="bg_color">#F8F6F7</color>
+    <color name="x1_text">#645D5D</color>
 </resources>
