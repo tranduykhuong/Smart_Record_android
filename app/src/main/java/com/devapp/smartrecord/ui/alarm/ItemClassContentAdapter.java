@@ -1,6 +1,9 @@
 package com.devapp.smartrecord.ui.alarm;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -64,6 +67,8 @@ public class ItemClassContentAdapter extends RecyclerView.Adapter<ItemClassConte
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+
+        void onItemClick(int position, boolean checked);
     }
 
     public void setData(List<ItemClassContent> listData){
@@ -88,7 +93,7 @@ public class ItemClassContentAdapter extends RecyclerView.Adapter<ItemClassConte
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    listener.onItemClick(position);
+                    listener.onItemClick(position, item.getChecked());
                 }
             });
         }

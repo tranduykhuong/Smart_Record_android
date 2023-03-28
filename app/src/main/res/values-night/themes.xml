@@ -3,15 +3,24 @@
     <style name="Theme.NoActionBar"
         parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/pink_200</item>
+        <item name="colorPrimary">@color/pink_300</item>
         <item name="colorPrimaryVariant">@color/pink_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/pink_200</item>
+        <item name="colorSecondaryVariant">@color/pink_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/actionBarColor</item>
         <!-- Customize your theme here. -->
+
+        <item name="backgroundColor">#1A1B1D</item>
+        <item name="foregroundColor">#24272C</item>
+
+        <item name="textColor">@color/white</item>
+        <item name="textColorPrimary">@color/white</item>
+        <item name="actionBarColor">#24272C</item>
+
+        <item name="backgroundState">@color/black</item>
     </style>
 </resources>

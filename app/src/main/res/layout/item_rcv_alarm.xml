@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="?attr/foregroundColor"
     android:orientation="horizontal"
     android:paddingTop="12dp"
     android:layout_marginBottom="1dp"
@@ -12,6 +12,7 @@
         android:id="@+id/item_rcv_cbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
     />
 
     <TextView
@@ -19,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
-        android:textColor="@color/black"
+        android:textColor="?attr/textColor"
         android:layout_toRightOf="@id/item_rcv_cbox"
         />
 

@@ -4,17 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.Manifest;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -26,6 +30,8 @@ import com.devapp.smartrecord.ui.WaveformView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
+import java.util.Locale;
+
 public class HomeActivity extends AppCompatActivity {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
     private final int SETTING_CODE = 10; // SETTING CODE
@@ -33,13 +39,27 @@ public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
-    private Button btn_setting;
+    private ImageView btn_setting;
+    private ConfigurationClass config;
 
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        config = new ConfigurationClass(getApplicationContext());
+        Boolean checkConfig = config.getConfig();
+        if (!checkConfig){
+            config.setConfig(1,"vi",1);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            changeLanguage("vi");
+        }
+        else{
+            config.setTheme();
+            changeLanguage(config.getLanguageState());
+        }
+
+        // FRAGMENT
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -85,7 +105,8 @@ public class HomeActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                Manifest.permission.INTERNET
+                Manifest.permission.INTERNET,
+                Manifest.permission.FOREGROUND_SERVICE
         };
 
         int permissionRecordAudio = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.RECORD_AUDIO);
@@ -96,6 +117,7 @@ public class HomeActivity extends AppCompatActivity {
         int permissionLocation2 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionLocation3 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         int permissionInternet = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.INTERNET);
+        int permissionService = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.FOREGROUND_SERVICE);
 
         if ((permissionRecordAudio + permissionModifyAudio + permissionCheckRead
                 + permissionCheckWrite + permissionLocation1 + permissionLocation2 + permissionLocation3 + permissionInternet)
@@ -107,7 +129,8 @@ public class HomeActivity extends AppCompatActivity {
                     ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.INTERNET)
+                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.INTERNET) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.FOREGROUND_SERVICE)
             ) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 builder.setTitle(R.string.grant_permission);
@@ -127,5 +150,13 @@ public class HomeActivity extends AppCompatActivity {
                         MICRO_PERM_CODE);
             }
         }
+    }
+
+    private void changeLanguage(String language){
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        android.content.res.Configuration configuration = resources.getConfiguration();
+        configuration.setLocale(new Locale(language.toLowerCase()));
+        resources.updateConfiguration(configuration, displayMetrics);
     }
 }

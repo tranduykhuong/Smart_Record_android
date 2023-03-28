@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +27,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.NoActionBar"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
+        <receiver android:name=".ui.alarm.ReminderReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.myapp.REMINDER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".ui.alarm.AlarmService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".HomeActivity"
             android:exported="true">
@@ -38,6 +55,9 @@
             android:exported="true" />
         <activity
             android:name=".RecordActivity"
+            android:exported="true" />
+        <activity
+            android:name=".EditInsertionActivity"
             android:exported="true" />
     </application>
 
