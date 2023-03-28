@@ -25,5 +25,6 @@
     <string name="dark">Dark</string>
 
     <string name="insertion" translatable="false">Insertion</string>
+    <string name="folder_private_title">Thư mục riêng tư</string>
 
 </resources>
