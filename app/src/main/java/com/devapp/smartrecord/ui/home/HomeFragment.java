@@ -1,14 +1,10 @@
 package com.devapp.smartrecord.ui.home;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,16 +16,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentHomeBinding;
-import com.devapp.smartrecord.editmenuv.cut.CutActivity;
+import com.devapp.smartrecord.editmenu.cut.CutActivity;
 
 import java.io.File;
 import java.text.DecimalFormat;

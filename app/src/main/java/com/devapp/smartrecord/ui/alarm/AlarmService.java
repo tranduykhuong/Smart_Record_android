@@ -60,7 +60,6 @@ public class AlarmService extends Service {
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
         }
 
-        // Dừng service sau khi đã đặt lịch
         return super.onStartCommand(intent, flags, startId);
     }
 }

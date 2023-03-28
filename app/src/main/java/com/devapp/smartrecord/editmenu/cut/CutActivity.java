@@ -1,4 +1,4 @@
-package com.devapp.smartrecord.editmenuv.cut;
+package com.devapp.smartrecord.editmenu.cut;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;

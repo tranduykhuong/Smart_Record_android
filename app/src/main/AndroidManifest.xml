@@ -31,7 +31,7 @@
         android:theme="@style/Theme.NoActionBar"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
-<<<<<<< HEAD
+
         <receiver android:name=".ui.alarm.ReminderReceiver"
             android:exported="true">
             <intent-filter>
@@ -43,8 +43,6 @@
             android:name=".ui.alarm.AlarmService"
             android:enabled="true"
             android:exported="false" />
-=======
->>>>>>> c38914b (Vinh: Code logic Home UI + UI Cut)
 
         <activity
             android:name=".HomeActivity"
@@ -62,9 +60,9 @@
             android:name=".RecordActivity"
             android:exported="true" />
         <activity
-            android:name=".EditInsertionActivity"
+            android:name=".editmenu.insertion.InsertionActivity"
             android:exported="true" />
-        <activity android:name=".editmenuv.cut.CutActivity"
+        <activity android:name=".editmenu.cut.CutActivity"
             android:exported="true" />
         <activity
             android:name=".ReplayActivity"

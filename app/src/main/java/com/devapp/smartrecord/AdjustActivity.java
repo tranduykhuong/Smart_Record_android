@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.devapp.smartrecord.editmenu.combine.CombineActivity;
+import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
 
 public class AdjustActivity extends AppCompatActivity {
 
@@ -31,6 +32,11 @@ public class AdjustActivity extends AppCompatActivity {
             }
             case R.id.adjust_btn_combine:{
                 Intent intent = new Intent(this, CombineActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.adjust_btn_insertion:{
+                Intent intent = new Intent(this, InsertionActivity.class);
                 startActivity(intent);
                 break;
             }

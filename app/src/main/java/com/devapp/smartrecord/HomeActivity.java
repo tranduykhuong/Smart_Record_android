@@ -1,12 +1,18 @@
 package com.devapp.smartrecord;
 
+import static android.content.ContentValues.TAG;
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +22,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
@@ -29,6 +38,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
 import java.util.Locale;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
@@ -40,10 +50,29 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView btn_setting;
     private ConfigurationClass config;
 
+    ActivityResultLauncher<String[]> requestPermissionLauncher;
+    private String[] permissions = new String[]{
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET
+    };
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+                        new ActivityResultCallback<Map<String, Boolean>>() {
+                    @Override
+                    public void onActivityResult(Map<String, Boolean> permissions) {
+                        // Xử lý kết quả trả về từ việc yêu cầu cấp quyền
+                    }
+                });
 
         config = new ConfigurationClass(getApplicationContext());
         Boolean checkConfig = config.getConfig();
@@ -100,58 +129,46 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void askForPermission() {
-        String[] permissions = new String[]{
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                Manifest.permission.INTERNET,
-                Manifest.permission.FOREGROUND_SERVICE
-        };
-
+        int grants = 0;
+        for (int i=0; i<permissions.length; i++) {
+            grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissions[i]);
+        }
         int permissionRecordAudio = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.RECORD_AUDIO);
-        int permissionModifyAudio = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.MODIFY_AUDIO_SETTINGS);
         int permissionCheckWrite = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permissionCheckRead = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
         int permissionLocation1 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
         int permissionLocation2 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionLocation3 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-        int permissionInternet = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.INTERNET);
-        int permissionService = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.FOREGROUND_SERVICE);
 
-        if ((permissionRecordAudio + permissionModifyAudio + permissionCheckRead
-                + permissionCheckWrite + permissionLocation1 + permissionLocation2 + permissionLocation3 + permissionInternet)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.RECORD_AUDIO) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.MODIFY_AUDIO_SETTINGS) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.INTERNET) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.FOREGROUND_SERVICE)
-            ) {
+        if (grants != PackageManager.PERMISSION_GRANTED) {
+            boolean rationables = false;
+            for (int i=0; i<permissions.length; i++) {
+                rationables = rationables || ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, permissions[i]);
+            }
+            if (rationables) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 builder.setTitle(R.string.grant_permission);
                 builder.setMessage(R.string.list_type);
                 builder.setPositiveButton(R.string.ok, (dialog, which) ->
-                        ActivityCompat.requestPermissions(HomeActivity.this,
-                                permissions,
-                                MICRO_PERM_CODE));
+                        requestPermissions()
+                );
                 builder.setNegativeButton(R.string.no, (dialog, which) ->
                         askForPermission()
                 );
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
-                ActivityCompat.requestPermissions(this,
-                        permissions,
-                        MICRO_PERM_CODE);
+                requestPermissions();
             }
+        }
+    }
+
+    private void requestPermissions() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            requestPermissionLauncher.launch(permissions);
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    permissions,
+                    MICRO_PERM_CODE);
         }
     }
 

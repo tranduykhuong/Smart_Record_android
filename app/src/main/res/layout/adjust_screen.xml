@@ -102,10 +102,12 @@
         android:background="@color/bg_adjust">
 
         <Button
+            android:id="@+id/adjust_btn_insertion"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:background="@drawable/btn_custom_adjust"
             android:padding="10dp"
+            android:onClick="changeLayoutFromAdjust"
             android:drawableTop="@drawable/ic_insert"
             android:text="Chèn"
             android:textColor="@color/black"
