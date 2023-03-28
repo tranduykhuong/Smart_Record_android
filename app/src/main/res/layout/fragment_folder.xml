@@ -79,9 +79,46 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MB KB"
+                android:text=" MB"
                 android:textSize="15sp"
                 android:layout_toRightOf="@id/folder_capacity"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/folder_item_private_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingTop="18dp"
+            android:layout_below="@+id/folder_wrap_info"
+            >
+
+            <ImageView
+                android:id="@+id/folder_item_private_image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/ic_private_pink500_folder" />
+
+            <TextView
+                android:id="@+id/folder_item_private_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/folder_private_title"
+                android:layout_alignBottom="@id/folder_item_private_image"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@id/folder_item_private_image"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/bg_solid_bottom_filter_folder"
+                android:layout_below="@id/folder_item_private_image"
+                android:layout_marginTop="18dp"
                 />
         </RelativeLayout>
 
@@ -89,7 +126,7 @@
             android:id="@+id/folder_rcv_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/folder_wrap_info"
+            android:layout_below="@id/folder_item_private_row"
             android:layout_above="@id/folder_wrap_record"
             ></androidx.recyclerview.widget.RecyclerView>
 
@@ -161,6 +198,7 @@
                     android:src="@drawable/ic_bluetooth_folder" />
 
                 <ImageButton
+                    android:id="@+id/folder_btn_record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="65dp"

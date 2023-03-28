@@ -11,4 +11,6 @@
     <string name="title_alarm">Alarm</string>
     <string name="title_trash">Trash</string>
 
+    <string name="folder_private_title">Thư mục riêng tư</string>
+
 </resources>

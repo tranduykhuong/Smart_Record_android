@@ -20,6 +20,8 @@
     <color name="text_time">#A4A1A1</color>
     <color name="red">#FF0000</color>
     <color name="bg_adjust">#D9D7D7</color>
+    <color name="gray">#CCCCCC</color>
+    <color name="bg_menu_folder">#80000000</color>
 
     <color name="bg_color">#F8F6F7</color>
 </resources>
