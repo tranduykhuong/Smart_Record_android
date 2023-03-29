@@ -12,101 +12,105 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
-
-        <EditText
-            android:id="@+id/search_home_audio"
+        <LinearLayout
+            android:id="@+id/home_wrap_search_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tìm kiếm"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/ic_search_home"
-            android:padding="10dp"
-            android:drawablePadding="16dp"
-            android:textCursorDrawable="@null"
-            android:background="@drawable/bg_search_home"
-            tools:ignore="MissingConstraints"
-            />
+            android:background="@color/little_gray"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/search_home_audio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/bg_search_home"
+                android:drawableLeft="@drawable/ic_search_home"
+                android:drawablePadding="16dp"
+                android:hint="Tìm kiếm"
+                android:padding="10dp"
+                android:textCursorDrawable="@null"
+                tools:ignore="MissingConstraints" />
 
-        <RelativeLayout
-            android:id="@+id/home_wrap_info_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_below="@id/search_home_audio"
-            android:layout_marginLeft="26dp"
-            >
-            <TextView
-                android:id="@+id/home_amount_audio"
+            <RelativeLayout
+                android:id="@+id/home_wrap_info_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="2"
-                />
-            <TextView
-                android:id="@+id/home_title_audio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bản ghi - "
-                android:layout_marginLeft="5dp"
-                android:textSize="15sp"
-                android:layout_toRightOf="@id/home_amount_audio"
-                />
-            <TextView
-                android:id="@+id/home_capacity_audio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="11"
-                android:textSize="15sp"
-                android:layout_toRightOf="@id/home_title_audio"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MB"
-                android:textSize="15sp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/home_capacity_audio"
-                />
-        </RelativeLayout>
+                android:layout_marginBottom="14dp"
+                android:layout_below="@id/search_home_audio"
+                android:layout_marginLeft="26dp"
+                >
+                <TextView
+                    android:id="@+id/home_amount_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="2"
+                    />
+                <TextView
+                    android:id="@+id/home_title_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bản ghi - "
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/home_amount_audio"
+                    />
+                <TextView
+                    android:id="@+id/home_capacity_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/home_title_audio"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MB"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/home_capacity_audio"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/home_wrap_sort_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/home_date_sort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="Ngày"
+                        android:textColor="@color/pink_500"
+                        />
+                    <ImageView
+                        android:id="@+id/home_icon_cvd_sort_type"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:background="@null"
+                        android:src="@drawable/ic_drop_down"
+
+                        />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/home_rcv_audio_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/home_wrap_info_audio"
+            android:layout_below="@id/home_wrap_search_info"
             android:layout_above="@id/home_wrap_record_feature"
             ></androidx.recyclerview.widget.RecyclerView>
-
-        <LinearLayout
-            android:id="@+id/home_wrap_sort_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/search_home_audio"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="26dp"
-            >
-
-            <TextView
-                android:id="@+id/home_date_sort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Ngày"
-                android:textColor="@color/pink_500"
-                />
-            <ImageView
-                android:id="@+id/home_icon_cvd_sort_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/ic_drop_down"
-
-                />
-        </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/home_wrap_record_feature"
@@ -118,11 +122,10 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/home_icon_cvup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_sort_down" />
 
             <TextView
@@ -137,14 +140,14 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="25dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/home_bluetooth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="@null"
                     android:src="@drawable/ic_bluetooth" />
 
@@ -154,12 +157,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="65dp"
                     android:background="@drawable/bg_record_btn_home"
+                    android:onClick="navigate_onclick"
                     android:src="@drawable/ic_micro" />
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/home_voice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="@null"
                     android:src="@drawable/ic_voice" />
             </LinearLayout>

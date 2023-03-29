@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+
+        <ImageButton
+            android:id="@+id/combine_btn_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="changeLayoutFromRecord"
+            android:layout_gravity="start|center_vertical"
+            android:background="@color/white"
+            android:elevation="0dp"
+            android:outlineProvider="none"
+            android:src="@drawable/ic_play_combine" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/combine_txt_name_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:gravity="left"
+                android:text="08_08_56, ngày 18 tháng 3, 2023"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/combine_txt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/x1_text"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:text="00:00 - 00:06" />
+
+                <TextView
+                    android:id="@+id/combine_txt_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/x1_text"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:text="MP3 - 155KB" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.slider.RangeSlider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/combine_rangeslider"
+        android:valueFrom="0"
+        android:valueTo="100"
+        app:thumbStrokeColor="@android:color/transparent"
+        app:thumbStrokeWidth="1dp"
+        app:values="@array/rangeSlider" />
+
+
+</LinearLayout>

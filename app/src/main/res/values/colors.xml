@@ -13,7 +13,10 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="black_light">#9D9D9D</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_100">#DADADA</color>
+    <color name="gray_300">#A1A1A1</color>
     <color name="gray_500">#989494</color>
     <color name="little_gray">#EFEFEF</color>
     <color name="bg_progressbar">#EEEEEE</color>
@@ -24,4 +27,5 @@
     <color name="bg_menu_folder">#80000000</color>
 
     <color name="bg_color">#F8F6F7</color>
+    <color name="x1_text">#645D5D</color>
 </resources>

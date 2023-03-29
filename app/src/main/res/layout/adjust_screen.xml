@@ -16,7 +16,8 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/btn_back_adjust"
+            android:id="@+id/adjust_btn_back"
+            android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -56,11 +57,9 @@
         android:background="@color/bg_adjust">
 
         <Button
-            android:id="@+id/btn_cut_adjust"
+            android:id="@+id/adjust_btn_cut"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
-            android:background="@drawable/btn_custom_adjust"
-            android:backgroundTint="@color/white"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_cut"
             android:text="Cắt xén"
@@ -72,25 +71,24 @@
             android:drawableBottom="@drawable/ic_line"
             android:layout_weight="1"
             android:layout_marginRight="15dp"
+            android:background="@drawable/btn_custom_adjust"
             />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="180dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_custom_adjust"
-            android:backgroundTint="@color/white"
-            android:padding="10dp"
             android:drawableTop="@drawable/ic_adjust_1"
-            android:text="Điều chỉnh"
-            android:textColor="@color/black"
-            android:textSize="18sp"
+            android:drawableBottom="@drawable/ic_line"
             android:drawablePadding="10dp"
             android:elevation="4dp"
+            android:padding="10dp"
+            android:text="Điều chỉnh"
             android:textAllCaps="false"
-            android:drawableBottom="@drawable/ic_line"
-            android:layout_weight="1"
-            android:layout_marginLeft="15dp"
-            />
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -104,11 +102,12 @@
         android:background="@color/bg_adjust">
 
         <Button
+            android:id="@+id/adjust_btn_insertion"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:background="@drawable/btn_custom_adjust"
-            android:backgroundTint="@color/white"
             android:padding="10dp"
+            android:onClick="changeLayoutFromAdjust"
             android:drawableTop="@drawable/ic_insert"
             android:text="Chèn"
             android:textColor="@color/black"
@@ -125,7 +124,6 @@
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:background="@drawable/btn_custom_adjust"
-            android:backgroundTint="@color/white"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_low_sound"
             android:text="Giảm ồn"
@@ -154,7 +152,6 @@
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:background="@drawable/btn_custom_adjust"
-            android:backgroundTint="@color/white"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_divide"
             android:text="Chia"
@@ -169,10 +166,11 @@
             />
 
         <Button
+            android:id="@+id/adjust_btn_combine"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
+            android:onClick="changeLayoutFromAdjust"
             android:background="@drawable/btn_custom_adjust"
-            android:backgroundTint="@color/white"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_mixture"
             android:text="Hợp nhất"
