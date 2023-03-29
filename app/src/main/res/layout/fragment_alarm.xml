@@ -11,37 +11,38 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         tools:ignore="MissingConstraints"
-        android:background="@color/bg_color"
+        android:background="?attr/backgroundColor"
         >
 
-        <EditText
-            android:id="@+id/search_file_edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tìm kiếm"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/ic_search_alarm"
-            android:padding="10dp"
-            android:drawablePadding="16dp"
-            android:textCursorDrawable="@null"
-            android:background="@drawable/bg_search_alarm"
-            tools:ignore="MissingConstraints"
-            />
+<!--        <EditText-->
+<!--            android:id="@+id/search_file_edt"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Tìm kiếm"-->
+<!--            android:layout_marginTop="6dp"-->
+<!--            android:layout_marginBottom="14dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:drawableLeft="@drawable/ic_search_alarm"-->
+<!--            android:padding="10dp"-->
+<!--            android:drawablePadding="16dp"-->
+<!--            android:textCursorDrawable="@null"-->
+<!--            android:background="@drawable/bg_search_alarm"-->
+<!--            tools:ignore="MissingConstraints"-->
+<!--            />-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_file_edt"
             android:orientation="vertical"
+            android:paddingTop="10dp"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/search_file_edt"
                 android:layout_marginBottom="12dp"
+                android:layout_weight="1"
+                android:minHeight="400dp"
                 >
                 <RelativeLayout
                     android:id="@+id/file_wrap_info_future"
@@ -55,31 +56,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:text="2"
+                        android:text="0"
                         />
                     <TextView
                         android:id="@+id/file_future"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1 BẢN GHI"
+                        android:text=" BẢN GHI"
                         android:textSize="15sp"
                         android:layout_toRightOf="@id/file_amount_future"
                         />
-                    <TextView
-                        android:id="@+id/file_capacity_future"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" - "
-                        android:textSize="15sp"
-                        android:layout_toRightOf="@id/file_future"
-                        />
+<!--                    <TextView-->
+<!--                        android:id="@+id/file_capacity_future"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text=" - "-->
+<!--                        android:textSize="15sp"-->
+<!--                        android:layout_toRightOf="@id/file_future"-->
+<!--                        />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/file_capacity_future"
-                        android:text="156 KB"
-                        android:textSize="15sp" />
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toRightOf="@id/file_capacity_future"-->
+<!--                        android:text="156 KB"-->
+<!--                        android:textSize="15sp" />-->
                 </RelativeLayout>
 
                 <LinearLayout
@@ -96,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:text="Lịch dự kiến"
-                        android:textColor="@color/pink_500"
+                        android:textColor="@color/pink_400"
                         />
                 </LinearLayout>
 
@@ -111,6 +112,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="400dp"
                 >
                 <RelativeLayout
                     android:id="@+id/file_wrap_info_past"
@@ -124,31 +127,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:text="2"
+                        android:text="0"
                         />
                     <TextView
                         android:id="@+id/file_past"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1 BẢN GHI"
+                        android:text=" BẢN GHI"
                         android:textSize="15sp"
                         android:layout_toRightOf="@id/file_amount_past"
                         />
-                    <TextView
-                        android:id="@+id/file_capacity_past"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" - "
-                        android:textSize="15sp"
-                        android:layout_toRightOf="@id/file_past"
-                        />
+<!--                    <TextView-->
+<!--                        android:id="@+id/file_capacity_past"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text=" - "-->
+<!--                        android:textSize="15sp"-->
+<!--                        android:layout_toRightOf="@id/file_past"-->
+<!--                        />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/file_capacity_past"
-                        android:text="156 KB"
-                        android:textSize="15sp" />
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toRightOf="@id/file_capacity_past"-->
+<!--                        android:text="156 KB"-->
+<!--                        android:textSize="15sp" />-->
                 </RelativeLayout>
 
                 <LinearLayout
@@ -165,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:text="Đã hoàn tất"
-                        android:textColor="@color/pink_500"
+                        android:textColor="@color/pink_400"
                         />
                 </LinearLayout>
 

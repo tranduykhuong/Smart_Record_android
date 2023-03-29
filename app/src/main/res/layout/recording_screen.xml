@@ -15,9 +15,10 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/btn_back"
+            android:id="@+id/record_btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="changeLayoutFromRecord"
             android:layout_gravity="start|center_vertical"
             android:background="@color/pink_500"
             android:elevation="0dp"
@@ -51,7 +52,7 @@
         android:background="@color/little_gray">
 
         <TextView
-            android:id="@+id/name_recording"
+            android:id="@+id/record_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -59,16 +60,24 @@
             android:gravity="center_horizontal"
             android:paddingHorizontal="40dp"
             android:paddingRight="40dp"
-            android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="17sp" />
+
+<!--        135 Trần Hưng Đạo 2, ngày 27/02/2023-->
 
     </LinearLayout>
 
 <!--    Audio Visualizer-->
-<!--    <com.devapp.smartrecord.ui.WaveformView-->
+<!--    <com.devapp.smartrecord.WaveformView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"/>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/test_graph_sound">
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,10 +85,11 @@
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingBottom="25dp"
+        android:layout_marginBottom="10dp"
        >
 
-        <TextView
-            android:id="@+id/time_recording"
+        <Chronometer
+            android:id="@+id/record_time_recording"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="40dp"
@@ -88,7 +98,6 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:layout_weight="3"
-            android:text="00:21"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
@@ -113,6 +122,7 @@
                 android:layout_marginRight="10dp"/>
 
             <ImageButton
+                android:id="@+id/record_btn_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -120,9 +130,10 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_pause" />
+                android:src="@drawable/ic_pause_record" />
 
             <ImageButton
+                android:id="@+id/record_btn_stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -130,7 +141,7 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:outlineProvider="none"
-                android:src="@drawable/ic_right"
+                android:src="@drawable/ic_right_record"
                 android:layout_marginRight="30dp"/>
 
 

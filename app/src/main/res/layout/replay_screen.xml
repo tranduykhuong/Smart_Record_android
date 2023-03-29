@@ -53,6 +53,8 @@
         android:gravity="center">
 
         <ImageButton
+            android:id="@+id/replay_btn_adjust"
+            android:onClick="changeLayoutFromReplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -110,6 +112,12 @@
     </LinearLayout>
 
 <!--    Part Sound Graph-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/test_replay_grp">
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -144,7 +152,7 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_voice" />
+                android:src="@drawable/ic_voice_change" />
 
             <Button
                 android:id="@+id/btn_increase_speed"
@@ -152,9 +160,11 @@
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
                 android:outlineProvider="none"
-                android:background="@color/white"
-                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:textColor="@color/x1_text"
                 android:layout_weight="0.1"
+                android:textSize="20sp"
+                android:textAllCaps="false"
                 android:text="x1"/>
 
             <ImageButton
@@ -184,22 +194,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ProgressBar
+            <SeekBar
                 android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
-                android:layout_height="12dp"
+                android:layout_height="11dp"
+                android:thumb="@drawable/ic_thumb_seekbar"
                 android:indeterminate="false"
                 android:max="100"
-                style="@android:style/Widget.ProgressBar.Horizontal"
                 android:progress="30"
                 android:layout_marginBottom="8dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
                 android:backgroundTint="@color/bg_progressbar"
-                android:progressTint="@color/pink_500"/>
+                android:progressTint="@color/pink_500"
+                android:progressDrawable="@drawable/replay_prb_custom" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -260,7 +271,7 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_5s_prev" />
+                android:src="@drawable/ic_5_prev_replay" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -270,7 +281,7 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_play" />
+                android:src="@drawable/ic_play_replay" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -280,7 +291,7 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_5s_next" />
+                android:src="@drawable/ic_5_next_replay" />
 
             <ImageButton
                 android:layout_width="wrap_content"

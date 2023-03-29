@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="color_list">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="foregroundColor" format="color"/>
+        <attr name="textColor" format="color"/>
+        <attr name="textColorPrimary" format="color"/>
+        <attr name="actionBarColor" format="color"/>
+
+        <attr name="backgroundState" format="color"/>
+    </declare-styleable>
+</resources>
