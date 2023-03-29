@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ghi âm</string>
+
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="grant_permission">Vui lòng cấp quyền truy cập để tiếp tục sử dụng ứng dụng này!</string>
+    <string name="list_type">Microphone, Lưu trữ, Vị trí, Mạng</string>
+
+    <string name="title_home">Trang chủ</string>
+    <string name="title_folder">Thư mục</string>
+    <string name="title_alarm">Nhắc nhở</string>
+    <string name="title_trash">Thùng rác</string>
+
+    <string name="language">Ngôn ngữ</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="english">Tiếng Anh</string>
+
+    <string name="settings">Cài đặt</string>
+    <string name="general_settings">Cài đặt chung</string>
+    <string name="theme">Chủ đề</string>
+    <string name="password">Mật khẩu</string>
+    <string name="file">Tệp</string>
+    <string name="format">Định dạng</string>
+    <string name="light">Sáng</string>
+    <string name="dark">Tối</string>
+
+    <string name="insertion">Chèn</string>
+</resources>

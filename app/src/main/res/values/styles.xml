@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomDatePickerDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+        <!-- Override color attributes here -->
+        <item name="android:colorPrimary">@color/pink_200</item>
+        <item name="android:colorAccent">@color/pink_300</item>
+        <item name="android:textColorPrimary">?attr/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/pink_700</item>
+        <item name="android:background">?attr/backgroundColor</item>
+    </style>
+</resources>

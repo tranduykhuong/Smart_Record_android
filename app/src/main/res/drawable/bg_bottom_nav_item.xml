@@ -17,7 +17,7 @@
     <!-- Thiết lập background cho item khi không được chọn -->
     <item >
         <shape android:shape="rectangle">
-            <solid android:color="@color/pink_500" />
+            <solid android:color="?attr/actionBarColor" />
             <corners android:radius="12dp" />
         </shape>
     </item>
