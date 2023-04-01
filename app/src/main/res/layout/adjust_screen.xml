@@ -123,12 +123,14 @@
             />
 
         <Button
+            android:id="@+id/adjust_btn_harmonic"
+            android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:background="@drawable/btn_custom_adjust"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_low_sound"
-            android:text="Giảm ồn"
+            android:text="Hòa âm"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:drawablePadding="10dp"
@@ -151,10 +153,12 @@
         android:background="@color/bg_adjust">
 
         <Button
+            android:id="@+id/adjust_btn_divide"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:background="@drawable/btn_custom_adjust"
             android:padding="10dp"
+            android:onClick="changeLayoutFromAdjust"
             android:drawableTop="@drawable/ic_divide"
             android:text="Chia"
             android:textColor="@color/black"

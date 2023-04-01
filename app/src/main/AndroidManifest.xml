@@ -98,9 +98,18 @@
             android:name=".editmenu.combine.CombineActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".editmenu.harmonic.HarmonicActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".editmenu.divide.DivideActivity"
+            android:exported="true" />
+
         <service
             android:name=".services.RecordingService"
             android:exported="true"/>
+
     </application>
 
 </manifest>

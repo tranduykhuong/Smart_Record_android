@@ -75,8 +75,13 @@ public class RecordingService extends Service {
             return;
         }
         Location location = locationManager.getLastKnownLocation(provider);
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
+        double latitude = 0, longitude = 0;
+
+        if(location != null)
+        {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
 
         // Sử dụng Geocoder để lấy địa chỉ dựa trên vị trí hiện tại
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
