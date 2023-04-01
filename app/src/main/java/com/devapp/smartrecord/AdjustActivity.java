@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.devapp.smartrecord.editmenu.combine.CombineActivity;
+import com.devapp.smartrecord.editmenu.divide.DivideActivity;
+import com.devapp.smartrecord.editmenu.harmonic.HarmonicActivity;
 import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
 
 public class AdjustActivity extends AppCompatActivity {
@@ -37,6 +39,16 @@ public class AdjustActivity extends AppCompatActivity {
             }
             case R.id.adjust_btn_insertion:{
                 Intent intent = new Intent(this, InsertionActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.adjust_btn_divide:{
+                Intent intent = new Intent(this, DivideActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.adjust_btn_harmonic:{
+                Intent intent = new Intent(this, HarmonicActivity.class);
                 startActivity(intent);
                 break;
             }
