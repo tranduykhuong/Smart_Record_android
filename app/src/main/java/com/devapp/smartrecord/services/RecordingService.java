@@ -178,7 +178,11 @@ public class RecordingService extends Service {
         super.onDestroy();
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> b936a05 (Khoi: Logic Record - UI Combine)
+=======
+}
+>>>>>>> 1aa9193 (Khoi: Replay functions + UI Harmonic/ UI Divide)
