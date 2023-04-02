@@ -8,20 +8,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/bottom_sheet_language"
+        android:id="@+id/bottom_sheet_file"
         android:background="@color/pink_200"
         android:padding="8dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_google_translate"
+            android:src="@drawable/ic_file"
             android:layout_margin="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/language"
+            android:text="@string/type_of_file"
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
             android:padding="8dp"/>
@@ -31,14 +31,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/english_setting"
+        android:id="@+id/mp3_setting"
         android:background="?android:attr/selectableItemBackground"
         android:padding="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/english"
+            android:text=".mp3"
             android:layout_gravity="center_vertical"
             android:padding="8dp"/>
 
@@ -48,14 +48,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/vietnamese_setting"
+        android:id="@+id/m4a_setting"
         android:background="?android:attr/selectableItemBackground"
         android:padding="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/vietnamese"
+            android:text=".m4a"
             android:layout_gravity="center_vertical"
             android:padding="8dp"/>
 

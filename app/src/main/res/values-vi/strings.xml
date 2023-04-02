@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ghi âm</string>
+    <string name="record">Ghi âm</string>
 
     <string name="no">No</string>
     <string name="ok">OK</string>
@@ -15,6 +16,7 @@
     <string name="language">Ngôn ngữ</string>
     <string name="vietnamese">Tiếng Việt</string>
     <string name="english">Tiếng Anh</string>
+    <string name="type_of_file">Định dạng file</string>
 
     <string name="settings">Cài đặt</string>
     <string name="general_settings">Cài đặt chung</string>
@@ -25,5 +27,15 @@
     <string name="light">Sáng</string>
     <string name="dark">Tối</string>
 
+    <string name="reminder">NHẮC NHỞ</string>
+    <string name="expected_reminder">Lịch dự kiến</string>
+    <string name="finished_reminder">Đã hoàn tất</string>
+    <string name="voice_to_text">Chuyển sang văn bản</string>
+    <string name="convert">Chuyển đổi</string>
+    <string name="summary">Tóm tắt</string>
+    <string name="error_convert_voice_to_text">Có lỗi xảy ra, vui lòng thử lại!</string>
+    <string name="api_free">API miễn phí không hỗ trợ</string>
+
     <string name="insertion">Chèn</string>
+    <string name="folder_private_title">Thư mục riêng tư</string>
 </resources>

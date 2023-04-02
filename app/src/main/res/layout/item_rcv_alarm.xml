@@ -12,7 +12,8 @@
         android:id="@+id/item_rcv_cbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:clickable="false"
+        android:focusable="false"
     />
 
     <TextView
