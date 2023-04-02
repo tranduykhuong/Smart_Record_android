@@ -34,6 +34,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.devapp.smartrecord.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
@@ -71,13 +72,22 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onActivityResult(Map<String, Boolean> permissions) {
                         // Xử lý kết quả trả về từ việc yêu cầu cấp quyền
+                        if (permissions.containsValue(false)) {
+                            // Xử lý khi không được cấp quyền
+                        } else {
+                            // Xử lý khi được cấp quyền
+                            onResume();
+                            onStop();
+                            onRestart();
+                            recreate();
+                        }
                     }
                 });
 
         config = new ConfigurationClass(getApplicationContext());
         Boolean checkConfig = config.getConfig();
         if (!checkConfig){
-            config.setConfig(1,"vi",1);
+            config.setConfig(0,"vi",1);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             changeLanguage("vi");
         }
@@ -178,5 +188,35 @@ public class HomeActivity extends AppCompatActivity {
         android.content.res.Configuration configuration = resources.getConfiguration();
         configuration.setLocale(new Locale(language.toLowerCase()));
         resources.updateConfiguration(configuration, displayMetrics);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

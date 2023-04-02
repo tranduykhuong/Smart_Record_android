@@ -104,4 +104,9 @@ public class SettingActivity extends AppCompatActivity {
         }
         this.recreate();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
