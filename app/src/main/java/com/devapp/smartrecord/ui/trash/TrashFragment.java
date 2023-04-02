@@ -82,7 +82,8 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         trashAdapter.setData(getItemList());
         recyclerView.setAdapter(trashAdapter);
 
-        totalAmountAudio.setText(String.valueOf(trashDirectory.listFiles().length));
+        if (trashDirectory != null && trashDirectory.listFiles() != null)
+            totalAmountAudio.setText(String.valueOf(trashDirectory.listFiles().length));
         if(sumCapacity >= 1024) {
             totalCapacityItem.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -99,7 +100,8 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         itemList = new ArrayList<>();
         trashDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/");
-        size = trashDirectory.listFiles().length;
+        if (trashDirectory != null && trashDirectory.listFiles() != null)
+            size = trashDirectory.listFiles().length;
         if (trashDirectory.exists()) {
             files = trashDirectory.listFiles();
             if (files != null) {
@@ -165,7 +167,8 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     @Override
     public void onItemClick(int position) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        totalAmountAudio.setText(String.valueOf(trashDirectory.listFiles().length));
+        if (trashDirectory != null && trashDirectory.listFiles() != null)
+            totalAmountAudio.setText(String.valueOf(trashDirectory.listFiles().length));
         if(sumCapacity >= 1024) {
             totalCapacityItem.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");

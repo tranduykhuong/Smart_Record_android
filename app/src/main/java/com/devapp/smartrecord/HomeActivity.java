@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
 
         btn_setting = findViewById(R.id.btn_setting);
         btn_setting.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, VoiceToTextActivity.class);
+            Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
             startActivityForResult(intent, SETTING_CODE);
         });
         askForPermission();

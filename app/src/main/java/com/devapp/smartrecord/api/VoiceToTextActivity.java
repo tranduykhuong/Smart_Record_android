@@ -34,6 +34,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 public class VoiceToTextActivity extends AppCompatActivity {
     private ImageButton btnBack;
@@ -45,7 +46,8 @@ public class VoiceToTextActivity extends AppCompatActivity {
     private Handler handler = new Handler();
     private static final String API_ENDPOINT = "https://api.fpt.ai/hmi/asr/general";
 
-    private static final String API_KEY = "bgLggHqMJye7VQ5wFzsjcuBgzOf3BmTq";
+    private static final String API_KEY = "YmdMZ2dIcU1KeWU3VlE1d0Z6c2pjdUJnek9mM0JtVHE=";
+    private String decodedAPI;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class VoiceToTextActivity extends AppCompatActivity {
         btnConvert.setOnClickListener(view -> {
             jsonString = "{\"status\": 0, \"id\": \"tranduykhuongit@gmail.com SmartRecord_22d1aaee-d777-4f08-9cfd-9d6f04a9d18c\", \"hypotheses\": [{\"utterance\": \"ALO \\u0111\\u00e2y l\\u00e0 1 b\\u00e0i . ALO .\", \"confidence\": 18.514267374889283}]}";
             try {
+                byte[] decodedBytes = Base64.getDecoder().decode(API_KEY);
+                decodedAPI = new String(decodedBytes, StandardCharsets.UTF_8);
                 Thread.sleep(1000);
                 handler.post(foreGround);
             } catch (InterruptedException e) {
@@ -76,7 +80,7 @@ public class VoiceToTextActivity extends AppCompatActivity {
 //                        URL url = new URL(API_ENDPOINT);
 //                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 //                        conn.setRequestMethod("POST");
-//                        conn.setRequestProperty("api_key", API_KEY);
+//                        conn.setRequestProperty("api_key", decodedAPI);
 //                        conn.setRequestProperty("language", "vi-VN");
 //
 //                        conn.setDoOutput(true);

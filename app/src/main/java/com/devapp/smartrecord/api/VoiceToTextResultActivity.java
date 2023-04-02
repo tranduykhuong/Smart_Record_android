@@ -32,6 +32,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 public class VoiceToTextResultActivity extends AppCompatActivity {
     private ImageButton btnBack;
@@ -44,6 +45,9 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
     private int responseCode;
     private Handler handler;
     private String isSummary;
+    private String decodedAPI;
+
+    private final String API_OPENAI_KEY = "c2stY3ZSekE4VGhkODNVM3c2ZERlUE5UM0JsYmtGSnRiaDZiMDRZVUZTbnRCaHBQRVBz";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +68,10 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String apiKey = "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";
+                    byte[] decodedBytes = Base64.getDecoder().decode(API_OPENAI_KEY);
+                    decodedAPI = new String(decodedBytes, StandardCharsets.UTF_8);
+                    Log.e(TAG, "Decode: " + decodedAPI);
+
                     jsonString = "{\"id\":\"cmpl-70k5h5nlMOqU2ebyWtb5CHwLtrahb\",\"object\":\"text_completion\",\"created\":1680411529,\"model\":\"text-davinci-003\",\"choices\":[{\"text\":\" Bài test này sẽ giúp chúng ta biết được mức độ hiểu biết của chúng ta về chủ đề.\\n\\nTest để biết mức hiểu biết về chủ đề.\",\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":42,\"completion_tokens\":117,\"total_tokens\":159}}";
                     handler.post(foreGround);
 //                    try {
@@ -72,7 +79,7 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
 //                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
 //                        con.setRequestMethod("POST");
 //                        con.setRequestProperty("Content-Type", "application/json");
-//                        con.setRequestProperty("Authorization", "Bearer " + apiKey);
+//                        con.setRequestProperty("Authorization", "Bearer " + decodedAPI);
 //                        con.setDoOutput(true);
 //
 //                        String jsonInputString = "{"
@@ -89,7 +96,7 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
 //                            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
 //                            os.write(input, 0, input.length);
 //                        }
-//                        int responseCode = con.getResponseCode();
+//                        responseCode = con.getResponseCode();
 //
 //                        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
 //                        StringBuilder response = new StringBuilder();
@@ -127,7 +134,7 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
             try {
                 try {
                     System.out.println("Response Code: " + responseCode);
-                    responseCode = 200;
+//                    responseCode = 200;
                     if (responseCode == 200) {
                         JSONObject jsonObject = new JSONObject(jsonString);
                         Log.e(TAG, "run: " + jsonObject);
