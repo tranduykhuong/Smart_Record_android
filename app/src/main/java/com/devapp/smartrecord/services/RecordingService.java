@@ -101,12 +101,12 @@ public class RecordingService extends Service {
 
         //fileName = "audio_" + ts;
 
-        file = new File(Environment.getExternalStorageDirectory() + "/MySoundRec/" + fileName + fileExt);
+        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + fileExt);
         if(file.exists()) {
             int i = 1;
             while (file.exists())
             {
-                file = new File(Environment.getExternalStorageDirectory() + "/MySoundRec/" + fileName + " (" + i + ")" + fileExt);
+                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + " (" + i + ")" + fileExt);
                 i++;
             }
         }
@@ -114,7 +114,7 @@ public class RecordingService extends Service {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediaRecorder.setOutputFile(file.getAbsoluteFile());
+        mediaRecorder.setOutputFile(file.getAbsolutePath());
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         mediaRecorder.setAudioChannels(1);
 
@@ -124,7 +124,7 @@ public class RecordingService extends Service {
             mStartingTimeMillis = System.currentTimeMillis();
         } catch (IOException e)
         {
-            Toast.makeText(getApplicationContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
 

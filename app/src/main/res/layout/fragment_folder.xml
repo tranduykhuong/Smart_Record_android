@@ -28,22 +28,38 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
 
-        <EditText
+<!--        <EditText-->
+<!--            android:id="@+id/search_folder_edt"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Tìm kiếm"-->
+<!--            android:layout_marginTop="6dp"-->
+<!--            android:layout_marginBottom="14dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:drawableLeft="@drawable/ic_search_folder"-->
+<!--            android:padding="10dp"-->
+<!--            android:drawablePadding="16dp"-->
+<!--            android:textCursorDrawable="@null"-->
+<!--            android:background="@drawable/bg_search_folder"-->
+<!--            tools:ignore="MissingConstraints"-->
+<!--            />-->
+
+        <SearchView
             android:id="@+id/search_folder_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tìm kiếm"
+            android:queryHint="Tìm kiếm"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/ic_search_folder"
-            android:padding="10dp"
             android:drawablePadding="16dp"
             android:textCursorDrawable="@null"
             android:background="@drawable/bg_search_folder"
-            tools:ignore="MissingConstraints"
+            android:focusableInTouchMode="true"
             />
+
 
         <RelativeLayout
             android:id="@+id/folder_wrap_info"
@@ -91,7 +107,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:paddingTop="18dp"
+            android:paddingTop="16dp"
             android:layout_below="@+id/folder_wrap_info"
             >
 
@@ -118,7 +134,7 @@
                 android:layout_height="1dp"
                 android:background="@drawable/bg_solid_bottom_filter_folder"
                 android:layout_below="@id/folder_item_private_image"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 />
         </RelativeLayout>
 
@@ -156,6 +172,24 @@
                 />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/add_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/folder_wrap_record"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            >
+
+            <ImageButton
+                android:id="@+id/folder_add_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_add_folder"
+                android:src="@drawable/ic_add_folder"
+                />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/folder_wrap_record"
@@ -163,39 +197,41 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="25dp"
             android:background="@drawable/bg_record_wrap_feature_folder"
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/folder_icon_cvup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/ic_chevon_up_folder" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/folder_icon_cvup"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@null"-->
+<!--                android:src="@drawable/ic_chevon_up_folder" />-->
 
-            <TextView
-                android:id="@+id/folder_regime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="Chế độ"
-                android:textSize="16sp"
-                tools:ignore="NotSibling" />
+<!--            <TextView-->
+<!--                android:id="@+id/folder_regime"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="15dp"-->
+<!--                android:text="Chế độ"-->
+<!--                android:textSize="16sp"-->
+<!--                tools:ignore="NotSibling" />-->
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="40dp"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal">-->
 
-                <ImageButton
-                    android:id="@+id/folder_bluetooth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/ic_bluetooth_folder" />
+<!--                <ImageButton-->
+<!--                    android:id="@+id/folder_bluetooth"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@null"-->
+<!--                    android:src="@drawable/ic_bluetooth_folder" />-->
 
                 <ImageButton
                     android:id="@+id/folder_btn_record"
@@ -204,15 +240,15 @@
                     android:layout_marginHorizontal="65dp"
                     android:background="@drawable/bg_record_btn_folder"
                     android:onClick="navigate_onclick"
-                    android:src="@drawable/ic_microphone_folder" />
+                    android:src="@drawable/ic_micro" />
 
-                <ImageButton
-                    android:id="@+id/folder_voice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/ic_voice_folder" />
-            </LinearLayout>
+<!--                <ImageButton-->
+<!--                    android:id="@+id/folder_voice"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@null"-->
+<!--                    android:src="@drawable/ic_voice_folder" />-->
+<!--            </LinearLayout>-->
         </LinearLayout>
 
     </RelativeLayout>
