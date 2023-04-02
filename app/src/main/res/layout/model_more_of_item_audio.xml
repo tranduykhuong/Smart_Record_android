@@ -1,82 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#80000000"
+    android:background="@color/bg_menu_folder"
     android:gravity="bottom"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/home_sort_item_above"
+        android:id="@+id/model_more_of_item_audio"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="bottom"
-        android:background="@drawable/bg_radius_white_sort_type_home"
+        android:background="@drawable/bg_radius_white_filter_folder"
         android:layout_marginHorizontal="6dp"
         >
 
         <TextView
-            android:id="@+id/home_sort_item_title"
+            android:id="@+id/model_more_item_reminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="?attr/textColor"
-            android:gravity="center"
-            android:text="Sắp xếp theo"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/bg_solid_bottom_item_home"
-            />
-
-        <TextView
-            android:id="@+id/home_sort_item_by_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="20dp"
+            android:padding="18dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Ngày"
+            android:text="Thêm lời nhắc"
             android:gravity="center"
             />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/bg_solid_bottom_item_home"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
             />
 
         <TextView
-            android:id="@+id/home_sort_item_by_name"
+            android:id="@+id/model_more_item_rename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="20dp"
+            android:padding="18dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Tên"
+            android:text="Đổi tên"
             android:gravity="center"
             />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/bg_solid_bottom_item_home"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
             />
 
         <TextView
-            android:id="@+id/home_sort_item_by_size"
+            android:id="@+id/model_more_item_convert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:padding="18dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Kích thước"
-            android:padding="20dp"
+            android:text="Chuyển đổi sang..."
             android:gravity="center"
             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+
+        <TextView
+            android:id="@+id/model_more_item_move"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="@color/pink_500"
+            android:text="Di chuyển đến..."
+            android:padding="18dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+
     </LinearLayout>
 
     <TextView
-        android:id="@+id/home_sort_item_by_destroy"
+        android:id="@+id/model_more_item_destroy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -88,7 +95,7 @@
         android:text="Hủy"
         android:textStyle="bold"
         android:gravity="center"
-        android:background="@drawable/bg_radius_white_sort_type_home"
-        android:layout_below="@+id/home_sort_item_above"
+        android:background="@drawable/bg_radius_white_filter_folder"
+        android:layout_below="@+id/model_more_of_item_audio"
         />
 </RelativeLayout>

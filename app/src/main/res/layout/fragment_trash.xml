@@ -1,23 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/trash_fragment_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="120dp"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.trash.TrashFragment"
+    android:layout_marginTop="120dp">
 
-    <TextView
-        android:id="@+id/text_trash"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:ignore="MissingConstraints">
+        <LinearLayout
+            android:id="@+id/trash_wrap_search_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/backgroundColor"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view_audio_trash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="-10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_search_home"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/title_search"
+                />
+
+            <RelativeLayout
+                android:id="@+id/trash_wrap_info_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="26dp"
+                >
+                <TextView
+                    android:id="@+id/trash_amount_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="2"
+                    />
+                <TextView
+                    android:id="@+id/trash_title_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bản ghi - "
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/trash_amount_audio"
+                    />
+                <TextView
+                    android:id="@+id/trash_capacity_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/trash_title_audio"
+                    />
+                <TextView
+                    android:id="@+id/capacity_audio_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="KB"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/trash_capacity_audio"
+                    />
+
+                
+            </RelativeLayout>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trash_rcv_audio_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trash_wrap_search_info"
+            android:background="?attr/backgroundColor"
+            android:layout_alignParentBottom="true"
+            ></androidx.recyclerview.widget.RecyclerView>
+
+
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

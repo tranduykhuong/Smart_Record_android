@@ -7,5 +7,10 @@
         <item name="android:textColorPrimary">?attr/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/pink_700</item>
         <item name="android:background">?attr/backgroundColor</item>
+        <item name="android:textColorLink">@android:color/transparent</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColorLink">@android:color/transparent</item>
     </style>
 </resources>
