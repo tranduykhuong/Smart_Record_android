@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:paddingTop="18dp"
+            android:paddingTop="16dp"
             android:layout_below="@+id/folder_wrap_info"
             >
 
@@ -134,7 +134,7 @@
                 android:layout_height="1dp"
                 android:background="@drawable/bg_solid_bottom_filter_folder"
                 android:layout_below="@id/folder_item_private_image"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 />
         </RelativeLayout>
 

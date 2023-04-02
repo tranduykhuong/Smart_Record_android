@@ -11,10 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
 import android.widget.ImageButton;
-=======
->>>>>>> 9f187e4 (Chính: update logic UI folder and new page UI Adjust)
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
