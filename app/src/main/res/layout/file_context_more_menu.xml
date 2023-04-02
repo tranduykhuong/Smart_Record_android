@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/folder_filder_item_above"
+        android:id="@+id/file_more_item_above"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,27 +17,13 @@
         >
 
         <TextView
-            android:id="@+id/folder_filter_item_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sắp xếp theo"
-            android:gravity="center"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/bg_solid_bottom_filter_folder"
-            />
-
-        <TextView
-            android:id="@+id/folder_filter_item_day"
+            android:id="@+id/file_more_item_reminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Ngày"
+            android:text="Thêm lời nhắc"
             android:gravity="center"
             />
         <TextView
@@ -47,13 +33,13 @@
             />
 
         <TextView
-            android:id="@+id/folder_filter_item_name"
+            android:id="@+id/file_more_item_rename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Tên"
+            android:text="Đổi tên"
             android:gravity="center"
             />
         <TextView
@@ -63,19 +49,50 @@
             />
 
         <TextView
-            android:id="@+id/folder_filter_item_size"
+            android:id="@+id/file_more_item_convert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="18dp"
+            android:textSize="18dp"
+            android:textColor="@color/pink_500"
+            android:text="Chuyển đổi sàng..."
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+
+        <TextView
+            android:id="@+id/file_more_item_move"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Kích thước"
+            android:text="Di chuyển đến..."
+            android:padding="18dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            />
+        <TextView
+            android:id="@+id/file_more_item_trash_can"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="@color/pink_500"
+            android:text="Chuyển vào thùng rác"
             android:padding="18dp"
             android:gravity="center"
             />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/file_convert_item_destroy"
+        android:id="@+id/file_more_item_destroy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -88,6 +105,6 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_radius_white_filter_folder"
-        android:layout_below="@+id/folder_filder_item_above"
+        android:layout_below="@+id/file_more_item_above"
         />
 </RelativeLayout>
