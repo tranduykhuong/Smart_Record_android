@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -27,10 +26,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentHomeBinding;
-import com.devapp.smartrecord.editmenuv.cut.CutActivity;
 
 import java.io.File;
 import java.text.DecimalFormat;

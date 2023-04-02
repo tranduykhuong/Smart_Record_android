@@ -121,6 +121,7 @@
             android:layout_below="@id/home_item_name_audio"
             android:text="KB"
             android:layout_marginLeft="2dp"
+            android:textColor="?attr/textColor"
             />
 
         <TextView
