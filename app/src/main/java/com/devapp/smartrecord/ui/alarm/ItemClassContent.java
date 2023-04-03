@@ -13,15 +13,13 @@ import java.util.Date;
 
 public class ItemClassContent {
     private String title;
-    private String time;
+    private String time = "";
     private boolean checked;
 
     private long milliseconds = 0;
 
     private Context context;
     private Intent serviceIntent;
-    private PendingIntent pendingIntent;
-    private AlarmManager alarmManager;
 
     public ItemClassContent(Context context, String title, String time, boolean checked) {
         this.title = title;
@@ -64,7 +62,7 @@ public class ItemClassContent {
         String []hhmmSplit = hhmm.split(":");
         String []ddmmyyyySplit = ddmmyyyy.split("/");
         Date date = new Date( Integer.parseInt(ddmmyyyySplit[2]) - 1900,
-                Integer.parseInt(ddmmyyyySplit[1]),
+                Integer.parseInt(ddmmyyyySplit[1]) - 1,
                 Integer.parseInt(ddmmyyyySplit[0]),
                 Integer.parseInt(hhmmSplit[0]),
                 Integer.parseInt(hhmmSplit[1]), 0);
@@ -79,7 +77,7 @@ public class ItemClassContent {
             Log.e(TAG, "ItemClassContent: " + milliseconds);
             serviceIntent.putExtra("timeInMillis", milliseconds);
             serviceIntent.putExtra("message", title);
-            context.startService(serviceIntent);
+//            context.startForegroundService(serviceIntent);
         }
     }
 }

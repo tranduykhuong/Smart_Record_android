@@ -62,8 +62,9 @@
                         android:id="@+id/file_future"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" BẢN GHI"
+                        android:text="@string/reminder"
                         android:textSize="15sp"
+                        android:paddingLeft="6dp"
                         android:layout_toRightOf="@id/file_amount_future"
                         />
 <!--                    <TextView-->
@@ -96,7 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:text="Lịch dự kiến"
+                        android:text="@string/expected_reminder"
                         android:textColor="@color/pink_400"
                         />
                 </LinearLayout>
@@ -133,7 +134,8 @@
                         android:id="@+id/file_past"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" BẢN GHI"
+                        android:text=" @string/reminder"
+                        android:paddingLeft="6dp"
                         android:textSize="15sp"
                         android:layout_toRightOf="@id/file_amount_past"
                         />
@@ -167,7 +169,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:text="Đã hoàn tất"
+                        android:text="@string/finished_reminder"
                         android:textColor="@color/pink_400"
                         />
                 </LinearLayout>

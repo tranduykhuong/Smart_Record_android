@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class RecordActivity extends AppCompatActivity {
-    private boolean flagBtn = false; //Đang ghi
+    private boolean flagRecording = false; //Đang ghi
     long timeWhenPaused = 0;
     private ImageButton btnStop, btnPlay;
     private Chronometer chrnmterTime;
@@ -40,7 +40,7 @@ public class RecordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recording_screen);
+        setContentView(R.layout.activity_record);
         getSupportActionBar().hide();
 
         btnStop = (ImageButton) findViewById(R.id.record_btn_stop);
@@ -57,7 +57,7 @@ public class RecordActivity extends AppCompatActivity {
         });
 
         btnStop.setOnClickListener(view -> {
-            flagBtn = true;
+            flagRecording = true;
             btnPlay.setImageResource(R.drawable.ic_play_record);
             chrnmterTime.setBase(SystemClock.elapsedRealtime());
             chrnmterTime.stop();
@@ -111,8 +111,13 @@ public class RecordActivity extends AppCompatActivity {
             return;
         }
         Location location = locationManager.getLastKnownLocation(provider);
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
+        double latitude = 0, longitude = 0;
+
+        if(location != null)
+        {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
 
         // Sử dụng Geocoder để lấy địa chỉ dựa trên vị trí hiện tại
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -131,8 +136,8 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void recordAudio(){
-        onRecord(flagBtn);
-        flagBtn = !flagBtn;
+        onRecord(flagRecording);
+        flagRecording = !flagRecording;
     }
 
     private void startRecord(){

@@ -10,17 +10,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/settings"
-            android:background="?attr/actionBarColor"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            />
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="?attr/actionBarColor" >
+            <ImageButton
+                android:id="@+id/setting_btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:background="?attr/actionBarColor"
+                android:elevation="0dp"
+                android:outlineProvider="none"
+                android:src="@drawable/ic_back" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/settings"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingRight="30dp"
+                />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,9 +89,9 @@
                 android:background="?attr/foregroundColor"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_paint_palette"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_palette"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,39 +113,39 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_marginBottom="2dp"
-                android:background="?attr/foregroundColor"
-                android:gravity="center_vertical">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_padlock"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/password"
-                    android:textSize="16dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:textColor="?attr/textColor" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="14dp"
-                    android:paddingRight="4dp"
-                    android:textColor="@color/black_light" />
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_arrow"
-                    />
-            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="10dp"-->
+<!--                android:layout_marginBottom="2dp"-->
+<!--                android:background="?attr/foregroundColor"-->
+<!--                android:gravity="center_vertical">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:src="@drawable/ic_padlock"-->
+<!--                    />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="@string/password"-->
+<!--                    android:textSize="16dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:textColor="?attr/textColor" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text=""-->
+<!--                    android:textSize="14dp"-->
+<!--                    android:paddingRight="4dp"-->
+<!--                    android:textColor="@color/black_light" />-->
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/ic_expand_arrow"-->
+<!--                    />-->
+<!--            </LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/btn_language"
@@ -140,9 +156,9 @@
                 android:background="?attr/foregroundColor"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_google_translate"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_language"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,6 +195,7 @@
                 android:textColor="?attr/textColor"/>
 
             <LinearLayout
+                android:id="@+id/btn_file_format"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -186,8 +203,8 @@
                 android:background="?attr/foregroundColor"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_file"
                     />
                 <TextView
@@ -199,6 +216,7 @@
                     android:paddingLeft="10dp"
                     android:textColor="?attr/textColor" />
                 <TextView
+                    android:id="@+id/tv_file_format"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MP3"

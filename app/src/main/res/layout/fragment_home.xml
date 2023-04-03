@@ -16,30 +16,28 @@
             android:id="@+id/home_wrap_search_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/little_gray"
+            android:background="?attr/backgroundColor"
             android:orientation="vertical">
-            <EditText
-                android:id="@+id/search_home_audio"
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view_audio_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="14dp"
+                android:paddingStart="-10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_search_home"
-                android:drawableLeft="@drawable/ic_search_home"
-                android:drawablePadding="16dp"
-                android:hint="Tìm kiếm"
-                android:padding="10dp"
-                android:textCursorDrawable="@null"
-                tools:ignore="MissingConstraints" />
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/title_search"
+                />
 
             <RelativeLayout
                 android:id="@+id/home_wrap_info_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:layout_below="@id/search_home_audio"
                 android:layout_marginLeft="26dp"
                 >
                 <TextView
@@ -67,9 +65,10 @@
                     android:layout_toRightOf="@id/home_title_audio"
                     />
                 <TextView
+                    android:id="@+id/capacity_audio_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MB"
+                    android:text="KB"
                     android:textSize="15sp"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/home_capacity_audio"
@@ -110,6 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/home_wrap_search_info"
             android:layout_above="@id/home_wrap_record_feature"
+            android:background="?attr/backgroundColor"
             ></androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
@@ -120,53 +120,20 @@
             android:layout_marginBottom="0dp"
             android:background="@drawable/bg_record_wrap_feature_home"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
-            <ImageView
-                android:id="@+id/home_icon_cvup"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_sort_down" />
-
-            <TextView
-                android:id="@+id/home_regime"
+            <ImageButton
+                android:id="@+id/home_btn_record"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="Chế độ"
-                android:textSize="16sp"
-                tools:ignore="NotSibling" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="65dp"
+                android:background="@drawable/bg_record_btn_home"
+                android:onClick="navigate_onclick"
+                android:layout_marginVertical="10dp"
+                android:src="@drawable/ic_micro" />
 
-                <ImageView
-                    android:id="@+id/home_bluetooth"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@null"
-                    android:src="@drawable/ic_bluetooth" />
-
-                <ImageButton
-                    android:id="@+id/home_btn_record"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="65dp"
-                    android:background="@drawable/bg_record_btn_home"
-                    android:onClick="navigate_onclick"
-                    android:src="@drawable/ic_micro" />
-
-                <ImageView
-                    android:id="@+id/home_voice"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@null"
-                    android:src="@drawable/ic_voice" />
-            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>

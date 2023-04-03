@@ -32,7 +32,7 @@
             android:textColor="@color/white"
             android:layout_weight="2"
             android:textAlignment="center"
-            android:text="Record" />
+            android:text="@string/record" />
 
         <ImageView
             android:id="@+id/btn_tool"
