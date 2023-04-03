@@ -75,6 +75,8 @@
             />
 
         <Button
+            android:id="@+id/adjust_btn_adjust"
+            android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:layout_marginLeft="15dp"

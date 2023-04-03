@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/folder_more_item_above"
+        android:id="@+id/file_convert_item_above"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,11 +17,11 @@
         >
 
         <TextView
-            android:id="@+id/folder_more_item_mp4"
+            android:id="@+id/file_convert_item_mp4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="20dp"
+            android:padding="18dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
             android:text="MP4"
             android:gravity="center"
@@ -33,11 +33,11 @@
             />
 
         <TextView
-            android:id="@+id/folder_more_item_wav"
+            android:id="@+id/file_convert_item_wav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="20dp"
+            android:padding="18dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
             android:text="WAV"
             android:gravity="center"
@@ -49,11 +49,11 @@
             />
 
         <TextView
-            android:id="@+id/folder_more_item_aac"
+            android:id="@+id/file_convert_item_aac"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="20dp"
+            android:padding="18dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
             android:text="AAC"
             android:gravity="center"
@@ -65,19 +65,19 @@
             />
 
         <TextView
-            android:id="@+id/folder_more_item_aiff"
+            android:id="@+id/file_convert_item_aiff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textColor="@color/pink_500"
             android:text="AIFF"
-            android:padding="20dp"
+            android:padding="18dp"
             android:gravity="center"
             />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/folder_filter_item_destroy"
+        android:id="@+id/file_convert_item_destroy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -90,6 +90,6 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_radius_white_filter_folder"
-        android:layout_below="@+id/folder_more_item_above"
+        android:layout_below="@+id/file_convert_item_above"
         />
 </RelativeLayout>

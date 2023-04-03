@@ -42,6 +42,11 @@ public class AdjustActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             }
+            case R.id.adjust_btn_adjust: {
+                Intent intent = new Intent(this, com.devapp.smartrecord.editmenu.adjust.AdjustActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.adjust_btn_divide:{
                 Intent intent = new Intent(this, DivideActivity.class);
                 startActivity(intent);
