@@ -5,7 +5,10 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -28,18 +31,22 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.devapp.smartrecord.api.VoiceToTextActivity;
+import com.devapp.smartrecord.api.VoiceToTextResultActivity;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
@@ -58,7 +65,10 @@ public class HomeActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.POST_NOTIFICATIONS
     };
 
     @SuppressLint("ResourceAsColor")
@@ -87,7 +97,7 @@ public class HomeActivity extends AppCompatActivity {
         config = new ConfigurationClass(getApplicationContext());
         Boolean checkConfig = config.getConfig();
         if (!checkConfig){
-            config.setConfig(0,"vi",1);
+            config.setConfig(0,"vi",1, "mp3");
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             changeLanguage("vi");
         }
@@ -143,11 +153,6 @@ public class HomeActivity extends AppCompatActivity {
         for (int i=0; i<permissions.length; i++) {
             grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissions[i]);
         }
-        int permissionRecordAudio = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.RECORD_AUDIO);
-        int permissionCheckWrite = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int permissionCheckRead = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permissionLocation1 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        int permissionLocation2 = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (grants != PackageManager.PERMISSION_GRANTED) {
             boolean rationables = false;

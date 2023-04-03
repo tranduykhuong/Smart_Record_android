@@ -21,6 +21,7 @@ public class ConfigurationClass {
     private Context context;
     private int isDarkMode;
     private String language;
+    private String fileFormat;
     private int isDefault;
 
     ConfigurationClass(Context a) {
@@ -35,15 +36,18 @@ public class ConfigurationClass {
     public int getDefaultMode(){
         return isDefault;
     }
+    public String getFileFormat(){
+        return fileFormat;
+    }
 
     protected void setTheme() {
         if(isDarkMode == 1){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            setConfig(1,language,isDefault);
+            setConfig(1,language,isDefault, fileFormat);
         }
         else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            setConfig(0,language,isDefault);
+            setConfig(0,language,isDefault, fileFormat);
         }
     }
 
@@ -58,18 +62,20 @@ public class ConfigurationClass {
             language = reader.readLine();
             line = reader.readLine();
             isDefault = Integer.parseInt(line);
+            fileFormat = reader.readLine();
             return true;
         } catch (IOException e) {
             return false;
         }
     }
 
-    protected void setConfig(int Theme, String Lan,int Default) {
+    protected void setConfig(int Theme, String Lan,int Default, String file) {
         try {
             FileOutputStream fout = context.openFileOutput(filename, Context.MODE_PRIVATE);
             fout.write((String.valueOf(Theme) + '\n').getBytes());
             fout.write((Lan + "\n").getBytes());
             fout.write((String.valueOf(Default) + '\n').getBytes());
+            fout.write((file + "\n").getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

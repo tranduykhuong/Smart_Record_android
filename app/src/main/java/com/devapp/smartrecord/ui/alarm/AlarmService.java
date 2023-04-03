@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -18,11 +19,12 @@ import androidx.core.app.NotificationCompat;
 
 import com.devapp.smartrecord.R;
 
+import java.io.IOException;
+
 public class AlarmService extends Service {
     private static final String CHANNEL_ID = "AlarmServiceChannel";
     private Intent alarmIntent;
     private PendingIntent pendingIntent;
-    private AlarmManager alarmManager;
     private long milliseconds = 0;
 
     @Override
@@ -33,6 +35,28 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Log.e(TAG, "actionAlarm: ");
+        if (intent == null) {
+            Log.e(TAG, "actionAlarm: null");
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("my_channel_id",
+                    "My Channel",
+                    NotificationManager.IMPORTANCE_LOW);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            Notification notification = new NotificationCompat.Builder(this, "my_channel_id")
+                    .setSmallIcon(R.drawable.ic_alarm_clock)
+                    .setContentTitle("Smart Record - Reminder")
+                    .setPriority(NotificationCompat.PRIORITY_MIN)
+                    .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                    .build();
+            startForeground(112, notification);
+        } else {
+            startForeground(112, new Notification());
+        }
 
         // Lấy ra thông tin về thời gian nhắc nhở từ Intent
         milliseconds = intent.getLongExtra("timeInMillis", 0);
@@ -61,5 +85,10 @@ public class AlarmService extends Service {
         }
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

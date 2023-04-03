@@ -16,6 +16,7 @@
 
         <ImageButton
             android:id="@+id/btn_back_replay"
+            android:onClick="changeLayoutFromReplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
@@ -97,7 +98,7 @@
         android:background="@color/little_gray">
 
         <TextView
-            android:id="@+id/name_recording"
+            android:id="@+id/txt_name_replay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="40dp"
@@ -155,7 +156,7 @@
                 android:src="@drawable/ic_voice_change" />
 
             <Button
-                android:id="@+id/btn_increase_speed"
+                android:id="@+id/btn_speed_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
@@ -178,6 +179,7 @@
                 android:src="@drawable/ic_time" />
 
             <ImageButton
+                android:id="@+id/btn_repeat_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -195,13 +197,12 @@
             android:orientation="vertical">
 
             <SeekBar
-                android:id="@+id/progress_bar"
+                android:id="@+id/skbar_replay"
                 android:layout_width="match_parent"
-                android:layout_height="11dp"
+                android:layout_height="14dp"
                 android:thumb="@drawable/ic_thumb_seekbar"
                 android:indeterminate="false"
-                android:max="100"
-                android:progress="30"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
@@ -217,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <Chronometer
                     android:id="@+id/timecurrent_replay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -226,8 +227,7 @@
                     android:textColor="@color/text_time"
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
-                    android:textStyle="bold"
-                    android:text="00:12" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/timetotal_replay"
@@ -239,7 +239,7 @@
                     android:gravity="right"
                     android:textStyle="bold"
                     android:layout_marginRight="24dp"
-                    android:text="00:21" />
+                    android:text="00:00" />
 
             </LinearLayout>
 
@@ -253,6 +253,7 @@
             android:gravity="center">
 
             <ImageButton
+                android:id="@+id/btn_prev_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -264,6 +265,7 @@
                 android:layout_marginLeft="20dp"/>
 
             <ImageButton
+                android:id="@+id/btn_pr5_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -274,6 +276,7 @@
                 android:src="@drawable/ic_5_prev_replay" />
 
             <ImageButton
+                android:id="@+id/btn_play_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -281,9 +284,10 @@
                 android:background="@color/white"
                 android:outlineProvider="none"
                 android:layout_weight="1"
-                android:src="@drawable/ic_play_replay" />
+                android:src="@drawable/ic_pause_replay" />
 
             <ImageButton
+                android:id="@+id/btn_next5_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -294,6 +298,7 @@
                 android:src="@drawable/ic_5_next_replay" />
 
             <ImageButton
+                android:id="@+id/btn_next_replay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"

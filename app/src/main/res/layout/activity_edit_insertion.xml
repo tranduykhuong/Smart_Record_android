@@ -10,17 +10,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-        <TextView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/insertion"
-            android:background="@color/pink_500"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            />
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="?attr/actionBarColor" >
+            <ImageButton
+                android:id="@+id/edt_insert_btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:background="?attr/actionBarColor"
+                android:elevation="0dp"
+                android:outlineProvider="none"
+                android:src="@drawable/ic_back" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/insertion"
+                android:background="@color/pink_500"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingRight="30dp"
+                />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

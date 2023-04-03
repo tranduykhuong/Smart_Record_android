@@ -239,7 +239,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         homeAudioAdapter.setData(getAudioList());
         rcvHomeAudio.setAdapter(homeAudioAdapter);
 
-        totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
+        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
+            totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
         if(sumCapacity >= 1024) {
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -269,7 +270,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     @Override
     public void onItemClick(int position) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
+        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
+            totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
         if(sumCapacity >= 1024) {
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -288,7 +290,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         audioList = new ArrayList<>();
         recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recorder/");
-        size = recordingsDirectory.listFiles().length;
+        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
+            size = recordingsDirectory.listFiles().length;
         if (recordingsDirectory.exists()) {
             files = recordingsDirectory.listFiles();
             if (files != null) {

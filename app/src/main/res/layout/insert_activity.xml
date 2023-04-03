@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:id="@+id/insert_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/pink_500"
+        android:paddingVertical="20dp"
+        >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_left_adjust"
+            android:background="@null"
+            android:layout_alignParentLeft="true"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Điều chỉnh"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/insert_wrap_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        android:gravity="center"
+        android:paddingVertical="12dp"
+        android:layout_below="@+id/insert_header"
+        android:background="@color/little_gray"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="135 Trần Hưng Đạo 2, ngày 17/02/2023"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/insert_wrap_address"
+        android:layout_above="@id/insert_wrap_record">
+
+        <LinearLayout
+            android:id="@+id/test_image"
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_test_insert_graph"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/test_image_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_test_image_time"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_below="@+id/insert_wrap_address"
+        android:layout_above="@+id/insert_wrap_record"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/insert_wrap_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="40dp"
+        android:paddingTop="18dp"
+        android:background="@color/white"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+<!--            <ProgressBar-->
+<!--                android:id="@+id/insert_progress_bar"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="12dp"-->
+<!--                android:indeterminate="false"-->
+<!--                android:max="100"-->
+<!--                style="@android:style/Widget.ProgressBar.Horizontal"-->
+<!--                android:progress="30"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:paddingLeft="4dp"-->
+<!--                android:paddingRight="4dp"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:backgroundTint="@color/bg_progressbar"-->
+<!--                android:progressTint="@color/pink_500"-->
+<!--                />-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/insert_timecurrent_replay"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:textColor="@color/text_time"-->
+<!--                    android:gravity="left"-->
+<!--                    android:layout_marginLeft="24dp"-->
+<!--                    android:text="00:12" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/insert_timetotal_replay"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:textColor="@color/text_time"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:gravity="right"-->
+<!--                    android:layout_marginRight="24dp"-->
+<!--                    android:text="00:21" />-->
+
+<!--            </LinearLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="12dp">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="x1"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_play_pink500"
+                    android:background="@null"
+                    android:layout_marginHorizontal="134dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:21"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hủy"
+                    android:textSize="16sp"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_record_btn_folder"
+                    android:src="@drawable/ic_add_folder"
+                    android:layout_marginHorizontal="100dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/pink_500"
+                    android:text="Chèn"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
