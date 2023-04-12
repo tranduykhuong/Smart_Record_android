@@ -54,4 +54,10 @@
 
     <string name="insertion">Chèn</string>
     <string name="folder_private_title">Thư mục riêng tư</string>
+
+    <string name="record_title">Ghi âm</string>
+    <string name="replay_title">Phát lại</string>
+    <string name="combine_title">Hợp nhất</string>
+    <string name="combine_cancel">Xóa</string>
+    <string name="menu_title">Chỉnh sửa Audio</string>
 </resources>

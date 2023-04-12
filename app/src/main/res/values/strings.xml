@@ -63,4 +63,10 @@
     <string name="insertion" translatable="false">Insertion</string>
     <string name="folder_private_title">Private folder</string>
 
+    <string name="record_title">Recording</string>
+    <string name="replay_title">Replay</string>
+    <string name="combine_title">Combine</string>
+    <string name="combine_cancel">Clear</string>
+    <string name="menu_title">Edit Menu</string>
+
 </resources>

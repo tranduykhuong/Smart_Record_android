@@ -1,8 +1,8 @@
 package com.devapp.smartrecord.ui.trash;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,16 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.devapp.smartrecord.R;
-import com.devapp.smartrecord.ui.home.HomeAudioAdapter;
 
 import java.io.File;
 import java.util.List;
 
 public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>{
-    private Context context;
+    private final Context context;
     private List<Item> itemList;
-    private OnItemClickListenerTrash listener;
-    private ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
+    private final OnItemClickListenerTrash listener;
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     public TrashAdapter(Context context, OnItemClickListenerTrash listener) {
         this.context = context;
@@ -37,6 +36,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
 
     public interface OnItemClickListenerTrash {
         void onItemClick(int position);
+        void playSound(String name);
     }
     @NonNull
     @Override
@@ -54,104 +54,84 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(position));
         viewBinderHelper.setOpenOnlyOne(true);
 
-        holder.permanentlyDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.permanentlyDeleteBtn.setOnClickListener(view -> {
 
-            }
         });
 
         //Khôi phục lại
-        holder.trashRestoreBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Item itemRestore = itemList.get(holder.getAbsoluteAdapterPosition());
-                String fileName = itemRestore.getName();
-                File sourceFile  = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
-                File destinationFolder = new File(Environment.getExternalStorageDirectory().toString()+"/Recorder/");
+        holder.trashRestoreBtn.setOnClickListener(view -> {
+            Item itemRestore = itemList.get(holder.getAbsoluteAdapterPosition());
+            String fileName = itemRestore.getName();
+            File sourceFile  = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
+            File destinationFolder = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/");
 
-                //Tạo ra dialog để xác nhận khôi phục hay không
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage(view.getContext().getString(R.string.question_restored));
-                builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int j) {
-                        try {
-                            if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
-                                File destinationFile = new File(destinationFolder, fileName); // Tạo tệp đích mới
-                                if (sourceFile.renameTo(destinationFile)) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
-                                    itemList.remove(holder.getAbsoluteAdapterPosition());
-                                    notifyItemRemoved(holder.getAbsoluteAdapterPosition());
-                                    Toast.makeText(context, view.getContext().getString(R.string.announce_restored_successfully), Toast.LENGTH_SHORT).show();
-                                    listener.onItemClick(j);
+            //Tạo ra dialog để xác nhận khôi phục hay không
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            builder.setMessage(view.getContext().getString(R.string.question_restored));
+            builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), (dialogInterface, j) -> {
+                try {
+                    if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
+                        File destinationFile = new File(destinationFolder, fileName); // Tạo tệp đích mới
+                        if (sourceFile.renameTo(destinationFile)) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+                            itemList.remove(holder.getAbsoluteAdapterPosition());
+                            notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+                            Toast.makeText(context, view.getContext().getString(R.string.announce_restored_successfully), Toast.LENGTH_SHORT).show();
+                            listener.onItemClick(j);
 
-                                }else {
-                                    Toast.makeText(context, view.getContext().getString(R.string.announce_restored_unsuccessfully), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            else {
-                                Toast.makeText(context, view.getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(context, view.getContext().getString(R.string.announce_restored_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(context, view.getContext().getString(R.string.announce_restored_unsuccessfully), Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
-                builder.setNegativeButton(view.getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
+                    else {
+                        Toast.makeText(context, view.getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
                     }
-                });
-                builder.show();
 
-            }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, view.getContext().getString(R.string.announce_restored_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton(view.getContext().getString(R.string.answer_no), (dialogInterface, i) -> {
+
+            });
+            builder.show();
+
         });
         //Xóa vĩnh viễn
-        holder.permanentlyDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Item item = itemList.get(holder.getAbsoluteAdapterPosition());
-                String fileName = item.getName();
-                File file = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/"+fileName);
+        holder.permanentlyDeleteBtn.setOnClickListener(view -> {
+            Item item1 = itemList.get(holder.getAbsoluteAdapterPosition());
+            String fileName = item1.getName();
+            File file = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/"+fileName);
 
-                //Tạo ra dialog để xác nhận xóa file vĩnh viễn
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage(view.getContext().getString(R.string.question_delete_permanently));
-                //Xử lí lựa chọn
-                builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int j) {
-                        try {
-                            if (file.exists()) { // Xóa tệp và kiểm tra kết quả
-                                Log.e("TAG", "onClick: " + file);
-                                itemList.remove(holder.getAbsoluteAdapterPosition());
-                                file.delete();
-                                notifyItemRemoved(holder.getAbsoluteAdapterPosition());
-                                Toast.makeText(context, view.getContext().getString(R.string.announce_deleted_successfully), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, view.getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(context, view.getContext().getString(R.string.announce_deleted_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+            //Tạo ra dialog để xác nhận xóa file vĩnh viễn
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            builder.setMessage(view.getContext().getString(R.string.question_delete_permanently));
+            //Xử lí lựa chọn
+            builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), (dialogInterface, j) -> {
+                try {
+                    if (file.exists()) { // Xóa tệp và kiểm tra kết quả
+                        Log.e("TAG", "onClick: " + file);
+                        itemList.remove(holder.getAbsoluteAdapterPosition());
+                        file.delete();
+                        notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+                        Toast.makeText(context, view.getContext().getString(R.string.announce_deleted_successfully), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, view.getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
                     }
-                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, view.getContext().getString(R.string.announce_deleted_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
-                builder.setNegativeButton(view.getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+            builder.setNegativeButton(view.getContext().getString(R.string.answer_no), (dialogInterface, i) -> {
 
-                    }
-                });
-                builder.show();
-            }
+            });
+            builder.show();
         });
 
         holder.icAudioTrash.setImageResource(item.getImage());
+        holder.icAudioTrash.setOnClickListener(view -> listener.playSound(itemList.get(holder.getAbsoluteAdapterPosition()).getName()));
         holder.nameItem.setText(item.getName());
         holder.timeOfItem.setText(item.getTimeOfAudio());
         holder.sizeItem.setText(item.getSize());
@@ -166,17 +146,16 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
         return 0;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Item> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
     }
 
-    public class TrashHolder extends RecyclerView.ViewHolder {
-        private ImageView icAudioTrash;
-        private TextView nameItem, timeOfItem, sizeItem, createDateItem;
-        private SwipeRevealLayout swipeRevealLayout;
-        private RelativeLayout relativeLayout;
-        private ImageView permanentlyDeleteBtn, trashRestoreBtn;
+    public static class TrashHolder extends RecyclerView.ViewHolder {
+        private final TextView nameItem, timeOfItem, sizeItem, createDateItem;
+        private final SwipeRevealLayout swipeRevealLayout;
+        private final ImageView permanentlyDeleteBtn, trashRestoreBtn, icAudioTrash;
 
         public TrashHolder(@NonNull View itemView) {
             super(itemView);
@@ -187,7 +166,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
             sizeItem = itemView.findViewById(R.id.trash_item_size);
             createDateItem = itemView.findViewById(R.id.trash_item_create_date);
             swipeRevealLayout = itemView.findViewById(R.id.swipe_reveal_trash_layout);
-            relativeLayout = itemView.findViewById(R.id.item_audio_trash);
+            RelativeLayout relativeLayout = itemView.findViewById(R.id.item_audio_trash);
             permanentlyDeleteBtn = itemView.findViewById(R.id.trash_btn_delete);
             trashRestoreBtn = itemView.findViewById(R.id.trash_btn_restore);
         }

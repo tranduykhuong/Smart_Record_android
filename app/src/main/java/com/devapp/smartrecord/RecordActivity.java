@@ -1,9 +1,10 @@
 package com.devapp.smartrecord;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -12,49 +13,65 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.devapp.smartrecord.services.BroadcastRecord;
 import com.devapp.smartrecord.services.RecordingService;
+import com.suman.voice.graphviewlibrary.GraphView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class RecordActivity extends AppCompatActivity {
-    private boolean flagRecording = false; //Đang ghi
+    private boolean flagRecording = false;
     long timeWhenPaused = 0;
-    private ImageButton btnStop, btnPlay;
+    private ImageButton btnPlay;
     private Chronometer chrnmterTime;
     private TextView txtRecordName;
+    private List samples;
+    private GraphView graphView;
+    private RecordingService recorder;
+    private TelephonyManager telephonyManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
-        btnStop = (ImageButton) findViewById(R.id.record_btn_stop);
-        btnPlay = (ImageButton) findViewById(R.id.record_btn_play);
-        chrnmterTime = (Chronometer) findViewById(R.id.record_time_recording);
-        txtRecordName = (TextView) findViewById(R.id.record_name);
+        ImageButton btnStop = findViewById(R.id.record_btn_stop);
+        btnPlay = findViewById(R.id.record_btn_play);
+        chrnmterTime = findViewById(R.id.record_time_recording);
+        txtRecordName = findViewById(R.id.record_name);
+        graphView = findViewById(R.id.graphView);
+        graphView.setGraphColor(Color.rgb(18, 17, 17));
+        graphView.setCanvasColor(Color.rgb(255, 255, 255));
+        graphView.setTimeColor(Color.rgb(0, 0, 0));
+        graphView.setWaveLengthPX(13);
+
+        recorder = RecordingService.getInstance();
 
         getLocation();
 
         startRecord();
 
-        btnPlay.setOnClickListener(view -> {
-            recordAudio();
-        });
+        btnPlay.setOnClickListener(view -> recordAudio());
 
         btnStop.setOnClickListener(view -> {
             flagRecording = true;
@@ -66,15 +83,24 @@ public class RecordActivity extends AppCompatActivity {
 
     }
     private void deleteRecord(){
-        Intent intentRecord = new Intent(this, RecordingService.class);
-        intentRecord.setAction("DELETE_RECORDING");
-        startService(intentRecord);
+        recorder.stopWithNoSave();
+        Toast.makeText(getApplicationContext(), "File is deleted", Toast.LENGTH_LONG).show();
+
+        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        intentInform.setAction("STOP_RECORDING");
+        startService(intentInform);
+
         Intent returnHome = new Intent(this, HomeActivity.class);
         startActivity(returnHome);
     }
     private void saveRecord(){
-        Intent intentRecord = new Intent(this, RecordingService.class);
-        stopService(intentRecord);
+        recorder.stopRecording();
+        Toast.makeText(getApplicationContext(), "Saved_" + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
+
+        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        intentInform.setAction("STOP_RECORDING");
+        startService(intentInform);
+
         Intent returnHome = new Intent(this, HomeActivity.class);
         startActivity(returnHome);
     }
@@ -83,22 +109,13 @@ public class RecordActivity extends AppCompatActivity {
         alertDiaglog.setTitle("Lưu bản ghi");
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
         alertDiaglog.setMessage("Bạn có muốn lưu bản ghi?");
-        alertDiaglog.setPositiveButton("Lưu", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                saveRecord();
-            }
-        });
-        alertDiaglog.setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                deleteRecord();
-            }
-        });
+        alertDiaglog.setPositiveButton("Lưu", (dialogInterface, i) -> saveRecord());
+        alertDiaglog.setNegativeButton("Xóa", (dialogInterface, i) -> deleteRecord());
 
         alertDiaglog.show();
     }
 
+    @SuppressLint("SetTextI18n")
     public void getLocation(){
         //GET LOCATION
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -119,7 +136,6 @@ public class RecordActivity extends AppCompatActivity {
             longitude = location.getLongitude();
         }
 
-        // Sử dụng Geocoder để lấy địa chỉ dựa trên vị trí hiện tại
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
@@ -128,9 +144,11 @@ public class RecordActivity extends AppCompatActivity {
                 String addressString = address.getAddressLine(0);
                 String finalAddress = addressString.substring(0, addressString.indexOf(','));
                 txtRecordName.setText(finalAddress);
+                recorder.setOutputFilePath(finalAddress);
             }
         } catch (IOException e) {
             txtRecordName.setText("Record");
+            recorder.setOutputFilePath("Record");
             e.printStackTrace();
         }
     }
@@ -141,8 +159,9 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecord(){
+        Toast.makeText(getApplicationContext(), "Record...", Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
-        File folder = new File(Environment.getExternalStorageDirectory() + "/MySoundRec");
+        File folder = new File(Environment.getExternalStorageDirectory() + "/Recordings");
 
         if(!folder.exists())
         {
@@ -151,42 +170,89 @@ public class RecordActivity extends AppCompatActivity {
         chrnmterTime.setBase(SystemClock.elapsedRealtime());
         chrnmterTime.start();
 
-        Intent intentRecord = new Intent(this, RecordingService.class);
-        startService(intentRecord);
+        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        startForegroundService(intentInform);
+
+        recorder.startRecording();
+        recorder.startPlotting(graphView);
+
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     private void onRecord(boolean start) {
         if(start)
         {
-            btnPlay.setImageResource(R.drawable.ic_pause_record);
-
-            chrnmterTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
-            chrnmterTime.start();
-
-            Intent intentRecord = new Intent(this, RecordingService.class);
-            intentRecord.setAction("RESUME_RECORDING");
-            startService(intentRecord);
-
-            this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            ResumeRecord();
         }
         else
         {
-            btnPlay.setImageResource(R.drawable.ic_play_record);
-
-            Intent intentRecord = new Intent(this, RecordingService.class);
-            intentRecord.setAction("PAUSE_RECORDING");
-            startService(intentRecord);
-
-            timeWhenPaused = SystemClock.elapsedRealtime() - chrnmterTime.getBase();
-            chrnmterTime.stop();
+            PauseRecord();
         }
     }
 
+    public void ResumeRecord(){
+        Toast.makeText(this, "Resume", Toast.LENGTH_LONG).show();
+        btnPlay.setImageResource(R.drawable.ic_pause_record);
+
+        chrnmterTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
+        chrnmterTime.start();
+        recorder.resumeRecording();
+
+        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        intentInform.setAction("RESUME_RECORDING");
+        startService(intentInform);
+
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    public void PauseRecord()
+    {
+        Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
+        btnPlay.setImageResource(R.drawable.ic_play_record);
+
+        recorder.pauseRecording();
+
+        samples = recorder.getSamples();
+        graphView.showFullGraph(samples);
+
+        timeWhenPaused = SystemClock.elapsedRealtime() - chrnmterTime.getBase();
+        chrnmterTime.stop();
+
+        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        intentInform.setAction("PAUSE_RECORDING");
+        startService(intentInform);
+    }
+
+    PhoneStateListener phoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+
+            if (state == TelephonyManager.CALL_STATE_RINGING) {
+                PauseRecord();
+
+            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+
+            } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
+    protected void onResume() {
+        super.onResume();
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+    }
+
+    @SuppressLint("NonConstantResourceId")
     public void changeLayoutFromRecord(View view){
         switch (view.getId()) {
             case R.id.record_btn_back: {
-                Intent intent = new Intent(this, ReplayActivity.class);
-                startActivity(intent);
+                finish();
                 break;
             }
         }
