@@ -94,6 +94,7 @@
         <activity
             android:name=".WaveformView"
             android:exported="true" />
+
         <activity
             android:name=".editmenu.combine.CombineActivity"
             android:exported="true" />
@@ -105,6 +106,12 @@
         <activity
             android:name=".editmenu.divide.DivideActivity"
             android:exported="true" />
+
+        <activity android:name=".editmenu.adjust.AdjustActivity"
+            android:exported="true"/>
+
+        <activity android:name=".editmenu.insertion.InsertionListFile"
+            android:exported="true"/>
 
         <service
             android:name=".services.RecordingService"

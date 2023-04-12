@@ -120,6 +120,7 @@
                     android:text="Hủy"
                     tools:ignore="RtlCompat" />
                 <ImageButton
+                    android:id="@+id/insert_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_bottom_nav_item"

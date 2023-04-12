@@ -14,6 +14,7 @@
         >
 
         <ImageButton
+            android:id="@+id/adjust_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_left_adjust"
@@ -188,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:max="24"
                     android:min="-24"
-                    android:progress="0"
+                    android:progress="24"
                     android:scaleY="0.7"
                     android:progressDrawable="@color/gray"
                     android:layout_toStartOf="@id/right_icon_1"
@@ -214,12 +215,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-24dp"
+                    android:text="-24dB"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-12dp"
+                    android:text="-12dB"
                     android:layout_marginHorizontal="38dp"
                     />
                 <TextView
@@ -231,13 +232,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12dp"
+                    android:text="12dB"
                     android:layout_marginHorizontal="41dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24dp"
+                    android:text="24dB"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -299,33 +300,61 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="x0.25"-->
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="x0.5"-->
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="x1"-->
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="x2"-->
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="x3" />-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="x0.25"
-                    android:layout_marginRight="44dp"/>
-
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="67dp"
-                    android:text="x0.5" />
-
+                    android:text="x0.5"
+                    android:layout_marginHorizontal="38dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp" />
-
+                    android:layout_marginHorizontal="22dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="48dp"
-                    android:text="x2" />
-
+                    android:text="x2"
+                    android:layout_marginHorizontal="41dp"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="x3" />
+                    android:text="x3"
+                    />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -345,30 +374,40 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/adjust_progress_bar"
+            <SeekBar
+                android:id="@+id/adjust_seek_bar"
                 android:layout_width="match_parent"
-                android:layout_height="12dp"
+                android:layout_height="14dp"
+                android:thumb="@drawable/ic_thumb_seekbar"
                 android:indeterminate="false"
-                android:max="100"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:progress="30"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
                 android:backgroundTint="@color/bg_progressbar"
                 android:progressTint="@color/pink_500"
-                />
+                android:progressDrawable="@drawable/replay_prb_custom" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+<!--                <TextView-->
+<!--                    android:id="@+id/adjust_timecurrent"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:textColor="@color/text_time"-->
+<!--                    android:gravity="left"-->
+<!--                    android:layout_marginLeft="24dp"-->
+<!--                    android:text="00:00" />-->
+
+                <Chronometer
                     android:id="@+id/adjust_timecurrent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -377,7 +416,7 @@
                     android:textColor="@color/text_time"
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
-                    android:text="00:12" />
+                    />
 
                 <TextView
                     android:id="@+id/adjust_timetotal"
