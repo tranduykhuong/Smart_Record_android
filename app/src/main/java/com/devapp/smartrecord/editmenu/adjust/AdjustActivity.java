@@ -14,6 +14,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+
+import com.devapp.smartrecord.EditMenuActivity;
 import com.devapp.smartrecord.R;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -97,7 +99,7 @@ public class AdjustActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editor.putBoolean("isFirstTime", false);
-                Intent intent = new Intent(AdjustActivity.this, com.devapp.smartrecord.AdjustActivity.class);
+                Intent intent = new Intent(AdjustActivity.this, EditMenuActivity.class);
                 startActivity(intent);
             }
         });

@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.devapp.smartrecord.AdjustActivity;
+import com.devapp.smartrecord.EditMenuActivity;
 import com.devapp.smartrecord.R;
 
 public class HarmonicActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class HarmonicActivity extends AppCompatActivity {
     public void changeLayoutFromHarmonic(View view) {
         switch (view.getId()) {
             case R.id.harmonic_btn_back: {
-                Intent intent = new Intent(this, AdjustActivity.class);
+                Intent intent = new Intent(this, EditMenuActivity.class);
                 startActivity(intent);
                 break;
             }

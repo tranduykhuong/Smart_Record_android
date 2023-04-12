@@ -10,17 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:gravity="center"
-        android:background="@color/pink_500"
+        android:background="?attr/actionBarColor"
         android:weightSum="5"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_back_replay"
             android:onClick="changeLayoutFromReplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
-            android:background="@color/pink_500"
+            android:background="?attr/actionBarColor"
             android:elevation="0dp"
             android:outlineProvider="none"
             android:src="@drawable/ic_back" />
@@ -50,17 +50,17 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
-        android:background="@color/pink_500"
+        android:background="?attr/actionBarColor"
         android:gravity="center">
 
         <ImageButton
             android:id="@+id/replay_btn_adjust"
             android:onClick="changeLayoutFromReplay"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
             android:elevation="0dp"
-            android:background="@color/pink_500"
+            android:background="?attr/actionBarColor"
             android:outlineProvider="none"
             android:layout_weight="1"
             android:src="@drawable/ic_adjust"
@@ -68,21 +68,23 @@
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
             android:elevation="0dp"
-            android:background="@color/pink_500"
+            android:background="?attr/actionBarColor"
             android:outlineProvider="none"
             android:layout_weight="1"
             android:src="@drawable/ic_app_record" />
 
         <ImageButton
+            android:id="@+id/replay_btn_text"
+            android:onClick="changeLayoutFromReplay"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
             android:elevation="0dp"
             android:layout_weight="1"
-            android:background="@color/pink_500"
+            android:background="?attr/actionBarColor"
             android:outlineProvider="none"
             android:src="@drawable/ic_speed_to_text"
             android:layout_marginRight="50dp"/>
@@ -95,7 +97,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/little_gray">
+        android:background="?attr/backgroundState">
 
         <TextView
             android:id="@+id/txt_name_replay"
@@ -103,7 +105,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="40dp"
             android:textSize="17sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/textColor"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:layout_weight="3"
@@ -113,17 +115,18 @@
     </LinearLayout>
 
 <!--    Part Sound Graph-->
-    <LinearLayout
+    <com.suman.voice.graphviewlibrary.GraphView
+        android:id="@+id/graphView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/test_replay_grp">
-    </LinearLayout>
+        android:fillViewport="true"
+        android:layout_weight="1">
+    </com.suman.voice.graphviewlibrary.GraphView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="?attr/backgroundColor"
         android:orientation="vertical"
         android:paddingBottom="25dp"
         >
@@ -132,33 +135,23 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal"
-            android:background="@color/white"
+            android:background="?attr/backgroundColor"
             android:gravity="center">
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_audio_wave" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:elevation="0dp"
-                android:background="@color/white"
-                android:outlineProvider="none"
-                android:layout_weight="1"
-                android:src="@drawable/ic_voice_change" />
-
             <Button
                 android:id="@+id/btn_speed_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:elevation="0dp"
                 android:outlineProvider="none"
                 android:background="@android:color/transparent"
@@ -170,10 +163,10 @@
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_time" />
@@ -181,10 +174,10 @@
             <ImageButton
                 android:id="@+id/btn_repeat_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_repeat" />
@@ -194,7 +187,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="?attr/backgroundColor">
 
             <SeekBar
                 android:id="@+id/skbar_replay"
@@ -216,7 +210,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="?attr/backgroundColor">
 
                 <Chronometer
                     android:id="@+id/timecurrent_replay"
@@ -224,7 +219,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_weight="1"
-                    android:textColor="@color/text_time"
+                    android:textColor="?attr/textColor"
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
                     android:textStyle="bold" />
@@ -234,7 +229,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="@color/text_time"
+                    android:textColor="?attr/textColor"
                     android:layout_weight="1"
                     android:gravity="right"
                     android:textStyle="bold"
@@ -249,16 +244,16 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal"
-            android:background="@color/white"
+            android:background="?attr/backgroundColor"
             android:gravity="center">
 
             <ImageButton
                 android:id="@+id/btn_prev_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_first"
@@ -267,10 +262,10 @@
             <ImageButton
                 android:id="@+id/btn_pr5_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_5_prev_replay" />
@@ -278,10 +273,10 @@
             <ImageButton
                 android:id="@+id/btn_play_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_pause_replay" />
@@ -289,10 +284,10 @@
             <ImageButton
                 android:id="@+id/btn_next5_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_5_next_replay" />
@@ -300,10 +295,10 @@
             <ImageButton
                 android:id="@+id/btn_next_replay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="@color/white"
+                android:background="?attr/backgroundColor"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_last"

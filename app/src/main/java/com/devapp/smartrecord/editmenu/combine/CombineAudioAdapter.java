@@ -37,6 +37,8 @@ public class CombineAudioAdapter extends RecyclerView.Adapter<CombineAudioAdapte
         }
 
         holder.nameAudio.setText(audio.getName());
+        holder.tagAudio.setText(audio.getName().substring(audio.getName().lastIndexOf(".") +1).toUpperCase() + " - " + audio.getSize());
+        holder.timeAudio.setText("00:00 - " + audio.getTimeOfAudio());
     }
 
     @Override
@@ -54,12 +56,14 @@ public class CombineAudioAdapter extends RecyclerView.Adapter<CombineAudioAdapte
 
 
     public class CombineAudioHolder extends RecyclerView.ViewHolder {
-        private TextView nameAudio;
+        private TextView nameAudio, tagAudio, timeAudio;
         private LinearLayout linearLayout;
 
         public CombineAudioHolder(@NonNull View itemView) {
             super(itemView);
             nameAudio = itemView.findViewById(R.id.combine_txt_name_item);
+            tagAudio = itemView.findViewById(R.id.combine_txt_tag);
+            timeAudio = itemView.findViewById(R.id.combine_txt_time);
             linearLayout = itemView.findViewById(R.id.item_audio_home);
         }
     }

@@ -1,12 +1,12 @@
 package com.devapp.smartrecord.ui.home;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,13 +20,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.ReplayActivity;
 import com.devapp.smartrecord.databinding.FragmentHomeBinding;
 
 import java.io.File;
@@ -86,150 +85,123 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 return true;
             }
         });
-        linearLayoutSortType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // inflate the layout of the popup window
-                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.home_sort_type_item, null);
+        linearLayoutSortType.setOnClickListener(view -> {
+            // inflate the layout of the popup window
+            LayoutInflater inflater1 = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater1.inflate(R.layout.home_sort_type_item, null);
 
-                // create the popup window
-                int width = LinearLayout.LayoutParams.MATCH_PARENT;
-                int height = LinearLayout.LayoutParams.MATCH_PARENT ;
-                boolean focusable = true; // lets taps outside the popup also dismiss it
-                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+            // create the popup window
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
-                // show the popup window
-                // which view you pass in doesn't matter, it is only used for the window token
-                popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+            // show the popup window
+            // which view you pass in doesn't matter, it is only used for the window token
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
 
-                // dismiss the popup window when touched
-                popupView.setOnTouchListener(new View.OnTouchListener() {
+            // dismiss the popup window when touched
+            popupView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    popupWindow.dismiss();
+                    return true;
+                }
+            });
+
+            TextView homeDateSort = binding.homeDateSort;
+            TextView sortTitle = popupView.findViewById(R.id.home_sort_item_title);
+            TextView sortByName = popupView.findViewById(R.id.home_sort_item_by_name);
+            TextView sortByDate = popupView.findViewById(R.id.home_sort_item_by_date);
+            TextView sortBySize = popupView.findViewById(R.id.home_sort_item_by_size);
+            TextView cancelSort = popupView.findViewById(R.id.home_sort_item_by_destroy);
+
+            sortTitle.setOnClickListener(view1 -> popupWindow.update());
+
+            sortByDate.setOnClickListener(view12 -> {
+                homeDateSort.setText(sortByDate.getText());
+                popupWindow.dismiss();
+
+                currentSortType = SORT_BY_DATE;
+                //sort the list by date in descending order
+                Collections.sort(audioList, new Comparator<Audio>() {
                     @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        popupWindow.dismiss();
-                        return true;
+                    public int compare(Audio audio1, Audio audio2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        try {
+                            date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio1.getCreateDate());
+                            date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio2.getCreateDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (date1 != null && date2 != null) {
+                            return date2.compareTo(date1);
+                        } else {
+                            return 0;
+                        }
                     }
                 });
 
-                TextView homeDateSort = binding.homeDateSort;
-                TextView sortTitle = popupView.findViewById(R.id.home_sort_item_title);
-                TextView sortByName = popupView.findViewById(R.id.home_sort_item_by_name);
-                TextView sortByDate = popupView.findViewById(R.id.home_sort_item_by_date);
-                TextView sortBySize = popupView.findViewById(R.id.home_sort_item_by_size);
-                TextView cancelSort = popupView.findViewById(R.id.home_sort_item_by_destroy);
+                // cập nhật lại adapter và hiển thị danh sách mới
+                homeAudioAdapter.setData(audioList);
+                homeAudioAdapter.notifyDataSetChanged();
+            });
 
-                sortTitle.setOnClickListener(new View.OnClickListener() {
+            sortByName.setOnClickListener(view13 -> {
+                homeDateSort.setText(sortByName.getText());
+                popupWindow.dismiss();
+
+                currentSortType = SORT_BY_NAME;
+
+                // sắp xếp danh sách theo tên
+                Collections.sort(audioList, (audio1, audio2) -> audio1.getName().compareTo(audio2.getName()));
+
+                // cập nhật lại adapter và hiển thị danh sách mới
+                homeAudioAdapter.setData(audioList);
+                homeAudioAdapter.notifyDataSetChanged();
+            });
+
+            sortBySize.setOnClickListener(view14 -> {
+                homeDateSort.setText(sortBySize.getText());
+                popupWindow.dismiss();
+
+                currentSortType = SORT_BY_SIZE;
+                NumberFormat format = NumberFormat.getInstance(Locale.US);
+                Collections.sort(audioList, new Comparator<Audio>() {
                     @Override
-                    public void onClick(View view) {
-                        popupWindow.update();
-                    }
-                });
-
-                sortByDate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        homeDateSort.setText(sortByDate.getText());
-                        popupWindow.dismiss();
-
-                        currentSortType = SORT_BY_DATE;
-                        //sort the list by date in descending order
-                        Collections.sort(audioList, new Comparator<Audio>() {
-                            @Override
-                            public int compare(Audio audio1, Audio audio2) {
-                                Date date1 = null;
-                                Date date2 = null;
-                                try {
-                                    date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio1.getCreateDate());
-                                    date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio2.getCreateDate());
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                if (date1 != null && date2 != null) {
-                                    return date2.compareTo(date1);
-                                } else {
-                                    return 0;
-                                }
-                            }
-                        });
-
-                        // cập nhật lại adapter và hiển thị danh sách mới
-                        homeAudioAdapter.setData(audioList);
-                        homeAudioAdapter.notifyDataSetChanged();
-                    }
-                });
-
-                sortByName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        homeDateSort.setText(sortByName.getText());
-                        popupWindow.dismiss();
-
-                        currentSortType = SORT_BY_NAME;
-
-                        // sắp xếp danh sách theo tên
-                        Collections.sort(audioList, new Comparator<Audio>() {
-                            @Override
-                            public int compare(Audio audio1, Audio audio2) {
-                                return audio1.getName().compareTo(audio2.getName());
-                            }
-                        });
-
-                        // cập nhật lại adapter và hiển thị danh sách mới
-                        homeAudioAdapter.setData(audioList);
-                        homeAudioAdapter.notifyDataSetChanged();
-                    }
-                });
-
-                sortBySize.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        homeDateSort.setText(sortBySize.getText());
-                        popupWindow.dismiss();
-
-                        currentSortType = SORT_BY_SIZE;
-                        NumberFormat format = NumberFormat.getInstance(Locale.US);
-                        Collections.sort(audioList, new Comparator<Audio>() {
-                            @Override
-                            public int compare(Audio audio1, Audio audio2) {
-                                String size1Str = audio1.getSize();
-                                String size2Str = audio2.getSize();
-                                // Kiểm tra nếu số đầu tiên của chuỗi có dấu ',' thì thay thế bằng '.'
-                                if (size1Str.indexOf(',') == 1) {
-                                    size1Str = size1Str.replace(',', '.');
-                                }
-                                if (size2Str.indexOf(',') == 1) {
-                                    size2Str = size2Str.replace(',', '.');
-                                }
-                                try {
-                                    Float size1 = format.parse(size1Str).floatValue();
-                                    Float size2 = format.parse(size2Str).floatValue();
-                                    return Float.compare(size1, size2);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                return 0;
-                            }
-                        });
-
-
-
-                        // cập nhật lại adapter và hiển thị danh sách mới
-                        homeAudioAdapter.setData(audioList);
-                        homeAudioAdapter.notifyDataSetChanged();
+                    public int compare(Audio audio1, Audio audio2) {
+                        String size1Str = audio1.getSize();
+                        String size2Str = audio2.getSize();
+                        // Kiểm tra nếu số đầu tiên của chuỗi có dấu ',' thì thay thế bằng '.'
+                        if (size1Str.indexOf(',') == 1) {
+                            size1Str = size1Str.replace(',', '.');
+                        }
+                        if (size2Str.indexOf(',') == 1) {
+                            size2Str = size2Str.replace(',', '.');
+                        }
+                        try {
+                            Float size1 = format.parse(size1Str).floatValue();
+                            Float size2 = format.parse(size2Str).floatValue();
+                            return Float.compare(size1, size2);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        return 0;
                     }
                 });
 
 
-                cancelSort.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        popupWindow.dismiss();
-                    }
-                });
+
+                // cập nhật lại adapter và hiển thị danh sách mới
+                homeAudioAdapter.setData(audioList);
+                homeAudioAdapter.notifyDataSetChanged();
+            });
 
 
-            }
+            cancelSort.setOnClickListener(view15 -> popupWindow.dismiss());
+
+
         });
 
         rcvHomeAudio = binding.homeRcvAudioList;
@@ -280,6 +252,22 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity));
         }
     }
+
+    @Override
+    public void playSound(String name) {
+        Intent intent = new Intent(getActivity(), ReplayActivity.class);
+        intent.putExtra("Name", name);
+        intent.setAction("FromHome");
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemClickConvert(int position) {
+        audioList.addAll(getAudioList()); // cập nhật danh sách dữ liệu mới
+        homeAudioAdapter.setData(audioList); // đặt lại danh sách dữ liệu cho adapter
+        homeAudioAdapter.notifyDataSetChanged(); // thông báo cho adapter biết rằng dữ liệu đã thay đổi và cần phải cập nhật lại
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -289,7 +277,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     private List<Audio> getAudioList() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         audioList = new ArrayList<>();
-        recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recorder/");
+        recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             size = recordingsDirectory.listFiles().length;
         if (recordingsDirectory.exists()) {
@@ -297,14 +285,14 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
             if (files != null) {
                 double tempCapacity = 0;
                 for (File file : files) {
-                    if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".wav") || file.getName().endsWith(".aac")) {
+                    if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".wav") || file.getName().endsWith(".aac") || file.getName().endsWith(".m4a")) {
 
                         String fileName = file.getName();
                         String fileSize = decimalFormat.format(1.0 * file.length() / 1024);
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
                         Date lastModifiedDate = new Date(file.lastModified());
                         String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        audioList.add(new Audio(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_play_audio_item));
+                        audioList.add(new Audio(fileName, getFileDuration(file), fileSize, formattedDate, R.drawable.ic_play_audio_item));
                     }
                 }
                 if(sumCapacity == 0) {
@@ -314,7 +302,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 }
 
             }
-            Collections.sort(audioList, new Comparator<Audio>() {
+            audioList.sort(new Comparator<Audio>() {
+                @SuppressLint("SimpleDateFormat")
                 @Override
                 public int compare(Audio audio1, Audio audio2) {
                     Date date1 = null;
@@ -336,6 +325,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         return audioList;
     }
 
+    @SuppressLint("DefaultLocale")
     @NonNull
     private String getFileDuration(File file) {
         long durationInMillis = 0;

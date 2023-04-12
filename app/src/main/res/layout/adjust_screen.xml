@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center"
-        android:background="@color/pink_500"
+        android:background="?attr/actionBarColor"
         android:weightSum="5"
         android:orientation="horizontal">
 
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
-            android:background="@color/pink_500"
+            android:background="?attr/actionBarColor"
             android:elevation="0dp"
             android:outlineProvider="none"
             android:src="@drawable/ic_back" />
@@ -36,7 +36,7 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:layout_weight="3"
-            android:text="Record Studio"
+            android:text="@string/menu_title"
             android:paddingRight="40dp"/>
 
         <TextView
@@ -58,6 +58,7 @@
 
         <Button
             android:id="@+id/adjust_btn_cut"
+            android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
             android:padding="10dp"
@@ -179,7 +180,7 @@
             android:background="@drawable/btn_custom_adjust"
             android:padding="10dp"
             android:drawableTop="@drawable/ic_mixture"
-            android:text="Hợp nhất"
+            android:text="@string/combine_title"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:drawablePadding="10dp"
