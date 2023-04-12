@@ -267,8 +267,11 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         }
     }
 
+
+
     @Override
     public void onItemClick(int position) {
+
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
@@ -280,6 +283,14 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity));
         }
     }
+
+    @Override
+    public void onItemClickConvert(int position) {
+        audioList.addAll(getAudioList()); // cập nhật danh sách dữ liệu mới
+        homeAudioAdapter.setData(audioList); // đặt lại danh sách dữ liệu cho adapter
+        homeAudioAdapter.notifyDataSetChanged(); // thông báo cho adapter biết rằng dữ liệu đã thay đổi và cần phải cập nhật lại
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -289,7 +300,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     private List<Audio> getAudioList() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         audioList = new ArrayList<>();
-        recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recorder/");
+        recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             size = recordingsDirectory.listFiles().length;
         if (recordingsDirectory.exists()) {
@@ -297,7 +308,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
             if (files != null) {
                 double tempCapacity = 0;
                 for (File file : files) {
-                    if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".wav") || file.getName().endsWith(".aac")) {
+                    if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".m4a") || file.getName().endsWith(".aac")) {
 
                         String fileName = file.getName();
                         String fileSize = decimalFormat.format(1.0 * file.length() / 1024);

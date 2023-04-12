@@ -72,6 +72,9 @@
             android:name=".SettingActivity"
             android:exported="true" />
         <activity
+            android:name=".soundvariation.VariationActivity"
+            android:exported="true" />
+        <activity
             android:name=".RecordActivity"
             android:exported="true" />
         <activity

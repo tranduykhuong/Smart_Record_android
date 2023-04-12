@@ -40,6 +40,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
+import com.devapp.smartrecord.soundvariation.VariationActivity;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
@@ -52,10 +53,11 @@ public class HomeActivity extends AppCompatActivity {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
     private final int SETTING_CODE = 10; // SETTING CODE
     private final int RECORDING_CODE = 11; // SETTING CODE
+    private final int TOOL_CODE = 12; // TOOL CODE
 
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
-    private ImageView btn_setting;
+    private ImageView btn_setting, btn_tool;
     private ConfigurationClass config;
 
     ActivityResultLauncher<String[]> requestPermissionLauncher;
@@ -125,6 +127,13 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
             startActivityForResult(intent, SETTING_CODE);
         });
+
+        btn_tool = findViewById(R.id.btn_tool);
+        btn_tool.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, VariationActivity.class);
+            startActivityForResult(intent, TOOL_CODE);
+        });
+
         askForPermission();
     }
 
