@@ -66,5 +66,10 @@
     <string name="demo_min_label"></string>
     <string name="demo_max_label"></string>
     <string name="folder_private_title">Thư mục riêng tư</string>
+    <string name="record_title">Recording</string>
+    <string name="replay_title">Replay</string>
+    <string name="combine_title">Combine</string>
+    <string name="combine_cancel">Clear</string>
+    <string name="menu_title">Edit Menu</string>
 
 </resources>

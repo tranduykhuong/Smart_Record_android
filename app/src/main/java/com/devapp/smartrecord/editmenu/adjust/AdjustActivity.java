@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import com.devapp.smartrecord.EditMenuActivity;
 import com.devapp.smartrecord.R;
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -1,11 +1,11 @@
 package com.devapp.smartrecord.ui.trash;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,34 +20,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.ReplayActivity;
 import com.devapp.smartrecord.databinding.FragmentTrashBinding;
-import com.devapp.smartrecord.ui.home.Audio;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickListenerTrash{
-    private RecyclerView recyclerView;
     private TrashAdapter trashAdapter;
     private List<Item> itemList;
     private File trashDirectory;
-    private File[] files;
-    private SearchView searchView;
     private TextView totalCapacityItem;
     private TextView totalAmountAudio;
     private TextView capacityUnit;
     private double sumCapacity = 0;
-    private int size;
     private FragmentTrashBinding binding;
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TrashViewModel trashViewModel = new ViewModelProvider(this).get(TrashViewModel.class);
         binding = FragmentTrashBinding.inflate(inflater, container, false);
@@ -59,7 +54,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         totalAmountAudio = binding.trashAmountAudio;
         capacityUnit = binding.capacityAudioUnit;
 
-        searchView = binding.searchViewAudioTrash;
+        SearchView searchView = binding.searchViewAudioTrash;
         searchView.clearFocus();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -75,7 +70,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
             }
         });
 
-        recyclerView = binding.trashRcvAudioList;
+        RecyclerView recyclerView = binding.trashRcvAudioList;
         recyclerView.setLayoutManager(new LinearLayoutManager((getContext())));
         trashAdapter = new TrashAdapter(getContext(), this);
 
@@ -83,7 +78,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         recyclerView.setAdapter(trashAdapter);
 
         if (trashDirectory != null && trashDirectory.listFiles() != null)
-            totalAmountAudio.setText(String.valueOf(trashDirectory.listFiles().length));
+            totalAmountAudio.setText(String.valueOf(Objects.requireNonNull(trashDirectory.listFiles()).length));
         if(sumCapacity >= 1024) {
             totalCapacityItem.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -100,11 +95,15 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         itemList = new ArrayList<>();
         trashDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/");
+<<<<<<< HEAD
         Log.e("sdnfsdhfk", String.valueOf(trashDirectory));
         if (trashDirectory != null && trashDirectory.listFiles() != null)
             size = trashDirectory.listFiles().length;
+=======
+        trashDirectory.listFiles();
+>>>>>>> 3a6f794 (Khoi: add graphview library + rebuild record + combine function + share function)
         if (trashDirectory.exists()) {
-            files = trashDirectory.listFiles();
+            File[] files = trashDirectory.listFiles();
             if (files != null) {
                 double tempCapacity = 0;
                 for (File file : files) {
@@ -114,8 +113,8 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
                         String fileSize = decimalFormat.format(1.0 * file.length() / 1024);
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
                         Date lastModifiedDate = new Date(file.lastModified());
-                        String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        itemList.add(new Item(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_play_audio_item));
+                        @SuppressLint("SimpleDateFormat") String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
+                        itemList.add(new Item(fileName, getFileDuration(file), fileSize, formattedDate, R.drawable.ic_play_audio_item));
                     }
                 }
                 if(sumCapacity == 0) {
@@ -129,6 +128,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         return itemList;
     }
 
+    @SuppressLint("DefaultLocale")
     @NonNull
     private String getFileDuration(File file) {
         long durationInMillis = 0;
@@ -159,17 +159,18 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         }
         if (filterList.isEmpty()) {
             trashAdapter.setData(null);
-            Toast.makeText(getContext(), "No data found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No Data Found", Toast.LENGTH_LONG).show();
         }else {
             trashAdapter.setData(filterList);
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onItemClick(int position) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if (trashDirectory != null && trashDirectory.listFiles() != null)
-            totalAmountAudio.setText(String.valueOf(trashDirectory.listFiles().length));
+            totalAmountAudio.setText(String.valueOf(Objects.requireNonNull(trashDirectory.listFiles()).length));
         if(sumCapacity >= 1024) {
             totalCapacityItem.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -178,6 +179,15 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
             totalCapacityItem.setText(decimalFormat.format(sumCapacity));
         }
     }
+
+    @Override
+    public void playSound(String name) {
+        Intent intent = new Intent(getActivity(), ReplayActivity.class);
+        intent.putExtra("NameTrash", name);
+        intent.setAction("FromTrash");
+        startActivity(intent);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

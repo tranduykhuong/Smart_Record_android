@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
@@ -48,6 +49,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
         <service
             android:name=".ui.alarm.AlarmService"
             android:enabled="true"
@@ -84,15 +94,10 @@
             android:name=".api.VoiceToTextResultActivity"
             android:exported="true" />
         <activity
-            android:name=".editmenu.insertion.InsertionActivity"
-            android:exported="true" />
-        <activity android:name=".editmenu.cut.CutActivity"
-            android:exported="true" />
-        <activity
             android:name=".ReplayActivity"
             android:exported="true" />
         <activity
-            android:name=".AdjustActivity"
+            android:name=".EditMenuActivity"
             android:exported="true" />
         <activity
             android:name=".WaveformView"
@@ -101,11 +106,9 @@
         <activity
             android:name=".editmenu.combine.CombineActivity"
             android:exported="true" />
-
         <activity
             android:name=".editmenu.harmonic.HarmonicActivity"
             android:exported="true" />
-
         <activity
             android:name=".editmenu.divide.DivideActivity"
             android:exported="true" />
@@ -116,8 +119,19 @@
         <activity android:name=".editmenu.insertion.InsertionListFile"
             android:exported="true"/>
 
+        <activity
+            android:name=".editmenu.insertion.InsertionActivity"
+            android:exported="true" />
+            
+        <activity
+            android:name=".editmenu.cut.CutActivity"
+            android:exported="true" />
+
         <service
             android:name=".services.RecordingService"
+            android:exported="true"/>
+        <service
+            android:name=".services.BroadcastRecord"
             android:exported="true"/>
 
     </application>

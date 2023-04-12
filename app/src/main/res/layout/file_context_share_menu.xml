@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="12dp"
+            android:layout_marginTop="12dp"
             >
 
             <ImageButton
@@ -75,14 +75,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginVertical="14dp"
+            android:layout_marginVertical="10dp"
+
             android:weightSum="5"
             >
 
             <LinearLayout
                 android:id="@+id/share_messenger"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -98,11 +99,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Messenger"/>
+                    android:text="Messenger"
+                    android:textColor="@color/black"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/share_zalo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -118,11 +121,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Zalo"/>
+                    android:text="Zalo"
+                    android:textColor="@color/black"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/share_outlook"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -138,11 +143,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Outlook"/>
+                    android:text="Outlook"
+                    android:textColor="@color/black"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/share_gmail"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -158,12 +165,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gmail"/>
+                    android:text="Gmail"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/share_sms"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_weight="1"
@@ -179,7 +188,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tin nhắn"/>
+                    android:text="Tin nhắn"
+                    android:textColor="@color/black"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

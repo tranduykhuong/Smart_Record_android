@@ -7,13 +7,15 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:orientation="vertical"
+    android:background="?attr/backgroundColor"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:background="?attr/backgroundColor">
 
         <ImageButton
             android:id="@+id/combine_btn_play"
@@ -21,7 +23,7 @@
             android:layout_height="wrap_content"
             android:onClick="changeLayoutFromRecord"
             android:layout_gravity="start|center_vertical"
-            android:background="@color/white"
+            android:background="?attr/backgroundColor"
             android:elevation="0dp"
             android:outlineProvider="none"
             android:src="@drawable/ic_play_combine" />
@@ -37,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
                 android:textSize="17sp"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:gravity="left"
                 android:text="08_08_56, ngày 18 tháng 3, 2023"
                 android:layout_marginBottom="10dp"/>
@@ -76,16 +78,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <com.google.android.material.slider.RangeSlider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/combine_rangeslider"
-        android:valueFrom="0"
-        android:valueTo="100"
-        app:thumbStrokeColor="@android:color/transparent"
-        app:thumbStrokeWidth="1dp"
-        app:values="@array/rangeSlider" />
-
 
 </LinearLayout>

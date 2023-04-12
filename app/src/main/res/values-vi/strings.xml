@@ -57,4 +57,9 @@
 
     <string name="demo_min_label"></string>
     <string name="demo_max_label"></string>
+    <string name="record_title">Ghi âm</string>
+    <string name="replay_title">Phát lại</string>
+    <string name="combine_title">Hợp nhất</string>
+    <string name="combine_cancel">Xóa</string>
+    <string name="menu_title">Chỉnh sửa Audio</string>
 </resources>
