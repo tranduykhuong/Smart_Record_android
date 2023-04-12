@@ -137,7 +137,6 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         holder.homeTrashBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Audio audio = audioList.get(holder.getAbsoluteAdapterPosition());
                 String fileName = audio.getName();
                 Log.e("TAG", "onClick: " + fileName);

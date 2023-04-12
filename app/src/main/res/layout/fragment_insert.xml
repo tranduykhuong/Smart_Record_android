@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/insert_fragment_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Khoảng khắc"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/insert_fragment_destroy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy"
+            android:textColor="@color/pink_500"
+            android:textSize="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="20dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/insert_fragment_header"
+            >
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/insert_fragment_search_edt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tìm Kiếm"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@drawable/curson_color_search_folder"
+                android:background="@drawable/bg_search_folder"
+                app:iconifiedByDefault="false"
+                app:queryHint="Tìm Kiếm..."
+                />
+
+
+            <RelativeLayout
+                android:id="@+id/insert_fragment_wrap_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_below="@id/insert_fragment_search_edt"
+                android:layout_marginLeft="26dp"
+                >
+                <TextView
+                    android:id="@+id/insert_fragment_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="2"
+                    />
+                <TextView
+                    android:id="@+id/folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Thư mục - "
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/insert_fragment_amount"
+                    />
+                <TextView
+                    android:id="@+id/insert_fragment_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/folder"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" MB"
+                    android:textSize="15sp"
+                    android:layout_toRightOf="@id/insert_fragment_size"
+                    />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/insert_fragment_rcv_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/insert_fragment_wrap_info"
+                android:layout_alignParentBottom="true"
+                >
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+
+    </RelativeLayout>
+    
+</RelativeLayout>

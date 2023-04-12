@@ -33,6 +33,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,6 +43,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
 import com.devapp.smartrecord.editmenu.cut.CutActivity;
+import com.devapp.smartrecord.ui.folder.FolderFragment;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
@@ -49,14 +52,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements FolderFragment.OnClickButtonItem {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
     private final int SETTING_CODE = 10; // SETTING CODE
     private final int RECORDING_CODE = 11; // SETTING CODE
-
+    private final int EDIT_CODE = 12;
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
-    private ImageView btn_setting;
+    private ImageView btn_setting, btn_edit;
     private ConfigurationClass config;
 
     ActivityResultLauncher<String[]> requestPermissionLauncher;
@@ -126,7 +129,36 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, SettingActivity.class);
             startActivityForResult(intent, SETTING_CODE);
         });
+
+        btn_edit = findViewById(R.id.btn_tool);
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Truyền dữ liệu từ activity vào fragment
+                FolderFragment fragment = (FolderFragment) getSupportFragmentManager().findFragmentById(R.id.folder_background);
+                if (fragment != null){
+                    Bundle args = new Bundle();
+                    args.putString("data", "Thông tin cần truyền");
+                    fragment.setArguments(args);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.folder_background, fragment)
+                            .commit();
+                }
+//                Intent intent = new Intent(HomeActivity.this, FolderFragment.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putBoolean("isChoice", true);
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent, EDIT_CODE);
+            }
+        });
+
         askForPermission();
+    }
+
+    @Override
+    public void onClickButton(String data) {
+        // Xử lý dữ liệu được truyền từ fragment vào đây
+
     }
 
     public void navigate_onclick(View view) {
