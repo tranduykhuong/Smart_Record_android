@@ -44,6 +44,7 @@ import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
 import com.devapp.smartrecord.editmenu.cut.CutActivity;
 import com.devapp.smartrecord.ui.folder.FolderFragment;
+import com.devapp.smartrecord.soundvariation.VariationActivity;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
@@ -57,9 +58,11 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
     private final int SETTING_CODE = 10; // SETTING CODE
     private final int RECORDING_CODE = 11; // SETTING CODE
     private final int EDIT_CODE = 12;
+    private final int TOOL_CODE = 12; // TOOL CODE
+
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
-    private ImageView btn_setting, btn_edit;
+    private ImageView btn_setting, btn_tool;
     private ConfigurationClass config;
 
     ActivityResultLauncher<String[]> requestPermissionLauncher;
@@ -150,6 +153,11 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
 //                intent.putExtras(bundle);
 //                startActivityForResult(intent, EDIT_CODE);
             }
+        });
+        btn_tool = findViewById(R.id.btn_tool);
+        btn_tool.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeActivity.this, VariationActivity.class);
+            startActivityForResult(intent, TOOL_CODE);
         });
 
         askForPermission();

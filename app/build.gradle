@@ -61,4 +61,7 @@ dependencies {
 
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
+    implementation 'commons-io:commons-io:2.11.0'
+
 }
