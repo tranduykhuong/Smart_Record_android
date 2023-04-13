@@ -13,6 +13,7 @@ import java.util.Date;
 
 public class ItemClassContent {
     private String title;
+    private String path;
     private String time = "";
     private boolean checked;
 
@@ -21,17 +22,23 @@ public class ItemClassContent {
     private Context context;
     private Intent serviceIntent;
 
-    public ItemClassContent(Context context, String title, String time, boolean checked) {
-        this.title = title;
+    public ItemClassContent(Context context, String path, String time, boolean checked) {
+        this.path = path;
         this.time = time;
         this.checked = checked;
         this.context = context;
+
+        String title[] = path.split("/");
+        this.title = title[title.length - 1];
 
         actionAlarm();
     }
 
     public String getTitle() {
         return title;
+    }
+    public String getPath() {
+        return path;
     }
 
     public void setTitle(String title) {
@@ -74,10 +81,10 @@ public class ItemClassContent {
             }
             serviceIntent.putExtra("oldID", milliseconds);
             milliseconds = date.getTime();
-            Log.e(TAG, "ItemClassContent: " + milliseconds);
+//            Log.e(TAG, "ItemClassContent: " + milliseconds);
             serviceIntent.putExtra("timeInMillis", milliseconds);
-            serviceIntent.putExtra("message", title);
-//            context.startForegroundService(serviceIntent);
+            serviceIntent.putExtra("path", path);
+            context.startForegroundService(serviceIntent);
         }
     }
 }

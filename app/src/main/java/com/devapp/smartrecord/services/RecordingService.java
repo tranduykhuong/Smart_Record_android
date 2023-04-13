@@ -161,8 +161,8 @@ public class RecordingService extends AppCompatActivity {
             mediaRecorder.start();
             startTime = System.currentTimeMillis();
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getBaseContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         pointList.clear();

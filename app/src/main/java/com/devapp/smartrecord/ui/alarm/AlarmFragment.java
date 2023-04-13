@@ -79,22 +79,22 @@ public class AlarmFragment extends Fragment implements ItemClassContentAdapter.O
         binding.fileAmountPast.setText("" + handleData.getListViewPast().size());
 
 
-        ContentResolver contentResolver = getContext().getContentResolver();
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.Media.DATA};
-        String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
-        String[] selectionArgs = new String[] {"audio/mpeg"};
-        Cursor cursor = contentResolver.query(uri, projection, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                // Lọc file mp3 theo đường dẫn
-//                if (title.contains("Recordings")) {
-                    Log.e(TAG, "onCreateView: " + title);
-//                }
-            }
-            cursor.close();
-        }
+//        ContentResolver contentResolver = getContext().getContentResolver();
+//        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//        String[] projection = {MediaStore.Audio.Media.DATA};
+//        String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
+//        String[] selectionArgs = new String[] {"audio/mpeg"};
+//        Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+//        if (cursor != null) {
+//            while (cursor.moveToNext()) {
+//                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+//                // Lọc file mp3 theo đường dẫn
+////                if (title.contains("Recordings")) {
+//                    Log.e(TAG, "onCreateView: " + title);
+////                }
+//            }
+//            cursor.close();
+//        }
 
         return root;
     }

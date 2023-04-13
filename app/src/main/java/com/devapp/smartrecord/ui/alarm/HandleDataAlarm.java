@@ -47,10 +47,9 @@ public class HandleDataAlarm {
         listItemPast = new ArrayList<>();
 
         loadRemindData();
-
     }
 
-    public void addReminder(String title) {
+    public void addReminder(String path) {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
@@ -76,7 +75,7 @@ public class HandleDataAlarm {
                 String time = hourSelected + ":" + minuteSelected + " "
                         + daySelected + "/" + monthSelected + "/" + yearSelected;
 
-                listItemFuture.add(new ItemClassContent(context, title, time, false));
+                listItemFuture.add(new ItemClassContent(context, path, time, false));
 
                 int[] duration = getDurationTime(time);
                 Toast.makeText(context, "Nhắc nhở được đặt sau " + duration[0]
@@ -241,11 +240,11 @@ public class HandleDataAlarm {
         Set<String> set = new HashSet<>();
         for (int i=0; i<listItemPast.size(); i++) {
             ItemClassContent item = listItemPast.get(i);
-            set.add(item.getTitle() + "`" + item.getTime() + "`" + item.getChecked());
+            set.add(item.getPath() + "`" + item.getTime() + "`" + item.getChecked());
         }
         for (int i=0; i<listItemFuture.size(); i++) {
             ItemClassContent item = listItemFuture.get(i);
-            set.add(item.getTitle() + "`" + item.getTime() + "`" + item.getChecked());
+            set.add(item.getPath() + "`" + item.getTime() + "`" + item.getChecked());
         }
         editor.putStringSet("remindDataKey", set);
         editor.apply();

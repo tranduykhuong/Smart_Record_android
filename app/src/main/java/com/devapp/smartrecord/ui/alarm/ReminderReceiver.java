@@ -44,12 +44,12 @@ public class ReminderReceiver extends BroadcastReceiver {
         // Xử lý thông báo nhắc nhở tại đây
         if (intent != null && intent.getAction() != null) {
             if (intent.getAction().equals("REMINDER_ALARM")) {
-                String fileName = intent.getExtras().getString("fileName");
+                String fileName = intent.getExtras().getString("path");
                 if (fileName != null) {
                     Log.e(TAG, "onReceive: " + fileName);
-                    Toast.makeText(context, fileName, Toast.LENGTH_SHORT).show();
 
                     Intent serviceIntent = new Intent(context, AlarmNotifyService.class);
+                    serviceIntent.putExtra("path", fileName);
                     context.startService(serviceIntent);
 
                     // Hiển thị notification

@@ -18,6 +18,8 @@ public class AlarmNotifyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String fileName = intent.getExtras().getString("path");
+        Toast.makeText(getBaseContext(), fileName, Toast.LENGTH_SHORT).show();
         // Tạo một đối tượng MediaPlayer để phát âm thanh báo thức
         mediaPlayer = new MediaPlayer();
         try {

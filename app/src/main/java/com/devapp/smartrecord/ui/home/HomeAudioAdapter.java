@@ -27,6 +27,7 @@ import com.arthenica.mobileffmpeg.FFmpeg;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
 //import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 
 import java.io.File;
@@ -211,7 +212,10 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
                 File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + fileName);
                  //CÁI PATH LÀ inputFilePath.getAbsolutePath() nha Duy Khương
-                Toast.makeText(context.getApplicationContext(), String.valueOf(inputFilePath.getAbsolutePath()), Toast.LENGTH_LONG).show();
+
+                HandleDataAlarm handleDataAlarm = new HandleDataAlarm(context);
+                handleDataAlarm.addReminder(String.valueOf(inputFilePath.getAbsolutePath()));
+//                Toast.makeText(context.getApplicationContext(), String.valueOf(inputFilePath.getAbsolutePath()), Toast.LENGTH_LONG).show();
             });
 
             //Đổi tên

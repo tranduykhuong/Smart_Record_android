@@ -127,7 +127,7 @@
             android:name=".editmenu.cut.CutActivity"
             android:exported="true" />
 
-        <service
+        <activity
             android:name=".services.RecordingService"
             android:exported="true"/>
         <service

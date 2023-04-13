@@ -26,6 +26,7 @@ public class AlarmService extends Service {
     private Intent alarmIntent;
     private PendingIntent pendingIntent;
     private long milliseconds = 0;
+    private AlarmManager alarmManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,7 +35,7 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Log.e(TAG, "actionAlarm: ");
         if (intent == null) {
@@ -60,12 +61,12 @@ public class AlarmService extends Service {
 
         // Lấy ra thông tin về thời gian nhắc nhở từ Intent
         milliseconds = intent.getLongExtra("timeInMillis", 0);
-        String title = intent.getStringExtra("message");
+        String path = intent.getStringExtra("path");
         long oldID = intent.getLongExtra("oldID", 0);
 
         alarmIntent = new Intent(this, ReminderReceiver.class);
         alarmIntent.setAction("REMINDER_ALARM");
-        alarmIntent.putExtra("fileName", title);
+        alarmIntent.putExtra("path", path);
 
         if (oldID != 0) {
             Log.e(TAG, "oldID: " + oldID);
