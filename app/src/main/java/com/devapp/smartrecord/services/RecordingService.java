@@ -161,8 +161,8 @@ public class RecordingService extends AppCompatActivity {
             mediaRecorder.start();
             startTime = System.currentTimeMillis();
         } catch (IOException e) {
-//            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//            Toast.makeText(getBaseContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         pointList.clear();
@@ -185,4 +185,16 @@ public class RecordingService extends AppCompatActivity {
             stopRecording();
         super.onDestroy();
     }
+<<<<<<< HEAD
 }
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> b936a05 (Khoi: Logic Record - UI Combine)
+=======
+}
+>>>>>>> 1aa9193 (Khoi: Replay functions + UI Harmonic/ UI Divide)
+>>>>>>> 4716628eb1f4a0a2330653211ea1088d384b409b
