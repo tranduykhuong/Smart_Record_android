@@ -58,11 +58,10 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
     private final int SETTING_CODE = 10; // SETTING CODE
     private final int RECORDING_CODE = 11; // SETTING CODE
     private final int EDIT_CODE = 12;
-    private final int TOOL_CODE = 12; // TOOL CODE
 
     private ActivityHomeBinding binding;
     private BottomNavigationView navView;
-    private ImageView btn_setting, btn_tool;
+    private ImageView btn_setting, btn_edit;
     private ConfigurationClass config;
 
     ActivityResultLauncher<String[]> requestPermissionLauncher;
@@ -153,11 +152,6 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
 //                intent.putExtras(bundle);
 //                startActivityForResult(intent, EDIT_CODE);
             }
-        });
-        btn_tool = findViewById(R.id.btn_tool);
-        btn_tool.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, VariationActivity.class);
-            startActivityForResult(intent, TOOL_CODE);
         });
 
         askForPermission();

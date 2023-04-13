@@ -113,18 +113,6 @@
             />
 
         <TextView
-            android:id="@+id/home_item_size_KB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_toRightOf="@id/home_item_size"
-            android:layout_below="@id/home_item_name_audio"
-            android:text="KB"
-            android:layout_marginLeft="2dp"
-            android:textColor="?attr/textColor"
-            />
-
-        <TextView
             android:id="@+id/home_item_create_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

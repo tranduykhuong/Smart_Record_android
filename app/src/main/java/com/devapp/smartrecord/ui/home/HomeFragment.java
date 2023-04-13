@@ -257,6 +257,14 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     }
 
     @Override
+    public void playSound(String name) {
+        Intent intent = new Intent(getActivity(), ReplayActivity.class);
+        intent.putExtra("Name", name);
+        intent.setAction("FromHome");
+        startActivity(intent);
+    }
+
+    @Override
     public void onItemClickConvert(int position) {
         audioList.addAll(getAudioList()); // cập nhật danh sách dữ liệu mới
         homeAudioAdapter.setData(audioList); // đặt lại danh sách dữ liệu cho adapter

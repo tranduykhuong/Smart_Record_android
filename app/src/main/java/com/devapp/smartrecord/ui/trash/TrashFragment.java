@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     private TextView capacityUnit;
     private double sumCapacity = 0;
     private FragmentTrashBinding binding;
+    private int size;
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,13 +97,11 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         itemList = new ArrayList<>();
         trashDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/");
-<<<<<<< HEAD
+
         Log.e("sdnfsdhfk", String.valueOf(trashDirectory));
         if (trashDirectory != null && trashDirectory.listFiles() != null)
             size = trashDirectory.listFiles().length;
-=======
         trashDirectory.listFiles();
->>>>>>> 3a6f794 (Khoi: add graphview library + rebuild record + combine function + share function)
         if (trashDirectory.exists()) {
             File[] files = trashDirectory.listFiles();
             if (files != null) {
