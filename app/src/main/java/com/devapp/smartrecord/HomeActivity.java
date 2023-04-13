@@ -40,6 +40,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
+import com.devapp.smartrecord.editmenu.cut.CutActivity;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;

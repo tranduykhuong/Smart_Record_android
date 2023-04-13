@@ -54,4 +54,7 @@
 
     <string name="insertion">Chèn</string>
     <string name="folder_private_title">Thư mục riêng tư</string>
+
+    <string name="demo_min_label"></string>
+    <string name="demo_max_label"></string>
 </resources>
