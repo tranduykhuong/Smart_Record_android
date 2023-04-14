@@ -1,8 +1,11 @@
 package com.devapp.smartrecord;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -15,6 +18,7 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
@@ -28,8 +32,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.devapp.smartrecord.services.BroadcastRecord;
 import com.devapp.smartrecord.services.RecordingService;
+import com.devapp.smartrecord.services.RecordingActivity;
+import com.devapp.smartrecord.services.RecordingActivity;
 import com.suman.voice.graphviewlibrary.GraphView;
 
 import java.io.File;
@@ -46,7 +51,7 @@ public class RecordActivity extends AppCompatActivity {
     private TextView txtRecordName;
     private List samples;
     private GraphView graphView;
-    private RecordingService recorder;
+    private RecordingActivity recorder;
     private TelephonyManager telephonyManager;
 
     @Override
@@ -65,9 +70,14 @@ public class RecordActivity extends AppCompatActivity {
         graphView.setTimeColor(Color.rgb(0, 0, 0));
         graphView.setWaveLengthPX(13);
 
-        recorder = RecordingService.getInstance();
+        recorder = RecordingActivity.getInstance();
 
         getLocation();
+
+        ConfigurationClass config = new ConfigurationClass(getApplicationContext());
+        config.getConfig();
+        recorder.setFileExt("." + config.getFileFormat());
+        Log.e(TAG, "onCreate: " +"." + config.getFileFormat());
 
         startRecord();
 
@@ -86,7 +96,7 @@ public class RecordActivity extends AppCompatActivity {
         recorder.stopWithNoSave();
         Toast.makeText(getApplicationContext(), "File is deleted", Toast.LENGTH_LONG).show();
 
-        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        Intent intentInform = new Intent(this, RecordingActivity.class);
         intentInform.setAction("STOP_RECORDING");
         startService(intentInform);
 
@@ -97,7 +107,7 @@ public class RecordActivity extends AppCompatActivity {
         recorder.stopRecording();
         Toast.makeText(getApplicationContext(), "Saved_" + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
 
-        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        Intent intentInform = new Intent(this, RecordingActivity.class);
         intentInform.setAction("STOP_RECORDING");
         startService(intentInform);
 
@@ -143,6 +153,7 @@ public class RecordActivity extends AppCompatActivity {
                 Address address = addresses.get(0);
                 String addressString = address.getAddressLine(0);
                 String finalAddress = addressString.substring(0, addressString.indexOf(','));
+                finalAddress = finalAddress.replace("/", "-");
                 txtRecordName.setText(finalAddress);
                 recorder.setOutputFilePath(finalAddress);
             }
@@ -170,7 +181,7 @@ public class RecordActivity extends AppCompatActivity {
         chrnmterTime.setBase(SystemClock.elapsedRealtime());
         chrnmterTime.start();
 
-        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        Intent intentInform = new Intent(this, RecordingActivity.class);
         startForegroundService(intentInform);
 
         recorder.startRecording();
@@ -197,7 +208,7 @@ public class RecordActivity extends AppCompatActivity {
         chrnmterTime.start();
         recorder.resumeRecording();
 
-        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        Intent intentInform = new Intent(this, RecordingActivity.class);
         intentInform.setAction("RESUME_RECORDING");
         startService(intentInform);
 
@@ -216,7 +227,7 @@ public class RecordActivity extends AppCompatActivity {
         timeWhenPaused = SystemClock.elapsedRealtime() - chrnmterTime.getBase();
         chrnmterTime.stop();
 
-        Intent intentInform = new Intent(this, BroadcastRecord.class);
+        Intent intentInform = new Intent(this, RecordingActivity.class);
         intentInform.setAction("PAUSE_RECORDING");
         startService(intentInform);
     }
@@ -246,12 +257,23 @@ public class RecordActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        Toast.makeText(getApplicationContext(), "Đang dừng nè má", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Toast.makeText(getApplicationContext(), "Đang hủy nè má", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
     }
 
     @SuppressLint("NonConstantResourceId")
     public void changeLayoutFromRecord(View view){
         switch (view.getId()) {
             case R.id.record_btn_back: {
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isRecording", flagRecording);
+                editor.apply();
                 finish();
                 break;
             }

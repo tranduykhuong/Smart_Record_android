@@ -99,9 +99,6 @@
         <activity
             android:name=".EditMenuActivity"
             android:exported="true" />
-        <activity
-            android:name=".WaveformView"
-            android:exported="true" />
 
         <activity
             android:name=".editmenu.combine.CombineActivity"

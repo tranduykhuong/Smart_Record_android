@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -74,7 +75,8 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
             Manifest.permission.INTERNET,
             Manifest.permission.MANAGE_EXTERNAL_STORAGE,
             Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.POST_NOTIFICATIONS
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.READ_PHONE_STATE
     };
 
     @SuppressLint("ResourceAsColor")
@@ -171,8 +173,16 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
                 break;
             }
             case R.id.folder_btn_record: {
-                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
-                startActivityForResult(intent, RECORDING_CODE);
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
+                if(isMarried == true)
+                {
+                    onBackPressed();
+                }
+                else {
+                    Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+                    startActivityForResult(intent, RECORDING_CODE);
+                }
                 break;
             }
 //            case R.id.record_btn_back: {

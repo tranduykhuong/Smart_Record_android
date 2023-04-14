@@ -1,200 +1,119 @@
 package com.devapp.smartrecord.services;
 
-import android.media.MediaRecorder;
-import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
-import com.suman.voice.graphviewlibrary.GraphView;
-import com.suman.voice.graphviewlibrary.WaveSample;
+import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.RecordActivity;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
-public class RecordingService extends AppCompatActivity {
-    private static RecordingService mInstance = null;
-    private final List<WaveSample> pointList = new ArrayList<>();
-    private long startTime = 0;
-    private Thread mRecordingThread;
-    private volatile Boolean stop = false;
-    private MediaRecorder mediaRecorder;
-    private GraphView graphView;
-    File file;
-    private String fileName;
-    private long longValue[];
-    private RecordingService() {}
-    public static RecordingService getInstance() {
-        if (mInstance == null) {
-            mInstance = new RecordingService();
-        }
-        return mInstance;
+public class RecordingService extends Service {
+    private static final int NOTIFICATION_ID = 1;
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private long pausedTime = 0;
+    private int elapsedTime = 0;
+    private final Handler handler = new Handler();
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
-
-    public boolean startPlotting(GraphView graphView) {
-        if (graphView != null) {
-            this.graphView = graphView;
-            graphView.setMasterList(pointList);
-            graphView.startPlotting();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Boolean isRecording() {
-        return mRecordingThread != null && mRecordingThread.isAlive();
-    }
-
-    public List getSamples() {
-        return pointList;
-    }
-
-    public List stopRecording() {
-        this.stop = true;
-
-        mRecordingThread.interrupt();
-        if (graphView != null) {
-            graphView.stopPlotting();
-        }
-        if(mediaRecorder != null)
-        {
-            mediaRecorder.stop();
-            mediaRecorder.reset();
-            mediaRecorder.release();
-            mediaRecorder = null;
-        }
-        longValue = new long[pointList.size()];
-        for (int i = 0; i < pointList.size(); i++) {
-            if (pointList.get(i) != null) {
-                longValue[i] = pointList.get(i).getAmplitude();
+    private final Runnable updateNotificationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (pausedTime > 0) {
+                elapsedTime = (int) pausedTime;
+                pausedTime = 0;
+            } else {
+                elapsedTime++;
             }
+            builder.setSubText(getFormattedTime(elapsedTime));
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+
+            handler.postDelayed(this, 1000);
         }
-        return pointList;
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        NotificationChannel channel = new NotificationChannel(
+                "recording_channel_id",
+                "Recording Channel",
+                NotificationManager.IMPORTANCE_HIGH);
+        notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
-    public List stopWithNoSave(){
-        this.stop = true;
-
-        mRecordingThread.interrupt();
-        if (graphView != null) {
-            graphView.stopPlotting();
-        }
-        if(mediaRecorder != null)
-        {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-
-            File fileDel = new File(String.valueOf(file.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-            }
-        }
-        longValue = new long[pointList.size()];
-        for (int i = 0; i < pointList.size(); i++) {
-            if (pointList.get(i) != null) {
-                longValue[i] = pointList.get(i).getAmplitude();
-            }
-        }
-        return pointList;
-    }
-
-    public String getOutputFilePath() {
-        String pathFile = null;
-        if (file != null)
-        {
-            pathFile = file.getAbsolutePath();
-        }
-        return pathFile;
-    }
-
-    public void setOutputFilePath(String file) {
-        fileName = file;
-    }
-
-    public void pauseRecording(){
-        if (mediaRecorder != null) {
-            graphView.pause();
-            mediaRecorder.pause();
-        }
-    }
-    public void resumeRecording(){
-        if (mediaRecorder != null) {
-            mediaRecorder.resume();
-            graphView.startPlotting();
-            graphView.resume();
-        }
-    }
-
-    public void startRecording() {
-        this.stop = false;
-
-        if(fileName == null)
-        {
-            fileName = "Record";
-        }
-
-        String fileExt = ".mp3";
-
-        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + fileExt);
-        if(file.exists()) {
-            int i = 1;
-            while (file.exists())
-            {
-                file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + " (" + i + ")" + fileExt);
-                i++;
-            }
-        }
-
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediaRecorder.setOutputFile(file.getAbsolutePath());
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mediaRecorder.setAudioChannels(1);
-
-        try {
-            mediaRecorder.prepare();
-            mediaRecorder.start();
-            startTime = System.currentTimeMillis();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-        pointList.clear();
-        mRecordingThread = new Thread(() -> {
-            while (!RecordingService.this.stop) {
-                pointList.add(new WaveSample(System.currentTimeMillis() - startTime, mediaRecorder.getMaxAmplitude()));
-                try {
-                    Thread.sleep(150);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        mRecordingThread.start();
+    private String getFormattedTime(int seconds) {
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds);
     }
 
     @Override
-    public void onDestroy() {
-        if(mediaRecorder != null)
-            stopRecording();
-        super.onDestroy();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent.getAction();
+        if (action != null && action.equals("PAUSE_RECORDING")) {
+            setTimePause();
+        } else if (action != null && action.equals("RESUME_RECORDING")) {
+            setTimeResume();
+        }
+          else if (action != null && action.equals("STOP_RECORDING")) {
+            stopForeground(true);
+            notificationManager.cancel(NOTIFICATION_ID);
+            handler.removeCallbacks(updateNotificationRunnable);
+        }
+        else{
+            showNotification();
+        }
+        return START_STICKY;
     }
-<<<<<<< HEAD
+
+    private void setTimePause()
+    {
+        pausedTime = elapsedTime;
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    private void setTimeResume(){
+        startForeground(1, builder.build());
+        handler.postDelayed(updateNotificationRunnable, 0);
+    }
+
+    private void showNotification(){
+        builder = new NotificationCompat.Builder(this, "recording_channel_id")
+                .setContentTitle("Recording in progress")
+                .setContentText("Tap to stop recording")
+                .setSmallIcon(R.drawable.ic_play_record)
+                .setOngoing(true)
+                .setVibrate(null)
+                .setSound(null)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(getStopRecordingIntent())
+                .setSubText(getFormattedTime(elapsedTime));
+
+        startForeground(NOTIFICATION_ID, builder.build());
+
+        handler.postDelayed(updateNotificationRunnable, 1000);
+    }
+
+    private PendingIntent getStopRecordingIntent() {
+        elapsedTime = 0;
+        Intent intent = new Intent(this, RecordActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+    }
 }
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> b936a05 (Khoi: Logic Record - UI Combine)
-=======
-}
->>>>>>> 1aa9193 (Khoi: Replay functions + UI Harmonic/ UI Divide)
->>>>>>> 4716628eb1f4a0a2330653211ea1088d384b409b

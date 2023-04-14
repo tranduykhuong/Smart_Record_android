@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -40,9 +39,6 @@ import com.devapp.smartrecord.ui.home.HomeAudioAdapter;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassContentAdapter.FolderHolder> {
@@ -79,9 +75,9 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
         }
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
+            @Override
             public void onClick(View v) {
-                    Toast.makeText(context, holder.getAbsoluteAdapterPosition()+"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, holder.getAbsoluteAdapterPosition()+"", Toast.LENGTH_SHORT).show();
 //                    Intent intent = new Intent(context, HomeFragment.class);
 //                    Bundle bundle = new Bundle();
 //                    bundle.putInt("count", 10);
@@ -92,18 +88,56 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(position));
         viewBinderHelper.setOpenOnlyOne(true);
 
-//        holder.bind(folder);
-//        holder.filterName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sortByName();
-//                notifyDataSetChanged();
-//            }
-//        });
+        holder.folderDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FolderCLassContent folder = listFolder.get(holder.getAbsoluteAdapterPosition());
+                String folderName = folder.getTitle();
+                File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
+                File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "Thùng rác");
+
+                // Tạo thư mục thùng rác nếu chưa tồn tại
+                if (!destinationFolder.exists()) {
+                    destinationFolder.mkdirs();
+                }
+
+                //Tạo ra dialog để xác nhận xóa hay không
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage(view.getContext().getString(R.string.question_delete));
+                builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int j) {
+                        try {
+                            File destinationFile = new File(destinationFolder, folderName); // Tạo tệp đích mới
+                            boolean success = sourceFile.renameTo(destinationFile);
+                            if (success) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+                                listFolder.remove(holder.getAbsoluteAdapterPosition());
+                                notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+                                Toast.makeText(context, view.getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+
+                                listener.onItemClick(j);
+                            } else {
+                                Toast.makeText(context, view.getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, view.getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton(view.getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
+            }
+        });
 
         holder.folderMoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 // inflate the layout of the popup window
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View popupView = inflater.inflate(R.layout.folder_context_more_menu, null);
@@ -116,7 +150,7 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
 
                 // show the popup window
                 // which view you pass in doesn't matter, it is only used for the window token
-                popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+                popupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
 
                 popupView.setOnTouchListener((v1, event) -> {
                     popupWindow.dismiss();
@@ -267,7 +301,6 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
             relativeLayout = itemView.findViewById(R.id.folder_item_view);
             folderDeleteBtn = itemView.findViewById(R.id.folder_btn_delete);
             folderMoreBtn = itemView.findViewById(R.id.folder_btn_more);
-            folderDeleteBtn = itemView.findViewById(R.id.folder_btn_delete);
         }
     }
 }

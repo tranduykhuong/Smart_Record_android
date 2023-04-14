@@ -282,6 +282,7 @@ public class GraphView extends HorizontalScrollView {
                 graphSurfaceView.drawFullGraph();
                 break;
         }
+
         return super.onTouchEvent(event);
     }
 

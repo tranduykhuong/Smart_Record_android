@@ -62,7 +62,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
         holder.trashRestoreBtn.setOnClickListener(view -> {
             Item itemRestore = itemList.get(holder.getAbsoluteAdapterPosition());
             String fileName = itemRestore.getName();
-            File sourceFile  = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
+            File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
             File destinationFolder = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/");
 
             //Tạo ra dialog để xác nhận khôi phục hay không
@@ -101,7 +101,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
         holder.permanentlyDeleteBtn.setOnClickListener(view -> {
             Item item1 = itemList.get(holder.getAbsoluteAdapterPosition());
             String fileName = item1.getName();
-            File file = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/"+fileName);
+            File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/TrashAudio/" + fileName);
 
             //Tạo ra dialog để xác nhận xóa file vĩnh viễn
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());

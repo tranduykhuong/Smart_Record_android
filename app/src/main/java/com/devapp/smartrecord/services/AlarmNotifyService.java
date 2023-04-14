@@ -23,7 +23,7 @@ public class AlarmNotifyService extends Service {
         // Tạo một đối tượng MediaPlayer để phát âm thanh báo thức
         mediaPlayer = new MediaPlayer();
         try {
-            mediaPlayer.setDataSource("/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3");
+            mediaPlayer.setDataSource(fileName);
             mediaPlayer.prepare();
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override

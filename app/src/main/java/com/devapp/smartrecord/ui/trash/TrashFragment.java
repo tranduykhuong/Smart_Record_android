@@ -96,12 +96,14 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     private List<Item> getItemList() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         itemList = new ArrayList<>();
-        trashDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/");
+        trashDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/TrashAudio/");
 
         Log.e("sdnfsdhfk", String.valueOf(trashDirectory));
         if (trashDirectory != null && trashDirectory.listFiles() != null)
             size = trashDirectory.listFiles().length;
+
         trashDirectory.listFiles();
+
         if (trashDirectory.exists()) {
             File[] files = trashDirectory.listFiles();
             if (files != null) {

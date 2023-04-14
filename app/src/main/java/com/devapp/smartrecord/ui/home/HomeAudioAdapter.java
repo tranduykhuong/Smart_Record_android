@@ -27,6 +27,7 @@ import com.arthenica.mobileffmpeg.FFmpeg;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
 
 import java.io.File;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.List;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.HomeAudioHolder>{
@@ -65,6 +67,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         if(audio == null) {
             return;
         }
+
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(position));
         viewBinderHelper.setOpenOnlyOne(true);
 
@@ -209,11 +212,10 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                 String fileName = item.getName();
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
                 File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + fileName);
-                 //CÁI PATH LÀ inputFilePath.getAbsolutePath() nha Duy Khương
-
-                 HandleDataAlarm handleDataAlarm = new HandleDataAlarm(context);
-                handleDataAlarm.addReminder(String.valueOf(inputFilePath.getAbsolutePath()));
-                // Toast.makeText(context.getApplicationContext(), String.valueOf(inputFilePath.getAbsolutePath()), Toast.LENGTH_LONG).show();
+                //CÁI PATH LÀ inputFilePath.getAbsolutePath() nha Duy Khương
+                HandleDataAlarm handleDataAlarm = new HandleDataAlarm(context);
+                handleDataAlarm.addReminder(inputFilePath.getAbsolutePath());
+//                Toast.makeText(context.getApplicationContext(), String.valueOf(inputFilePath.getAbsolutePath()), Toast.LENGTH_LONG).show();
             });
 
             //Đổi tên
@@ -363,14 +365,18 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         holder.homeTrashBtn.setOnClickListener(view -> {
 
             Audio audio1 = audioList.get(holder.getAbsoluteAdapterPosition());
-            String fileName = audio1.getName();
-            Log.e("TAG", "onClick: " + fileName);
-            File sourceFile  = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
-            File destinationFolder = new File(Environment.getExternalStorageDirectory().toString()+"/TrashAudio/");
+            String fileNameTrash = audio1.getName();
+            Log.e("TAG", "onClick: " + fileNameTrash);
+            File sourceFile  = new File(Environment.getExternalStorageDirectory() + "/Recordings/" + fileNameTrash); // Lấy đường dẫn đầy đủ đến tệp
+            File destinationFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/TrashAudio/");
 
             // Tạo thư mục thùng rác nếu chưa tồn tại
             if (!destinationFolder.exists()) {
-                destinationFolder.mkdirs();
+                destinationFolder.mkdir();
+                Toast.makeText(context, "CC", Toast.LENGTH_SHORT).show();
+            }
+            else {
+
             }
 
             //Tạo ra dialog để xác nhận xóa hay không
@@ -379,8 +385,8 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
             builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), (dialogInterface, j) -> {
                 try {
                     if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
-                        File destinationFile = new File(destinationFolder, fileName); // Tạo tệp đích mới
-                        if (sourceFile.renameTo(destinationFile)) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+                        File destinationFile = new File(destinationFolder, fileNameTrash); // Tạo tệp đích mới
+                        if (sourceFile.renameTo(destinationFile)) {// Di chuyển tệp đến thư mục đích và kiểm tra kết quả
                             audioList.remove(holder.getAbsoluteAdapterPosition());
                             notifyItemRemoved(holder.getAbsoluteAdapterPosition());
                             Toast.makeText(context, view.getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
@@ -410,6 +416,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         holder.timeOfAudio.setText(audio.getTimeOfAudio());
         holder.sizeAudio.setText(audio.getSize());
         holder.createDateAudio.setText(audio.getCreateDate());
+        holder.relativeLayout.setOnClickListener(view -> listener.playSound(audioList.get(holder.getAbsoluteAdapterPosition()).getName()));
 
     }
     @Override
@@ -431,6 +438,8 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         private final TextView nameAudio, timeOfAudio, sizeAudio, createDateAudio;
         private final SwipeRevealLayout swipeRevealLayout;
         private final ImageView homeMoreBtn, homeShareBtn,  homeTrashBtn;
+        private final RelativeLayout relativeLayout;
+
 
         public HomeAudioHolder(@NonNull View itemView) {
             super(itemView);
@@ -440,7 +449,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
             sizeAudio = itemView.findViewById(R.id.home_item_size);
             createDateAudio = itemView.findViewById(R.id.home_item_create_date);
             swipeRevealLayout = itemView.findViewById(R.id.swipe_reveal_layout);
-            RelativeLayout relativeLayout = itemView.findViewById(R.id.item_audio_home);
+            relativeLayout = itemView.findViewById(R.id.item_audio_home);
             homeTrashBtn = itemView.findViewById(R.id.home_btn_delete);
             homeMoreBtn = itemView.findViewById(R.id.home_btn_more);
             homeShareBtn = itemView.findViewById(R.id.home_btn_share);

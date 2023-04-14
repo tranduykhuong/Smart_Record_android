@@ -24,7 +24,7 @@ public class ConfigurationClass {
     private String fileFormat;
     private int isDefault;
 
-    ConfigurationClass(Context a) {
+    public ConfigurationClass(Context a) {
         context = a;
     }
     public int getThemeMode() {

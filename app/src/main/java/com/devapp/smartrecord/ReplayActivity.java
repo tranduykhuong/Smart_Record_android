@@ -338,6 +338,7 @@ public class ReplayActivity  extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     public void changeLayoutFromReplay(View view){
         mediaPlayer.stop();
+        txtTimeCur.stop();
 
         switch (view.getId()) {
             case R.id.replay_btn_adjust: {
