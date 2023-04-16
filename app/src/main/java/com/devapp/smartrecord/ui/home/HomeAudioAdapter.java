@@ -1,5 +1,7 @@
 package com.devapp.smartrecord.ui.home;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -213,7 +215,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
                 File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + fileName);
                 //CÁI PATH LÀ inputFilePath.getAbsolutePath() nha Duy Khương
-                HandleDataAlarm handleDataAlarm = new HandleDataAlarm(context);
+                HandleDataAlarm handleDataAlarm = HandleDataAlarm.getInstance(context);
                 handleDataAlarm.addReminder(inputFilePath.getAbsolutePath());
 //                Toast.makeText(context.getApplicationContext(), String.valueOf(inputFilePath.getAbsolutePath()), Toast.LENGTH_LONG).show();
             });
@@ -224,9 +226,9 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
                 // Lấy thông tin tệp cần đổi tên
                 Audio item = audioList.get(holder.getAbsoluteAdapterPosition());
-                String fileName = item.getName();
-                String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-                File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + fileName);
+                String fileNameRe = item.getName();
+                String fileExtension = fileNameRe.substring(fileNameRe.lastIndexOf("."));
+                File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + fileNameRe);
 
                 // Tạo Dialog để nhập tên mới
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -234,7 +236,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
                 // Thiết kế giao diện Dialog
                 final EditText input = new EditText(context);
-                input.setText(FilenameUtils.removeExtension(fileName)); // Hiển thị tên tệp hiện tại trong input
+                input.setText(FilenameUtils.removeExtension(fileNameRe)); // Hiển thị tên tệp hiện tại trong input
                 input.setSelection(input.getText().length()); // Di chuyển con trỏ đến cuối input
                 builder.setView(input);
 
@@ -250,7 +252,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                     }
                     if (newFileName.isEmpty()) {
                         Toast.makeText(context, "Tên tệp không được để trống", Toast.LENGTH_SHORT).show();
-                    } else if (newFileName.equals(fileName)) {
+                    } else if (newFileName.equals(fileNameRe)) {
                         Toast.makeText(context, "Tên tệp mới phải khác tên tệp cũ", Toast.LENGTH_SHORT).show();
                     } else if (newFilePath.exists()) {
                         Toast.makeText(context, "Tệp đã tồn tại", Toast.LENGTH_SHORT).show();

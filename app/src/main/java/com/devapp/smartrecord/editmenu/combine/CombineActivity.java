@@ -85,7 +85,7 @@ public class CombineActivity extends AppCompatActivity {
         audioList.add(new Audio(name, formatTime(file), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_audio_item));
 
         //ADD SOUND
-        addFileSound("Record (12).mp3");
+//        addFileSound("Record (12).mp3");
 
         finalName = "CB_" + fileName;
         txtName.setText(finalName);

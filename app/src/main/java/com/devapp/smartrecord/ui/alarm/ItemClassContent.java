@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -64,26 +65,27 @@ public class ItemClassContent {
     }
 
     private void actionAlarm() {
-        String hhmm = time.split(" ")[0];
-        String ddmmyyyy = time.split(" ")[1];
-        String []hhmmSplit = hhmm.split(":");
-        String []ddmmyyyySplit = ddmmyyyy.split("/");
-        Date date = new Date( Integer.parseInt(ddmmyyyySplit[2]) - 1900,
-                Integer.parseInt(ddmmyyyySplit[1]) - 1,
-                Integer.parseInt(ddmmyyyySplit[0]),
-                Integer.parseInt(hhmmSplit[0]),
-                Integer.parseInt(hhmmSplit[1]), 0);
-
         if (checked == false) {
+            String hhmm = time.split(" ")[0];
+            String ddmmyyyy = time.split(" ")[1];
+            String []hhmmSplit = hhmm.split(":");
+            String []ddmmyyyySplit = ddmmyyyy.split("/");
+            Date date = new Date( Integer.parseInt(ddmmyyyySplit[2]) - 1900,
+                    Integer.parseInt(ddmmyyyySplit[1]) - 1,
+                    Integer.parseInt(ddmmyyyySplit[0]),
+                    Integer.parseInt(hhmmSplit[0]),
+                    Integer.parseInt(hhmmSplit[1]), 0);
+
             serviceIntent = new Intent(context, AlarmService.class);
             if (milliseconds == 0) {
                 milliseconds = date.getTime();
             }
             serviceIntent.putExtra("oldID", milliseconds);
             milliseconds = date.getTime();
-//            Log.e(TAG, "ItemClassContent: " + milliseconds);
+//            Log.e(TAG, "Create ItemClassContent: " + milliseconds);
             serviceIntent.putExtra("timeInMillis", milliseconds);
             serviceIntent.putExtra("path", path);
+            serviceIntent.putExtra("time", time);
             context.startForegroundService(serviceIntent);
         }
     }

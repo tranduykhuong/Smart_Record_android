@@ -2,11 +2,13 @@ package com.devapp.smartrecord.ui.alarm;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +18,9 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
 
 import java.util.ArrayList;
@@ -27,6 +32,8 @@ import java.util.Set;
 
 public class HandleDataAlarm {
     Context context;
+
+    private static HandleDataAlarm sgt;
     private ArrayList<ItemClassContent> listItemPast;
     private ArrayList<ItemClassContent> listItemFuture;
 
@@ -41,11 +48,25 @@ public class HandleDataAlarm {
     private int monthSelected;
     private int yearSelected;
 
-    public HandleDataAlarm(Context context) {
-        this.context = context;
-        listItemFuture = new ArrayList<>();
-        listItemPast = new ArrayList<>();
+    public static HandleDataAlarm getInstance(Context context) {
+        if (sgt == null) {
+            sgt = new HandleDataAlarm(context);
+        }
+        return sgt;
+    }
 
+    private HandleDataAlarm(Context context) {
+        this.context = context;
+        loadRemindData();
+    }
+
+    public void setChecked(String time) {
+        for (int i = 0; i < listItemFuture.size(); i++) {
+            if (listItemFuture.get(i).getTime().equals(time)) {
+                listItemFuture.get(i).setchecked(true);
+            }
+        }
+        saveRemindData();
         loadRemindData();
     }
 
@@ -116,7 +137,25 @@ public class HandleDataAlarm {
                 calendar.getTimeInMillis() - 1000);
 
         // Show
-        datePickerDialog.show();
+        if (isValidContextForDialog(context)) {
+            Log.e(TAG, "addReminder: true");
+            datePickerDialog.show();
+        } else {
+            Log.e(TAG, "addReminder: false");
+            Toast.makeText(context, "Có lỗi xảy ra! Vui lòng khởi động lại ứng dụng!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public static boolean isValidContextForDialog(Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (!activity.isFinishing()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void onChangeTimeAlarmFurture(int position, ItemClassContentAdapter adapter) {
@@ -204,6 +243,7 @@ public class HandleDataAlarm {
                 calendar.getTimeInMillis() - 1000);
 
         // Show
+        Log.e(TAG, "onChangeTimeAlarmFurture: " + context);
         datePickerDialog.show();
     }
 
@@ -251,6 +291,8 @@ public class HandleDataAlarm {
     }
 
     public void loadRemindData() {
+        listItemFuture = new ArrayList<>();
+        listItemPast = new ArrayList<>();
         SharedPreferences sharedPreferences = context.getSharedPreferences("remindData", Context.MODE_PRIVATE);
         if (sharedPreferences == null) return;
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -270,12 +312,13 @@ public class HandleDataAlarm {
                         Integer.parseInt(ddmmyyyySplit[0]),
                         Integer.parseInt(hhmmSplit[0]),
                         Integer.parseInt(hhmmSplit[1]), 0);
-                if (date.getTime() > System.currentTimeMillis()) {
+                if (date.getTime() > System.currentTimeMillis() && item[2].equals("false")) {
                     listItemFuture.add(new ItemClassContent(context, item[0], item[1], false));
                 } else {
                     listItemPast.add(new ItemClassContent(context, item[0], item[1], true));
                 }
             }
+            saveRemindData();
         }
     }
 

@@ -342,7 +342,8 @@ public class ReplayActivity  extends AppCompatActivity {
 
         switch (view.getId()) {
             case R.id.replay_btn_adjust: {
-                File file = new File(getApplicationContext().getFilesDir(), files[currentSongIndex].getName());
+                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
+//                File file = new File(getApplicationContext().getFilesDir(), files[currentSongIndex].getName());
                 Intent intent1 = new Intent(this, EditMenuActivity.class);
                 intent1.putExtra("PATH_KEY", file.getAbsolutePath());
                 startActivity(intent1);
@@ -364,5 +365,11 @@ public class ReplayActivity  extends AppCompatActivity {
     public void onBackPressed() {
         mediaPlayer.stop();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mediaPlayer.stop();
+        super.onDestroy();
     }
 }

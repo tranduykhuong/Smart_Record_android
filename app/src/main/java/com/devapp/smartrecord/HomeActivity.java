@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -44,12 +45,16 @@ import androidx.navigation.ui.NavigationUI;
 import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
 import com.devapp.smartrecord.editmenu.cut.CutActivity;
+import com.devapp.smartrecord.ui.alarm.AlarmService;
+import com.devapp.smartrecord.ui.alarm.ReminderReceiver;
 import com.devapp.smartrecord.ui.folder.FolderFragment;
 import com.devapp.smartrecord.soundvariation.VariationActivity;
 import com.devapp.smartrecord.ui.home.HomeFragment;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.devapp.smartrecord.databinding.ActivityHomeBinding;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -240,33 +245,50 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
         resources.updateConfiguration(configuration, displayMetrics);
     }
 
+    public static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> runningServices = manager.getRunningServices(Integer.MAX_VALUE);
+        for (ActivityManager.RunningServiceInfo service : runningServices) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+        Log.e(TAG, "onStart: Home");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e(TAG, "onResume: Home");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.e(TAG, "onStop: Home");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.e(TAG, "onPause: Home");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.e(TAG, "onRestart: Home");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e(TAG, "onDestroy: Home");
     }
 }

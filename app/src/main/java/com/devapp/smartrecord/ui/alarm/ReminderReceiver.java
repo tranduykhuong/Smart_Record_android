@@ -39,18 +39,31 @@ import java.io.IOException;
 public class ReminderReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "REMINDER_CHANNEL_ID";
 
+    private HandleDataAlarm handleData;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // Xử lý thông báo nhắc nhở tại đây
         if (intent != null && intent.getAction() != null) {
             if (intent.getAction().equals("REMINDER_ALARM")) {
                 String fileName = intent.getExtras().getString("path");
+                String time = intent.getExtras().getString("time");
                 if (fileName != null) {
                     Log.e(TAG, "onReceive: " + fileName);
 
                     Intent serviceIntent = new Intent(context, AlarmNotifyService.class);
                     serviceIntent.putExtra("path", fileName);
+                    serviceIntent.putExtra("time", time);
                     context.startService(serviceIntent);
+
+
+                    handleData = HandleDataAlarm.getInstance(context);
+                    handleData.setChecked(time);
+
+                    if (handleData.getListViewFuture().size() == 0) {
+                        Intent AlarmServiceIntent = new Intent(context, AlarmService.class);
+                        context.stopService(AlarmServiceIntent);
+                    }
 
                     // Hiển thị notification
                     Intent intentRemoveNotify = new Intent(context, RemoveNotifyReceiver.class);
@@ -65,10 +78,10 @@ public class ReminderReceiver extends BroadcastReceiver {
                         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
                         notificationManager.createNotificationChannel(channel);
                     }
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_alarm_clock)
                             .setContentTitle("SMART RECORD - REMINDER")
-                            .setContentText(fileName)
+                            .setContentText(time)
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .addAction(R.drawable.ic_pause_record, "Tắt ngay", pendingIntentRemove)
                             .setDeleteIntent(pendingIntentRemove)

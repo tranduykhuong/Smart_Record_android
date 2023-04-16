@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -37,7 +38,6 @@ public class AlarmService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        Log.e(TAG, "actionAlarm: ");
         if (intent == null) {
             Log.e(TAG, "actionAlarm: null");
         }
@@ -48,11 +48,10 @@ public class AlarmService extends Service {
                     NotificationManager.IMPORTANCE_LOW);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            Notification notification = new NotificationCompat.Builder(this, "my_channel_id")
+            Notification notification = new NotificationCompat.Builder(getApplicationContext(), "my_channel_id")
                     .setSmallIcon(R.drawable.ic_alarm_clock)
                     .setContentTitle("Smart Record - Reminder")
                     .setPriority(NotificationCompat.PRIORITY_MIN)
-                    .setVisibility(NotificationCompat.VISIBILITY_SECRET)
                     .build();
             startForeground(112, notification);
         } else {
@@ -62,11 +61,13 @@ public class AlarmService extends Service {
         // Lấy ra thông tin về thời gian nhắc nhở từ Intent
         milliseconds = intent.getLongExtra("timeInMillis", 0);
         String path = intent.getStringExtra("path");
+        String time = intent.getStringExtra("time");
         long oldID = intent.getLongExtra("oldID", 0);
 
         alarmIntent = new Intent(this, ReminderReceiver.class);
         alarmIntent.setAction("REMINDER_ALARM");
         alarmIntent.putExtra("path", path);
+        alarmIntent.putExtra("time", time);
 
         if (oldID != 0) {
             Log.e(TAG, "oldID: " + oldID);
@@ -85,11 +86,16 @@ public class AlarmService extends Service {
             alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
         }
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.e(TAG, "onDestroy: service");
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        stopForeground(true);
+        stopSelf();
     }
 }

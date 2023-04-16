@@ -61,7 +61,8 @@ public class AlarmFragment extends Fragment implements ItemClassContentAdapter.O
         binding = FragmentAlarmBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        handleData = new HandleDataAlarm(getActivity());
+        handleData = HandleDataAlarm.getInstance(getActivity());
+        handleData.loadRemindData();
 
         rcvFuture = binding.fileRcvListFuture;
         rcvFuture.setLayoutManager(new LinearLayoutManager(getContext()));

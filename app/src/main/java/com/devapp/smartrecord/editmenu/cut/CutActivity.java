@@ -6,10 +6,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -38,6 +40,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -58,9 +63,10 @@ public class CutActivity extends AppCompatActivity {
     private int percentMin = 0;
     private int percentMax = 100;
     private byte[] waveform;
+    ArrayList<Float> wf;
     private List<Entry> entries;
-    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
-//    String audioFilePath = "/storage/emulated/0/Recordings/Voice Recorder/Test.m4a";
+//    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
+    String audioFilePath = "/storage/emulated/0/Recordings/139-40 Đ. Trần Hưng Đạo (2).mp3";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -72,6 +78,9 @@ public class CutActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_cut);
         entries = new ArrayList<>();
+
+        Intent intent = getIntent();
+        audioFilePath = intent.getStringExtra("PATH_KEY");
 
         twMin = findViewById(R.id.tw_min);
         twMax = findViewById(R.id.tw_max);
@@ -139,6 +148,7 @@ public class CutActivity extends AppCompatActivity {
         chart.getAxisRight().setDrawGridLines(false);
         chart.getLegend().setEnabled(false);
 
+
         // Đọc dữ liệu từ tệp
         File file = new File(audioFilePath);
         byte[] data = new byte[(int) file.length()];
@@ -147,6 +157,19 @@ public class CutActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        IntBuffer intBuffer = buffer.asIntBuffer();
+
+        wf = new ArrayList<Float>();
+        while (intBuffer.hasRemaining()) {
+            int sample = intBuffer.get();
+            float amplitude = (float) (Math.abs((float) sample) / 32768.0);
+            // sử dụng cường độ âm thanh tại mỗi mẫu dữ liệu ở đây
+            wf.add(amplitude);
+        }
+        Log.e(TAG, "wf: " + wf.size());
 
         // Chuyển đổi các mẫu âm thanh sang dạng số thực và chuẩn hóa
         double[] samples = new double[data.length / 2];
@@ -160,6 +183,7 @@ public class CutActivity extends AppCompatActivity {
         for (int i = 0; i < samples.length; i = i + 1) {
             waveform[i] = (byte) (samples[i] * 100);
         }
+
 
         Log.e(TAG, "Waveform: " + waveform.length);
         Log.e(TAG, "length: " + duration);
@@ -193,6 +217,11 @@ public class CutActivity extends AppCompatActivity {
                 int delta = (int) ((percentMax - percentMin) / 100f * duration);
                 twTimeCutAudio.setText(String.format(Locale.getDefault(), "%02d:%02d", (delta / 1000) / 60, (delta/1000) % 60));
             }
+        });
+
+        mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
+            btnPlay.setImageResource(R.drawable.ic_play);
+            btnPlay.setTag("ic_play");
         });
 
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -260,6 +289,44 @@ public class CutActivity extends AppCompatActivity {
 //            throw new RuntimeException(e);
 //        }
     }
+
+//    private void updateChart() {
+//        int curMinWave = (int) (wf.size() * (percentMin / 100f));
+//        int curMaxWave = (int) (wf.size() * (percentMax / 100f));
+//        Log.e(TAG, "updateChart: " + curMinWave + " " + curMaxWave);
+//
+//        entries.clear();
+//        for (int i=curMinWave; i<curMaxWave; i = i + 67) {
+//            if (Math.abs(wf.get(i)) < 60)
+//                entries.add(new Entry(i, wf.get(i) / 10));
+//            else if (Math.abs(wf.get(i)) < 80)
+//                entries.add(new Entry(i, wf.get(i) / 6));
+//            else if (Math.abs(wf.get(i)) < 90)
+//                entries.add(new Entry(i, wf.get(i) / 4));
+//            else if (Math.abs(wf.get(i)) < 116)
+//                entries.add(new Entry(i, wf.get(i) / 3));
+//            else
+//                entries.add(new Entry(i, wf.get(i) / 2));
+//        }
+//        Log.e(TAG, "entries: " + entries.size());
+//
+//        int range = entries.size() * 2 > 9000 ? 9000 : entries.size() * 2;
+//        chart.setMinimumWidth(range);
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "");
+//        dataSet.setDrawValues(false);
+//        dataSet.setDrawCircles(false);
+//        dataSet.setColor(Color.BLACK);
+//        dataSet.setLineWidth(1f);
+//        dataSet.setHighlightLineWidth(2f);
+//        dataSet.setDrawHorizontalHighlightIndicator(false);
+//        LineData lineData = new LineData(dataSet);
+//        chart.setData(lineData);
+//        chart.invalidate();
+//
+//        chart.highlightValue(0, 0);
+//    }
+
 
     private void updateChart() {
         int curMinWave = (int) (waveform.length * (percentMin / 100f));

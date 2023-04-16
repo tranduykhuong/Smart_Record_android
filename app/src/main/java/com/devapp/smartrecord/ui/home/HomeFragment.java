@@ -59,6 +59,14 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     private TextView totalCapacityAudio;
     private TextView capacityUnit;
     private FragmentHomeBinding binding;
+    private Context context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -206,7 +214,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
 
         rcvHomeAudio = binding.homeRcvAudioList;
         rcvHomeAudio.setLayoutManager(new LinearLayoutManager(getContext()));
-        homeAudioAdapter = new HomeAudioAdapter(getContext(), this);
+        homeAudioAdapter = new HomeAudioAdapter(getActivity(), this);
 
         homeAudioAdapter.setData(getAudioList());
         rcvHomeAudio.setAdapter(homeAudioAdapter);

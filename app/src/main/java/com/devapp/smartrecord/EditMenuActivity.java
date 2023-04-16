@@ -73,6 +73,7 @@ public class EditMenuActivity extends AppCompatActivity {
             }
             case R.id.adjust_btn_cut:{
                 Intent intent = new Intent(this, CutActivity.class);
+                intent.putExtra("PATH_KEY", pathSound);
                 startActivity(intent);
                 break;
             }

@@ -14,7 +14,7 @@ public class RemoveNotifyReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        handleData = new HandleDataAlarm(context);
+        handleData = HandleDataAlarm.getInstance(context);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(111);

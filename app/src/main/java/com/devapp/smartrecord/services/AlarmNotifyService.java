@@ -11,6 +11,8 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 
+import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
+
 import java.io.IOException;
 
 public class AlarmNotifyService extends Service {
@@ -19,7 +21,7 @@ public class AlarmNotifyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String fileName = intent.getExtras().getString("path");
-        Toast.makeText(getBaseContext(), fileName, Toast.LENGTH_SHORT).show();
+        String time = intent.getExtras().getString("time");
         // Tạo một đối tượng MediaPlayer để phát âm thanh báo thức
         mediaPlayer = new MediaPlayer();
         try {
@@ -30,7 +32,6 @@ public class AlarmNotifyService extends Service {
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(111);
-                    Toast.makeText(AlarmNotifyService.this, "Cancel", Toast.LENGTH_SHORT).show();
                 }
             });
             mediaPlayer.start();
