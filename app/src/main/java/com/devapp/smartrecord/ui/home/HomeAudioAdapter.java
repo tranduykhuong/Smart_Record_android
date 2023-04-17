@@ -375,7 +375,6 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
             // Tạo thư mục thùng rác nếu chưa tồn tại
             if (!destinationFolder.exists()) {
                 destinationFolder.mkdir();
-                Toast.makeText(context, "CC", Toast.LENGTH_SHORT).show();
             }
             else {
 

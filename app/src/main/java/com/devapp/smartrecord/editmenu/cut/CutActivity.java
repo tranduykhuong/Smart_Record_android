@@ -227,7 +227,7 @@ public class CutActivity extends AppCompatActivity {
                             chart.highlightValue((int) (currentPosition * (waveform.length * 1f / (duration - 2.2))), 0);
 
                             rate1 = 1.0f * realWidth / chart.getWidth();
-                            rate2 = 1.0f * currentPosition / mediaPlayer.getDuration();
+                            rate2 = 1.0f * currentPosition / duration;
 
                             if (rate3 > 0.01 && rate2 > rate3)
                             {

@@ -65,5 +65,9 @@
     <string name="combine_title">Combine</string>
     <string name="combine_cancel">Clear</string>
     <string name="menu_title">Edit Menu</string>
+    <string name="add_successfull">Successful Add</string>
+    <string name="remove_file">File is deleted</string>
+    <string name="save_file">Saved_</string>
+
 
 </resources>
