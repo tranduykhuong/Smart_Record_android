@@ -171,6 +171,7 @@
                 android:text="x1"/>
 
             <ImageButton
+                android:id="@+id/replay_btn_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"

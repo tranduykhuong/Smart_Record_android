@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.devapp.smartrecord.services.RecordingActivity;
+import com.devapp.smartrecord.services.RecordingService;
 import com.suman.voice.graphviewlibrary.GraphView;
 
 import org.json.JSONArray;
@@ -129,7 +130,7 @@ public class RecordActivity extends AppCompatActivity {
                 editor.putString(recorder.getFileName(), json);
                 editor.apply();
 
-                Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show();
                 popupWindow.dismiss();
             });
 
@@ -143,12 +144,20 @@ public class RecordActivity extends AppCompatActivity {
         recorder.stopWithNoSave();
         Toast.makeText(getApplicationContext(), this.getString(R.string.remove_file), Toast.LENGTH_LONG).show();
 
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("STOP_RECORDING");
+        startService(intentInform);
+
         Intent returnHome = new Intent(this, HomeActivity.class);
         startActivity(returnHome);
     }
     private void saveRecord(){
         recorder.stopRecording();
         Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
+
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("STOP_RECORDING");
+        startService(intentInform);
 
         Intent returnHome = new Intent(this, HomeActivity.class);
         startActivity(returnHome);
@@ -220,6 +229,9 @@ public class RecordActivity extends AppCompatActivity {
         chronometerTime.setBase(SystemClock.elapsedRealtime());
         chronometerTime.start();
 
+        Intent intentInform = new Intent(this, RecordingService.class);
+        startService(intentInform);
+
         recorder.startRecording();
         recorder.startPlotting(graphView);
 
@@ -244,6 +256,10 @@ public class RecordActivity extends AppCompatActivity {
         chronometerTime.start();
         recorder.resumeRecording();
 
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("RESUME_RECORDING");
+        startService(intentInform);
+
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     public void PauseRecord()
@@ -258,6 +274,10 @@ public class RecordActivity extends AppCompatActivity {
 
         timeWhenPaused = SystemClock.elapsedRealtime() - chronometerTime.getBase();
         chronometerTime.stop();
+
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("PAUSE_RECORDING");
+        startService(intentInform);
     }
 
     PhoneStateListener phoneStateListener = new PhoneStateListener() {
@@ -285,6 +305,8 @@ public class RecordActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        recorder.stopRecording();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
         super.onDestroy();
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.devapp.smartrecord.api.VoiceToTextActivity;
+import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -43,10 +44,7 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -64,7 +62,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private TextView txtNameReplay, txtTimeTotal;
     private HorizontalScrollView hrzScrollView;
     private Chronometer txtTimeCur;
-    private ImageButton btnPlayReplay, btnListNote;
+    private ImageButton btnPlayReplay;
     private Button btnSpeed;
     private SeekBar skbarReplay;
     private LineChart chart;
@@ -172,7 +170,7 @@ public class ReplayActivity  extends AppCompatActivity {
         chart.getAxisRight().setDrawGridLines(false);
         chart.getLegend().setEnabled(false);
 
-        // Đọc dữ liệu từ tệp
+        // Read data from file
         File fileWave = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
         byte[] data = new byte[(int) fileWave.length()];
         try (FileInputStream inputStream = new FileInputStream(fileWave)) {
@@ -201,18 +199,19 @@ public class ReplayActivity  extends AppCompatActivity {
         btnSpeed =  findViewById(R.id.btn_speed_replay);
         skbarReplay =  findViewById(R.id.skbar_replay);
         hrzScrollView = findViewById(R.id.replay_horizontal);
-        btnListNote = findViewById(R.id.replay_btn_list);
+        ImageButton btnListNote = findViewById(R.id.replay_btn_list);
         ImageButton btnPrevReplay = findViewById(R.id.btn_prev_replay);
         ImageButton btnNextReplay = findViewById(R.id.btn_next_replay);
         ImageButton btnBackWard = findViewById(R.id.btn_pr5_replay);
         ImageButton btnForward = findViewById(R.id.btn_next5_replay);
         ImageButton btnRepeat = findViewById(R.id.btn_repeat_replay);
+        ImageButton btnAlarm = findViewById(R.id.replay_btn_alarm);
 
-        // Khởi tạo biểu đồ tần số âm thanh
+        // Initialize chart
         chart = findViewById(R.id.replay_chart);
         InitChart();
 
-        // Cập nhật vẽ chart
+        // Update chart
         updateChart();
 
         //SEEKBAR
@@ -367,10 +366,9 @@ public class ReplayActivity  extends AppCompatActivity {
                 txtTimeCur.stop();
             }
         });
-
         btnListNote.setOnClickListener(view -> {
             LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.modal_show_note, null);
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.modal_show_note, null);
 
             int width = LinearLayout.LayoutParams.MATCH_PARENT;
             int height = LinearLayout.LayoutParams.MATCH_PARENT ;
@@ -400,6 +398,12 @@ public class ReplayActivity  extends AppCompatActivity {
 
             btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
         });
+        btnAlarm.setOnClickListener(view -> {
+            File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
+            HandleDataAlarm handleDataAlarm = HandleDataAlarm.getInstance(this);
+            handleDataAlarm.addReminder(inputFilePath.getAbsolutePath());
+        });
+
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
             if(flagRepeat)
