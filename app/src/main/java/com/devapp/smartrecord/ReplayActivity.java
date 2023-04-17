@@ -3,20 +3,16 @@ package com.devapp.smartrecord;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.media.audiofx.Visualizer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,18 +22,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.devapp.smartrecord.api.VoiceToTextActivity;
-import com.devapp.smartrecord.services.RecordingService;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.suman.voice.graphviewlibrary.GraphView;
-import com.suman.voice.graphviewlibrary.WaveSample;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -54,20 +49,32 @@ public class ReplayActivity  extends AppCompatActivity {
     private File[] files;
     private boolean flagPlaying = true, flagSpeed = false, flagRepeat = false; //Stop
     private TextView txtNameReplay, txtTimeTotal;
+    private HorizontalScrollView hrzScrollView;
     private Chronometer txtTimeCur;
     private ImageButton btnPlayReplay;
     private Button btnSpeed;
     private SeekBar skbarReplay;
+    private LineChart chart;
+    ArrayList<Float> wf;
+    private byte[] waveform;
+    private List<Entry> entries;
+    private final Handler handler = new Handler();
     private boolean isSeekBarTouched = false;
-    private GraphView graphView;
-    private final List<WaveSample> pointList = new ArrayList<>();
-    private Thread mRecordingThread;
+    private int progressWidth;
+    private int realWidth;
+    private float rate1, rate2, rate3;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replay);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        progressWidth = displayMetrics.widthPixels;
+        realWidth = displayMetrics.widthPixels;
+
         getFiles();
+        entries = new ArrayList<>();
         BoundView();
 
         Intent intent = getIntent();
@@ -91,7 +98,7 @@ public class ReplayActivity  extends AppCompatActivity {
             nameSound = intent.getStringExtra("NameTrash");
             File trashDirectory = new File(Environment.getExternalStorageDirectory() + "/TrashAudio");
             files = trashDirectory.listFiles(file -> file.isFile() && (file.getName().endsWith(".mp3") || file.getName().endsWith(".aac")));
-            for(int i = 0; i < files.length; i++)
+            for(int i = 0; i < Objects.requireNonNull(files).length; i++)
             {
                 if(files[i].getName().equals(nameSound))
                 {
@@ -111,17 +118,72 @@ public class ReplayActivity  extends AppCompatActivity {
         btnPlayReplay =  findViewById(R.id.btn_play_replay);
         btnSpeed =  findViewById(R.id.btn_speed_replay);
         skbarReplay =  findViewById(R.id.skbar_replay);
+        hrzScrollView = findViewById(R.id.replay_horizontal);
         ImageButton btnPrevReplay = findViewById(R.id.btn_prev_replay);
         ImageButton btnNextReplay = findViewById(R.id.btn_next_replay);
         ImageButton btnBackWard = findViewById(R.id.btn_pr5_replay);
         ImageButton btnForward = findViewById(R.id.btn_next5_replay);
         ImageButton btnRepeat = findViewById(R.id.btn_repeat_replay);
-        graphView = findViewById(R.id.graphView);
-        graphView.setGraphColor(Color.rgb(18, 17, 17));
-        graphView.setCanvasColor(Color.rgb(255, 255, 255));
-        graphView.setTimeColor(Color.rgb(0, 0, 0));
-        graphView.setWaveLengthPX(13);
 
+        // Khởi tạo biểu đồ tần số âm thanh
+        chart = findViewById(R.id.replay_chart);
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(false);
+        chart.setPinchZoom(true);
+        chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMinimum(60 * 1000f);
+        // Vẽ lưới nền và thiết lập màu nền cho lưới
+        chart.setDrawGridBackground(true);
+        chart.setGridBackgroundColor(Color.WHITE);
+
+        // Thiết lập khoảng cách giữa các đường lưới trên trục X và Y
+        chart.getXAxis().setGranularity(1000f);
+        chart.getXAxis().setSpaceMin(1000f);
+        chart.getXAxis().setDrawLabels(false); //
+        chart.getXAxis().setEnabled(false); //
+        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getAxisRight().setDrawGridLines(false);
+        chart.getLegend().setEnabled(false);
+
+        // Đọc dữ liệu từ tệp
+        File fileWave = new File(files[currentSongIndex].getAbsolutePath());
+        byte[] data = new byte[(int) fileWave.length()];
+        try (FileInputStream inputStream = new FileInputStream(fileWave)) {
+            inputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        IntBuffer intBuffer = buffer.asIntBuffer();
+
+        wf = new ArrayList<>();
+        while (intBuffer.hasRemaining()) {
+            int sample = intBuffer.get();
+            float amplitude = (float) (Math.abs((float) sample) / 32768.0);
+            // sử dụng cường độ âm thanh tại mỗi mẫu dữ liệu ở đây
+            wf.add(amplitude);
+        }
+
+        // Chuyển đổi các mẫu âm thanh sang dạng số thực và chuẩn hóa
+        double[] samples = new double[data.length / 2];
+        for (int i = 0; i < samples.length; i++) {
+            short sample = (short) (((data[i * 2 + 1] & 0xff) << 8) | (data[i * 2] & 0xff));
+            samples[i] = (double) sample / Short.MAX_VALUE;
+        }
+
+        // Chuyển sang waveform
+        waveform = new byte[samples.length + 1];
+        for (int i = 0; i < samples.length; i = i + 1) {
+            waveform[i] = (byte) (samples[i] * 100);
+        }
+
+        // Cập nhật vẽ chart
+        updateChart();
 
         //SEEKBAR
         skbarReplay.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -276,6 +338,7 @@ public class ReplayActivity  extends AppCompatActivity {
                 txtTimeCur.stop();
             }
         });
+
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
             if(flagRepeat)
             {
@@ -294,6 +357,77 @@ public class ReplayActivity  extends AppCompatActivity {
             }
         });
 
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mediaPlayer != null) {
+                            int crtPosition = mediaPlayer.getCurrentPosition();
+                            chart.highlightValue((int) (crtPosition * (waveform.length * 1f / (mediaPlayer.getDuration() - 2.2))), 0);
+
+                            rate1 = 1.0f * realWidth / chart.getWidth();
+                            rate2 = 1.0f * crtPosition / mediaPlayer.getDuration();
+
+                            if (rate3 > 0.01 && rate2 > rate3)
+                            {
+                                rate3 = rate3 + rate1;
+                                hrzScrollView.smoothScrollTo(progressWidth, 0);
+                                progressWidth = progressWidth + realWidth;
+                            }
+
+                            handler.postDelayed(this, 10);
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void updateChart() {
+        int percentMin = 0;
+        int curMinWave = (int) (waveform.length * (percentMin / 100f));
+        int percentMax = 100;
+        int curMaxWave = (int) (waveform.length * (percentMax / 100f));
+
+        if(entries != null)
+        {
+            entries.clear();
+        }
+
+        for (int i=curMinWave; i<curMaxWave; i = i + 134) {
+            if (Math.abs(waveform[i]) < 60)
+                entries.add(new Entry(i, waveform[i] / 10));
+            else if (Math.abs(waveform[i]) < 80)
+                entries.add(new Entry(i, waveform[i] / 6));
+            else if (Math.abs(waveform[i]) < 90)
+                entries.add(new Entry(i, waveform[i] / 4));
+            else if (Math.abs(waveform[i]) < 116)
+                entries.add(new Entry(i, waveform[i] / 3));
+            else
+                entries.add(new Entry(i, waveform[i] / 2));
+        }
+
+        assert entries != null;
+        int range = Math.min(entries.size() * 2, 9000);
+        chart.setMinimumWidth(range);
+
+        rate3 = 1.0f * progressWidth / range;
+
+        LineDataSet dataSet = new LineDataSet(entries, "");
+        dataSet.setDrawValues(false);
+        dataSet.setDrawCircles(false);
+        dataSet.setColor(Color.BLACK);
+        dataSet.setLineWidth(1f);
+        dataSet.setHighlightLineWidth(2f);
+        dataSet.setDrawHorizontalHighlightIndicator(false);
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate();
+
+        chart.highlightValue(0, 0);
     }
 
     @SuppressLint("SetTextI18n")

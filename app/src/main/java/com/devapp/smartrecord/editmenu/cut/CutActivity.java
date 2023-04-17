@@ -8,38 +8,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.media.audiofx.Visualizer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.devapp.smartrecord.R;
-import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -48,9 +36,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class CutActivity extends AppCompatActivity {
-    private ImageView btnBack;
-    private TextView nameCut;
-    private TextView btnCancel;
     private TextView twMin;
     private TextView twMax;
     private TextView twTimeCutAudio;
@@ -58,12 +43,15 @@ public class CutActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private LineChart chart;
     private final Handler handler = new Handler();
-
+    private int progressWidth;
+    private int realWidth;
+    private float rate1, rate2, rate3;
     private int duration;
     private int percentMin = 0;
     private int percentMax = 100;
     private byte[] waveform;
     ArrayList<Float> wf;
+    private HorizontalScrollView hrzScrollView;
     private List<Entry> entries;
 //    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
     String audioFilePath = "/storage/emulated/0/Recordings/139-40 Đ. Trần Hưng Đạo (2).mp3";
@@ -77,42 +65,47 @@ public class CutActivity extends AppCompatActivity {
             actionBar.hide();
         }
         setContentView(R.layout.activity_cut);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        progressWidth = displayMetrics.widthPixels;
+        realWidth = displayMetrics.widthPixels;
+
         entries = new ArrayList<>();
 
         Intent intent = getIntent();
         audioFilePath = intent.getStringExtra("PATH_KEY");
 
+
+        hrzScrollView = findViewById(R.id.cut_horizontal);
         twMin = findViewById(R.id.tw_min);
         twMax = findViewById(R.id.tw_max);
         twTimeCutAudio = findViewById(R.id.tw_time_cut_audio);
         btnPlay = findViewById(R.id.btn_play_cut);
 
-        btnCancel = findViewById(R.id.btn_cancel);
+        TextView btnCancel = findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(view -> this.onBackPressed());
 
-        nameCut = findViewById(R.id.name_recording_cut);
+        TextView nameCut = findViewById(R.id.name_recording_cut);
         String[] nameFile = audioFilePath.split("/");
         nameCut.setText(nameFile[nameFile.length-1]);
 
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView imageView = (ImageView) v;
-                if (imageView.getTag() == null || imageView.getTag().equals("ic_play")) {
-                    imageView.setImageResource(R.drawable.ic_pause);
-                    imageView.setTag("ic_pause");
+        btnPlay.setOnClickListener(v -> {
+            ImageView imageView = (ImageView) v;
+            if (imageView.getTag() == null || imageView.getTag().equals("ic_play")) {
+                imageView.setImageResource(R.drawable.ic_pause);
+                imageView.setTag("ic_pause");
 
-                    mediaPlayer.start();
-                } else {
-                    imageView.setImageResource(R.drawable.ic_play);
-                    imageView.setTag("ic_play");
+                mediaPlayer.start();
+            } else {
+                imageView.setImageResource(R.drawable.ic_play);
+                imageView.setTag("ic_play");
 
-                    mediaPlayer.pause();
-                }
+                mediaPlayer.pause();
             }
         });
 
-        btnBack = findViewById(R.id.btn_back_cut);
+        ImageView btnBack = findViewById(R.id.btn_back_cut);
         btnBack.setOnClickListener(view -> this.onBackPressed());
 
         // Khởi tạo MediaPlayer và Visualizer
@@ -162,7 +155,7 @@ public class CutActivity extends AppCompatActivity {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer intBuffer = buffer.asIntBuffer();
 
-        wf = new ArrayList<Float>();
+        wf = new ArrayList<>();
         while (intBuffer.hasRemaining()) {
             int sample = intBuffer.get();
             float amplitude = (float) (Math.abs((float) sample) / 32768.0);
@@ -198,25 +191,22 @@ public class CutActivity extends AppCompatActivity {
         twMax.setText(String.format(Locale.getDefault(), "%02d:%02d", (duration / 1000) / 60, (duration/1000) % 60));
         twTimeCutAudio.setText(String.format(Locale.getDefault(), "%02d:%02d", (duration / 1000) / 60, (duration/1000) % 60));
 
-        rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-                // Handle the range seek bar values changed event
-                percentMin = minValue;
-                percentMax = maxValue;
-                int minSecond = (int) ((Integer) minValue / 100f * (duration / 1000));
-                int maxSecond = (int) ((Integer) maxValue / 100f * (duration / 1000));
-                twMin.setText(String.format(Locale.getDefault(), "%02d:%02d", minSecond / 60, minSecond % 60));
-                twMax.setText(String.format(Locale.getDefault(), "%02d:%02d", maxSecond / 60, maxSecond % 60));
+        rangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            // Handle the range seek bar values changed event
+            percentMin = minValue;
+            percentMax = maxValue;
+            int minSecond = (int) (minValue / 100f * (duration / 1000));
+            int maxSecond = (int) (maxValue / 100f * (duration / 1000));
+            twMin.setText(String.format(Locale.getDefault(), "%02d:%02d", minSecond / 60, minSecond % 60));
+            twMax.setText(String.format(Locale.getDefault(), "%02d:%02d", maxSecond / 60, maxSecond % 60));
 
-                updateChart();
+            updateChart();
 
-                int currentPosition = (int) (minValue / 100f * duration);
-                mediaPlayer.seekTo(currentPosition);
+            int currentPosition = (int) (minValue / 100f * duration);
+            mediaPlayer.seekTo(currentPosition);
 
-                int delta = (int) ((percentMax - percentMin) / 100f * duration);
-                twTimeCutAudio.setText(String.format(Locale.getDefault(), "%02d:%02d", (delta / 1000) / 60, (delta/1000) % 60));
-            }
+            int delta = (int) ((percentMax - percentMin) / 100f * duration);
+            twTimeCutAudio.setText(String.format(Locale.getDefault(), "%02d:%02d", (delta / 1000) / 60, (delta/1000) % 60));
         });
 
         mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
@@ -234,6 +224,16 @@ public class CutActivity extends AppCompatActivity {
                             int currentPosition = mediaPlayer.getCurrentPosition();
                             // do something with currentPosition
                             chart.highlightValue((int) (currentPosition * (waveform.length * 1f / (duration - 2.2))), 0);
+
+                            rate1 = 1.0f * realWidth / chart.getWidth();
+                            rate2 = 1.0f * currentPosition / mediaPlayer.getDuration();
+
+                            if (rate3 > 0.01 && rate2 > rate3)
+                            {
+                                rate3 = rate3 + rate1;
+                                hrzScrollView.smoothScrollTo(progressWidth, 0);
+                                progressWidth = progressWidth + realWidth;
+                            }
                             handler.postDelayed(this, 10); // update every 1 second
 
                             if (currentPosition > percentMax / 100f * duration) {
@@ -348,8 +348,10 @@ public class CutActivity extends AppCompatActivity {
         }
         Log.e(TAG, "entries: " + entries.size());
 
-        int range = entries.size() * 2 > 9000 ? 9000 : entries.size() * 2;
+        int range = Math.min(entries.size() * 2, 9000);
         chart.setMinimumWidth(range);
+
+        rate3 = 1.0f * progressWidth / range;
 
         LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setDrawValues(false);
