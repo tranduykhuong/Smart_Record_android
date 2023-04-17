@@ -71,7 +71,6 @@ public class ReplayActivity  extends AppCompatActivity {
     private int progressWidth;
     private int realWidth;
     private float rate1, rate2, rate3;
-    private int duration;
     private Runnable highlight;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -481,13 +480,11 @@ public class ReplayActivity  extends AppCompatActivity {
             btnSpeed.setText("x1");
             txtNameReplay.setText(files[currentSongIndex].getName());
             skbarReplay.setProgress(0);
-            skbarReplay.setMax(mediaPlayer.getDuration());
+            skbarReplay.setMax(duration);
             btnPlayReplay.setImageResource(R.drawable.ic_pause_replay);
             txtTimeCur.setBase(SystemClock.elapsedRealtime());
             txtTimeCur.start();
             txtTimeTotal.setText(getTotalTime());
-
-            duration = mediaPlayer.getDuration();
         } catch (IOException e) {
             e.printStackTrace();
         }
