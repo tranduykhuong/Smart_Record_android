@@ -42,6 +42,7 @@ public class CutActivity extends AppCompatActivity {
     private ImageView btnPlay;
     private MediaPlayer mediaPlayer;
     private LineChart chart;
+    private Runnable highlight;
     private final Handler handler = new Handler();
     private int progressWidth;
     private int realWidth;
@@ -217,7 +218,7 @@ public class CutActivity extends AppCompatActivity {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                handler.post(new Runnable() {
+                highlight = new Runnable() {
                     @Override
                     public void run() {
                         if (mediaPlayer != null) {
@@ -245,7 +246,8 @@ public class CutActivity extends AppCompatActivity {
                             }
                         }
                     }
-                });
+                };
+                handler.post(highlight);
             }
         });
 
@@ -377,5 +379,6 @@ public class CutActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+        handler.removeCallbacks(highlight);
     }
 }

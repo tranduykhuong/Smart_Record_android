@@ -1,5 +1,7 @@
 package com.devapp.smartrecord;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -63,6 +66,8 @@ public class ReplayActivity  extends AppCompatActivity {
     private int progressWidth;
     private int realWidth;
     private float rate1, rate2, rate3;
+    private int duration;
+    private Runnable highlight;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +80,6 @@ public class ReplayActivity  extends AppCompatActivity {
 
         getFiles();
         entries = new ArrayList<>();
-        BoundView();
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -108,6 +112,7 @@ public class ReplayActivity  extends AppCompatActivity {
             }
         }
 
+        BoundView();
         playCurrentSong(currentSongIndex);
     }
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -149,7 +154,8 @@ public class ReplayActivity  extends AppCompatActivity {
         chart.getLegend().setEnabled(false);
 
         // Đọc dữ liệu từ tệp
-        File fileWave = new File(files[currentSongIndex].getAbsolutePath());
+//        File fileWave = new File(files[currentSongIndex].getAbsolutePath());
+        File fileWave = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
         byte[] data = new byte[(int) fileWave.length()];
         try (FileInputStream inputStream = new FileInputStream(fileWave)) {
             inputStream.read(data);
@@ -157,17 +163,17 @@ public class ReplayActivity  extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ByteBuffer buffer = ByteBuffer.wrap(data);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        IntBuffer intBuffer = buffer.asIntBuffer();
+//        ByteBuffer buffer = ByteBuffer.wrap(data);
+//        buffer.order(ByteOrder.LITTLE_ENDIAN);
+//        IntBuffer intBuffer = buffer.asIntBuffer();
 
-        wf = new ArrayList<>();
-        while (intBuffer.hasRemaining()) {
-            int sample = intBuffer.get();
-            float amplitude = (float) (Math.abs((float) sample) / 32768.0);
-            // sử dụng cường độ âm thanh tại mỗi mẫu dữ liệu ở đây
-            wf.add(amplitude);
-        }
+//        wf = new ArrayList<>();
+//        while (intBuffer.hasRemaining()) {
+//            int sample = intBuffer.get();
+//            float amplitude = (float) (Math.abs((float) sample) / 32768.0);
+//            // sử dụng cường độ âm thanh tại mỗi mẫu dữ liệu ở đây
+//            wf.add(amplitude);
+//        }
 
         // Chuyển đổi các mẫu âm thanh sang dạng số thực và chuẩn hóa
         double[] samples = new double[data.length / 2];
@@ -360,15 +366,15 @@ public class ReplayActivity  extends AppCompatActivity {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                handler.post(new Runnable() {
+                highlight = new Runnable() {
                     @Override
                     public void run() {
                         if (mediaPlayer != null) {
                             int crtPosition = mediaPlayer.getCurrentPosition();
-                            chart.highlightValue((int) (crtPosition * (waveform.length * 1f / (mediaPlayer.getDuration() - 2.2))), 0);
+                            chart.highlightValue((int) (crtPosition * (waveform.length * 1f / (duration - 2.2))), 0);
 
                             rate1 = 1.0f * realWidth / chart.getWidth();
-                            rate2 = 1.0f * crtPosition / mediaPlayer.getDuration();
+                            rate2 = 1.0f * crtPosition / duration;
 
                             if (rate3 > 0.01 && rate2 > rate3)
                             {
@@ -380,7 +386,8 @@ public class ReplayActivity  extends AppCompatActivity {
                             handler.postDelayed(this, 10);
                         }
                     }
-                });
+                };
+                handler.post(highlight);
             }
         });
 
@@ -448,6 +455,7 @@ public class ReplayActivity  extends AppCompatActivity {
             txtTimeCur.start();
             txtTimeTotal.setText(getTotalTime());
 
+            duration = mediaPlayer.getDuration();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -504,6 +512,7 @@ public class ReplayActivity  extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mediaPlayer.stop();
+        handler.removeCallbacks(highlight);
         super.onDestroy();
     }
 }
