@@ -16,7 +16,6 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +38,6 @@ import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -47,7 +45,6 @@ import java.util.Objects;
 public class RecordActivity extends AppCompatActivity {
     private boolean flagRecording = false;
     long timeWhenPaused = 0;
-    private String fileName;
     private ImageButton btnPlay;
     private Chronometer chronometerTime;
     private TextView txtRecordName;
@@ -158,11 +155,11 @@ public class RecordActivity extends AppCompatActivity {
     }
     private void confirmDelete(){
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
-        alertDiaglog.setTitle("Lưu bản ghi");
+        alertDiaglog.setTitle(this.getString(R.string.save_record_announce));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage("Bạn có muốn lưu bản ghi?");
-        alertDiaglog.setPositiveButton("Lưu", (dialogInterface, i) -> saveRecord());
-        alertDiaglog.setNegativeButton("Xóa", (dialogInterface, i) -> deleteRecord());
+        alertDiaglog.setMessage(this.getString(R.string.YN_save_announce));
+        alertDiaglog.setPositiveButton(this.getString(R.string.save_announce), (dialogInterface, i) -> saveRecord());
+        alertDiaglog.setNegativeButton(this.getString(R.string.delete_announce), (dialogInterface, i) -> deleteRecord());
 
         alertDiaglog.show();
     }
@@ -240,7 +237,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        Toast.makeText(this, "Resume", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_LONG).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
         chronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
@@ -251,7 +248,7 @@ public class RecordActivity extends AppCompatActivity {
     }
     public void PauseRecord()
     {
-        Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_LONG).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
         recorder.pauseRecording();
@@ -284,12 +281,10 @@ public class RecordActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-        Toast.makeText(getApplicationContext(), "Đang dừng nè má", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
-        Toast.makeText(getApplicationContext(), "Đang hủy nè má", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 

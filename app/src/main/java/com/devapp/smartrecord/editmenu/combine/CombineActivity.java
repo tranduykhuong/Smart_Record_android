@@ -308,20 +308,20 @@ public class CombineActivity extends AppCompatActivity {
     }
     private void ConfirmCombine(){
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
-        alertDiaglog.setTitle("Combination");
+        alertDiaglog.setTitle(this.getString(R.string.combine_title));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage("Do you want to combine?");
-        alertDiaglog.setPositiveButton("Combine", (dialogInterface, i) -> {
-            Toast.makeText(getApplicationContext(), "Successfull Combine", Toast.LENGTH_LONG).show();
+        alertDiaglog.setMessage(this.getString(R.string.combine_YN));
+        alertDiaglog.setPositiveButton(this.getString(R.string.combine_title), (dialogInterface, i) -> {
+            Toast.makeText(getApplicationContext(), this.getString(R.string.combine_success), Toast.LENGTH_LONG).show();
             flagDelete = false;
             onBackPressed();
         });
-        alertDiaglog.setNegativeButton("Cancel", (dialogInterface, i) -> {
+        alertDiaglog.setNegativeButton(this.getString(R.string.cancel_announce), (dialogInterface, i) -> {
             File fileDl = new File(tempPath + deleteName);
             File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
             if (fileDel.exists()) {
                 fileDel.delete();
-                Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_announce), Toast.LENGTH_LONG).show();
             }
 
             onBackPressed();

@@ -68,6 +68,17 @@
     <string name="add_successfull">Successful Add</string>
     <string name="remove_file">File is deleted</string>
     <string name="save_file">Saved_</string>
+    <string name="save_announce">Save</string>
+    <string name="save_record_announce">Save Record</string>
+    <string name="delete_announce">Delete</string>
+    <string name="YN_save_announce">Do you want to save record?</string>
+    <string name="resume_announce">Resume</string>
+    <string name="pause_announce">Pause</string>
+    <string name="repeat_mode">Repeat Mode</string>
+    <string name="cancel_repeat_mode">Cancel Repeat Mode</string>
+    <string name="combine_YN">Do you want to combine?</string>
+    <string name="combine_success">Successfully Combine</string>
+    <string name="cancel_announce">Cancel</string>
 
 
 </resources>

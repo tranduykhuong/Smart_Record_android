@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -36,9 +35,6 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -61,7 +57,6 @@ public class ReplayActivity  extends AppCompatActivity {
     private Button btnSpeed;
     private SeekBar skbarReplay;
     private LineChart chart;
-    ArrayList<Float> wf;
     private byte[] waveform;
     private List<Entry> entries;
     private final Handler handler = new Handler();
@@ -69,6 +64,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private int progressWidth;
     private int realWidth;
     private float rate1, rate2, rate3;
+    private Runnable highlight;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,12 +78,11 @@ public class ReplayActivity  extends AppCompatActivity {
 
         getFiles();
         entries = new ArrayList<>();
-        BoundView();
 
         Intent intent = getIntent();
         String action = intent.getAction();
         String nameSound;
-        
+
         if(action.equals("FromHome"))
         {
             nameSound = intent.getStringExtra("Name");
@@ -115,6 +110,7 @@ public class ReplayActivity  extends AppCompatActivity {
             }
         }
 
+        BoundView();
         playCurrentSong(currentSongIndex);
 
         getHistoryNote();
@@ -125,7 +121,7 @@ public class ReplayActivity  extends AppCompatActivity {
         String json = sharedPreferences.getString(files[currentSongIndex].getName(), null);
 
         if (json != null) {
-            JSONArray jsonArray = null;
+            JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(json);
             } catch (JSONException e) {
@@ -181,24 +177,13 @@ public class ReplayActivity  extends AppCompatActivity {
         chart.getLegend().setEnabled(false);
 
         // Đọc dữ liệu từ tệp
-        File fileWave = new File(files[currentSongIndex].getAbsolutePath());
+//        File fileWave = new File(files[currentSongIndex].getAbsolutePath());
+        File fileWave = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
         byte[] data = new byte[(int) fileWave.length()];
         try (FileInputStream inputStream = new FileInputStream(fileWave)) {
             inputStream.read(data);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        ByteBuffer buffer = ByteBuffer.wrap(data);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        IntBuffer intBuffer = buffer.asIntBuffer();
-
-        wf = new ArrayList<>();
-        while (intBuffer.hasRemaining()) {
-            int sample = intBuffer.get();
-            float amplitude = (float) (Math.abs((float) sample) / 32768.0);
-            // sử dụng cường độ âm thanh tại mỗi mẫu dữ liệu ở đây
-            wf.add(amplitude);
         }
 
         // Chuyển đổi các mẫu âm thanh sang dạng số thực và chuẩn hóa
@@ -306,10 +291,10 @@ public class ReplayActivity  extends AppCompatActivity {
             flagRepeat = !flagRepeat;
             if(flagRepeat)
             {
-                Toast.makeText(getApplicationContext(), "Chế độ lặp lại", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.repeat_mode), Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(getApplicationContext(), "Bỏ lặp lại", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_repeat_mode), Toast.LENGTH_LONG).show();
             }
         });
         btnPrevReplay.setOnClickListener(view -> {
@@ -392,7 +377,7 @@ public class ReplayActivity  extends AppCompatActivity {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                handler.post(new Runnable() {
+                highlight = new Runnable() {
                     @Override
                     public void run() {
                         if (mediaPlayer != null) {
@@ -412,7 +397,8 @@ public class ReplayActivity  extends AppCompatActivity {
                             handler.postDelayed(this, 10);
                         }
                     }
-                });
+                };
+                handler.post(highlight);
             }
         });
 
@@ -475,12 +461,11 @@ public class ReplayActivity  extends AppCompatActivity {
             btnSpeed.setText("x1");
             txtNameReplay.setText(files[currentSongIndex].getName());
             skbarReplay.setProgress(0);
-            skbarReplay.setMax(mediaPlayer.getDuration());
+            skbarReplay.setMax(duration);
             btnPlayReplay.setImageResource(R.drawable.ic_pause_replay);
             txtTimeCur.setBase(SystemClock.elapsedRealtime());
             txtTimeCur.start();
             txtTimeTotal.setText(getTotalTime());
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -493,7 +478,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private String getTimeString(int millis) {
         int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(millis);
         int seconds = (int) (TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(minutes));
+                TimeUnit.MINUTES.toSeconds(minutes));
         return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
     }
 
@@ -536,6 +521,7 @@ public class ReplayActivity  extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mediaPlayer.stop();
+        handler.removeCallbacks(highlight);
         super.onDestroy();
     }
 }
