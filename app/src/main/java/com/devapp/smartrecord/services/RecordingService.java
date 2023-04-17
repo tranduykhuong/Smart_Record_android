@@ -1,6 +1,5 @@
 package com.devapp.smartrecord.services;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,7 +13,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
-import com.devapp.smartrecord.RecordActivity;
 
 import java.util.Locale;
 
@@ -106,8 +104,8 @@ public class RecordingService extends Service {
 
     private void showNotification(){
         builder = new NotificationCompat.Builder(this, "recording_channel_id")
-                .setContentTitle("Recording in progress")
-                .setContentText("Tap to stop recording")
+                .setContentTitle(this.getString(R.string.broadcast_title))
+                .setContentText(this.getString(R.string.broadcast_action))
                 .setSmallIcon(R.drawable.ic_play_record)
                 .setOngoing(true)
                 .setVibrate(null)

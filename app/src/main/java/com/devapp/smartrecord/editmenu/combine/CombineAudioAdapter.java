@@ -1,5 +1,6 @@
 package com.devapp.smartrecord.editmenu.combine;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.devapp.smartrecord.ui.home.Audio;
 import java.util.List;
 
 public class CombineAudioAdapter extends RecyclerView.Adapter<CombineAudioAdapter.CombineAudioHolder>{
-    private Context context;
+    private final Context context;
     private List<Audio>audioList;
 
     public CombineAudioAdapter(Context context) {
@@ -29,6 +30,7 @@ public class CombineAudioAdapter extends RecyclerView.Adapter<CombineAudioAdapte
         return new CombineAudioHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CombineAudioHolder holder, int position) {
         Audio audio = audioList.get(position);
@@ -49,22 +51,21 @@ public class CombineAudioAdapter extends RecyclerView.Adapter<CombineAudioAdapte
         return 0;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Audio> audioList){
         this.audioList = audioList;
         notifyDataSetChanged();
     }
 
 
-    public class CombineAudioHolder extends RecyclerView.ViewHolder {
-        private TextView nameAudio, tagAudio, timeAudio;
-        private LinearLayout linearLayout;
+    public static class CombineAudioHolder extends RecyclerView.ViewHolder {
+        private final TextView nameAudio, tagAudio, timeAudio;
 
         public CombineAudioHolder(@NonNull View itemView) {
             super(itemView);
             nameAudio = itemView.findViewById(R.id.combine_txt_name_item);
             tagAudio = itemView.findViewById(R.id.combine_txt_tag);
             timeAudio = itemView.findViewById(R.id.combine_txt_time);
-            linearLayout = itemView.findViewById(R.id.item_audio_home);
         }
     }
 }

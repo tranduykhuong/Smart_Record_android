@@ -79,6 +79,9 @@
     <string name="combine_YN">Do you want to combine?</string>
     <string name="combine_success">Successfully Combine</string>
     <string name="cancel_announce">Cancel</string>
+    <string name="record_announce">Record...</string>
+    <string name="broadcast_title">Recording in progress</string>
+    <string name="broadcast_action">Tap to stop recording</string>
 
 
 </resources>

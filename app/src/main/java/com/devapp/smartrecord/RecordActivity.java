@@ -218,7 +218,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecord(){
-        Toast.makeText(getApplicationContext(), "Record...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.record_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
         File folder = new File(Environment.getExternalStorageDirectory() + "/Recordings");
 
@@ -249,7 +249,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
         chronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
@@ -264,7 +264,7 @@ public class RecordActivity extends AppCompatActivity {
     }
     public void PauseRecord()
     {
-        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
         recorder.pauseRecording();

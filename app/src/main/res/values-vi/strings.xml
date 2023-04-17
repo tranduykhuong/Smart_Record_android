@@ -76,4 +76,7 @@
     <string name="combine_YN">Bạn có muốn hợp nhất?</string>
     <string name="combine_success">Hợp nhất thành công</string>
     <string name="cancel_announce">Hủy</string>
+    <string name="record_announce">Ghi...</string>
+    <string name="broadcast_title">Đang ghi âm...</string>
+    <string name="broadcast_action">Chạm để dừng</string>
 </resources>
