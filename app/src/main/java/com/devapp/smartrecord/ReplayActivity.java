@@ -2,13 +2,16 @@ package com.devapp.smartrecord;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -27,6 +30,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 public class ReplayActivity  extends AppCompatActivity {
     MediaPlayer mediaPlayer = new MediaPlayer();
     int currentSongIndex = 0;
-    private int currentPosition;
+    private int currentPosition, duration;
     private long timeWhenPaused = 0;
     private long elapsedTime = 0;
     private long elapsedTimeSpeedUp = 0;
@@ -68,6 +74,7 @@ public class ReplayActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replay);
         Objects.requireNonNull(getSupportActionBar()).hide();
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         progressWidth = displayMetrics.widthPixels;
@@ -109,6 +116,31 @@ public class ReplayActivity  extends AppCompatActivity {
         }
 
         playCurrentSong(currentSongIndex);
+
+        getHistoryNote();
+    }
+
+    public void getHistoryNote(){
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        String json = sharedPreferences.getString(files[currentSongIndex].getName(), null);
+
+        if (json != null) {
+            JSONArray jsonArray = null;
+            try {
+                jsonArray = new JSONArray(json);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    String note = jsonArray.getString(i);
+                    Log.d("note: ", note);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     public void BoundView(){
@@ -365,10 +397,10 @@ public class ReplayActivity  extends AppCompatActivity {
                     public void run() {
                         if (mediaPlayer != null) {
                             int crtPosition = mediaPlayer.getCurrentPosition();
-                            chart.highlightValue((int) (crtPosition * (waveform.length * 1f / (mediaPlayer.getDuration() - 2.2))), 0);
+                            chart.highlightValue((int) (crtPosition * (waveform.length * 1f / (duration - 2.2))), 0);
 
                             rate1 = 1.0f * realWidth / chart.getWidth();
-                            rate2 = 1.0f * crtPosition / mediaPlayer.getDuration();
+                            rate2 = 1.0f * crtPosition / duration;
 
                             if (rate3 > 0.01 && rate2 > rate3)
                             {
@@ -437,6 +469,7 @@ public class ReplayActivity  extends AppCompatActivity {
             mediaPlayer.setDataSource(files[currentSongIndex].getPath());
             mediaPlayer.prepare();
             mediaPlayer.start();
+            duration = mediaPlayer.getDuration();
             flagPlaying = true;
             flagSpeed = false;
             btnSpeed.setText("x1");
@@ -477,7 +510,6 @@ public class ReplayActivity  extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.replay_btn_adjust: {
                 File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
-//                File file = new File(getApplicationContext().getFilesDir(), files[currentSongIndex].getName());
                 Intent intent1 = new Intent(this, EditMenuActivity.class);
                 intent1.putExtra("PATH_KEY", file.getAbsolutePath());
                 startActivity(intent1);

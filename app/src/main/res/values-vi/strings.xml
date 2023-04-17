@@ -62,4 +62,7 @@
     <string name="combine_title">Hợp nhất</string>
     <string name="combine_cancel">Xóa</string>
     <string name="menu_title">Chỉnh sửa Audio</string>
+    <string name="add_successfull">Thêm thành công</string>
+    <string name="remove_file">File đã xóa</string>
+    <string name="save_file">Đã lưu_</string>
 </resources>

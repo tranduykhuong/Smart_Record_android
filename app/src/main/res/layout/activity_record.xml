@@ -105,6 +105,7 @@
             android:gravity="center">
 
             <ImageButton
+                android:id="@+id/record_btn_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
