@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:max="24"
                     android:min="-24"
-                    android:progress="24"
+                    android:progress="0"
                     android:scaleY="0.7"
                     android:progressDrawable="@color/gray"
                     android:layout_toStartOf="@id/right_icon_1"

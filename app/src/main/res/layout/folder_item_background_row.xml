@@ -29,7 +29,7 @@
                 android:background="@color/pink_500"
                 android:padding="15dp"
                 android:gravity="center"
-                android:src="@drawable/ic_delete_folder"/>
+                android:src="@drawable/ic_delete_multi_folder"/>
         </LinearLayout>
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
