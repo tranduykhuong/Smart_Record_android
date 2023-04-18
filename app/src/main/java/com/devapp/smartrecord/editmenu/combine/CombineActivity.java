@@ -94,12 +94,21 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         audioList.add(new Audio(name, formatTime(file), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_audio_item));
 
         //ADD SOUND
-
         finalName = "CB_" + fileName;
         txtName.setText(finalName);
-
-        //COMBINE LIST AUDIO
-        ConcatAudio();
+        outputFile = new File(tempPath + finalName);
+        if(outputFile.exists()) {
+            int i = 1;
+            while (outputFile.exists())
+            {
+                deleteName = finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit;
+                outputFile = new File(tempPath + finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit);
+                i++;
+            }
+        }
+        else {
+            deleteName = finalName;
+        }
 
         //SET DEFAULT
         CheckColor();
@@ -108,16 +117,8 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         txtCurTime.setText("00:00:00");
 
         try {
-            if(audioList.size() > 1)
-            {
-                mediaPlayer.setDataSource(tempPath + finalName);
-                txtDurationTime.setText(formatTime(outputFile));
-            }
-            else {
-                mediaPlayer.setDataSource(tempPath + fileName);
-                txtDurationTime.setText(formatTime(file));
-            }
-
+            mediaPlayer.setDataSource(tempPath + fileName);
+            txtDurationTime.setText(formatTime(file));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -167,7 +168,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             TextView btnOkRecordNote = popupView.findViewById(R.id.combine_modal_add);
             RecyclerView modalList = popupView.findViewById(R.id.listView_show_note);
 
-            recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/");
+            recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/");
             if (recordingsDirectory.listFiles() != null)
                 size = Objects.requireNonNull(recordingsDirectory.listFiles()).length;
             if (recordingsDirectory.exists()) {
@@ -183,7 +184,6 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                 }
             }
 
-            assert files != null;
             checkedArray = new boolean[files.length];
 
             CombineModalAdapter combineModalAdapter = new CombineModalAdapter(popupView.getContext(), this);
@@ -211,7 +211,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                 //XÉT LẠI MEDIA PLAYER
                 try {
                     mediaPlayer.stop();
-                    mediaPlayer.setDataSource(tempPath + finalName);
+                    mediaPlayer.setDataSource(outputFile.getPath());
                     txtDurationTime.setText(formatTime(outputFile));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -417,6 +417,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             checkedArray[position] = true;
         }
     }
+    @SuppressLint("NotifyDataSetChanged")
     public void ResetAdapter(){
         combineAudioAdapter.notifyDataSetChanged();
         combineAudioAdapter.setData(audioList);
@@ -427,20 +428,6 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
     }
 
     public void ConcatAudio(){
-        outputFile = new File(tempPath + finalName);
-        if(outputFile.exists()) {
-            int i = 1;
-            while (outputFile.exists())
-            {
-                deleteName = finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit;
-                outputFile = new File(tempPath + finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit);
-                i++;
-            }
-        }
-        else {
-            deleteName = finalName;
-        }
-
         int rc;
         String[] command = null;
         String filter = "concat=n=%d:v=0:a=1";
