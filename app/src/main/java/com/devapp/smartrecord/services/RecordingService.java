@@ -11,8 +11,8 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
-import com.devapp.smartrecord.RecordActivity;
 
 import java.util.Locale;
 
@@ -74,12 +74,22 @@ public class RecordingService extends Service {
             stopForeground(true);
             notificationManager.cancel(NOTIFICATION_ID);
             handler.removeCallbacks(updateNotificationRunnable);
+
+            stopRecord();
         }
         else{
             showNotification();
         }
         return START_STICKY;
     }
+
+    private void stopRecord()
+    {
+        Intent intent1 = new Intent(this, HomeActivity.class);
+        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent1);
+    }
+
 
     private void setTimePause()
     {
@@ -88,14 +98,14 @@ public class RecordingService extends Service {
     }
 
     private void setTimeResume(){
-        startForeground(1, builder.build());
+        startForeground(NOTIFICATION_ID, builder.build());
         handler.postDelayed(updateNotificationRunnable, 0);
     }
 
     private void showNotification(){
         builder = new NotificationCompat.Builder(this, "recording_channel_id")
-                .setContentTitle("Recording in progress")
-                .setContentText("Tap to stop recording")
+                .setContentTitle(this.getString(R.string.broadcast_title))
+                .setContentText(this.getString(R.string.broadcast_action))
                 .setSmallIcon(R.drawable.ic_play_record)
                 .setOngoing(true)
                 .setVibrate(null)
@@ -111,8 +121,9 @@ public class RecordingService extends Service {
 
     private PendingIntent getStopRecordingIntent() {
         elapsedTime = 0;
-        Intent intent = new Intent(this, RecordActivity.class);
+        Intent intent = new Intent(this, RecordingService.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setAction("STOP_RECORDING");
 
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }

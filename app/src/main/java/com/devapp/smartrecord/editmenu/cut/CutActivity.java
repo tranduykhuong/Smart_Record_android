@@ -42,6 +42,7 @@ public class CutActivity extends AppCompatActivity {
     private ImageView btnPlay;
     private MediaPlayer mediaPlayer;
     private LineChart chart;
+    private Runnable highlight;
     private final Handler handler = new Handler();
     private int progressWidth;
     private int realWidth;
@@ -75,7 +76,6 @@ public class CutActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         audioFilePath = intent.getStringExtra("PATH_KEY");
-
 
         hrzScrollView = findViewById(R.id.cut_horizontal);
         twMin = findViewById(R.id.tw_min);
@@ -217,7 +217,7 @@ public class CutActivity extends AppCompatActivity {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                handler.post(new Runnable() {
+                highlight = new Runnable() {
                     @Override
                     public void run() {
                         if (mediaPlayer != null) {
@@ -226,7 +226,7 @@ public class CutActivity extends AppCompatActivity {
                             chart.highlightValue((int) (currentPosition * (waveform.length * 1f / (duration - 2.2))), 0);
 
                             rate1 = 1.0f * realWidth / chart.getWidth();
-                            rate2 = 1.0f * currentPosition / mediaPlayer.getDuration();
+                            rate2 = 1.0f * currentPosition / duration;
 
                             if (rate3 > 0.01 && rate2 > rate3)
                             {
@@ -245,7 +245,8 @@ public class CutActivity extends AppCompatActivity {
                             }
                         }
                     }
-                });
+                };
+                handler.post(highlight);
             }
         });
 
@@ -377,5 +378,6 @@ public class CutActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+        handler.removeCallbacks(highlight);
     }
 }

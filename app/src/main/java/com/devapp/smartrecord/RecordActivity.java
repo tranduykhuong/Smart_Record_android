@@ -1,7 +1,5 @@
 package com.devapp.smartrecord;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -18,24 +16,26 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
+import com.devapp.smartrecord.services.RecordingActivity;
 import com.devapp.smartrecord.services.RecordingService;
-import com.devapp.smartrecord.services.RecordingActivity;
-import com.devapp.smartrecord.services.RecordingActivity;
 import com.suman.voice.graphviewlibrary.GraphView;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,22 +47,25 @@ public class RecordActivity extends AppCompatActivity {
     private boolean flagRecording = false;
     long timeWhenPaused = 0;
     private ImageButton btnPlay;
-    private Chronometer chrnmterTime;
+    private Chronometer chronometerTime;
     private TextView txtRecordName;
-    private List samples;
     private GraphView graphView;
     private RecordingActivity recorder;
     private TelephonyManager telephonyManager;
+    private JSONArray jsonArray;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        jsonArray = new JSONArray();
 
         ImageButton btnStop = findViewById(R.id.record_btn_stop);
+        ImageButton btnNote = findViewById(R.id.record_btn_note);
         btnPlay = findViewById(R.id.record_btn_play);
-        chrnmterTime = findViewById(R.id.record_time_recording);
+        chronometerTime = findViewById(R.id.record_time_recording);
         txtRecordName = findViewById(R.id.record_name);
         graphView = findViewById(R.id.graphView);
         graphView.setGraphColor(Color.rgb(18, 17, 17));
@@ -77,7 +80,6 @@ public class RecordActivity extends AppCompatActivity {
         ConfigurationClass config = new ConfigurationClass(getApplicationContext());
         config.getConfig();
         recorder.setFileExt("." + config.getFileFormat());
-        Log.e(TAG, "onCreate: " +"." + config.getFileFormat());
 
         startRecord();
 
@@ -86,17 +88,63 @@ public class RecordActivity extends AppCompatActivity {
         btnStop.setOnClickListener(view -> {
             flagRecording = true;
             btnPlay.setImageResource(R.drawable.ic_play_record);
-            chrnmterTime.setBase(SystemClock.elapsedRealtime());
-            chrnmterTime.stop();
+            chronometerTime.setBase(SystemClock.elapsedRealtime());
+            chronometerTime.stop();
             confirmDelete();
+        });
+
+        btnNote.setOnClickListener(view -> {
+            PauseRecord();
+
+            LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.record_modal_note, null);
+
+            // create the popup window
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            // show the popup window
+            // which view you pass in doesn't matter, it is only used for the window token
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+
+            TextView headingTimeNote = popupView.findViewById(R.id.record_time_note);
+            TextView btnDestroyNote = popupView.findViewById(R.id.record_modal_destroy_note);
+            TextView btnOkRecordNote = popupView.findViewById(R.id.record_modal_ok_note);
+            EditText edtNote = popupView.findViewById(R.id.record_note_edt);
+
+            long seconds = timeWhenPaused / 1000;
+            String TimePause = String.format(Locale.getDefault(), "%02d:%02d", seconds / 60, seconds % 60);
+            headingTimeNote.setText(TimePause);
+
+            btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
+
+            btnOkRecordNote.setOnClickListener(view1 -> {
+                jsonArray.put(TimePause + " - " + edtNote.getText());
+
+                String json = jsonArray.toString();
+
+                SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(recorder.getFileName(), json);
+                editor.apply();
+
+                Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show();
+                popupWindow.dismiss();
+            });
+
+            popupWindow.setOnDismissListener(() -> {
+             ResumeRecord();
+            });
         });
 
     }
     private void deleteRecord(){
         recorder.stopWithNoSave();
-        Toast.makeText(getApplicationContext(), "File is deleted", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.remove_file), Toast.LENGTH_LONG).show();
 
-        Intent intentInform = new Intent(this, RecordingActivity.class);
+        Intent intentInform = new Intent(this, RecordingService.class);
         intentInform.setAction("STOP_RECORDING");
         startService(intentInform);
 
@@ -105,9 +153,9 @@ public class RecordActivity extends AppCompatActivity {
     }
     private void saveRecord(){
         recorder.stopRecording();
-        Toast.makeText(getApplicationContext(), "Saved_" + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
 
-        Intent intentInform = new Intent(this, RecordingActivity.class);
+        Intent intentInform = new Intent(this, RecordingService.class);
         intentInform.setAction("STOP_RECORDING");
         startService(intentInform);
 
@@ -116,11 +164,11 @@ public class RecordActivity extends AppCompatActivity {
     }
     private void confirmDelete(){
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
-        alertDiaglog.setTitle("Lưu bản ghi");
+        alertDiaglog.setTitle(this.getString(R.string.save_record_announce));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage("Bạn có muốn lưu bản ghi?");
-        alertDiaglog.setPositiveButton("Lưu", (dialogInterface, i) -> saveRecord());
-        alertDiaglog.setNegativeButton("Xóa", (dialogInterface, i) -> deleteRecord());
+        alertDiaglog.setMessage(this.getString(R.string.YN_save_announce));
+        alertDiaglog.setPositiveButton(this.getString(R.string.save_announce), (dialogInterface, i) -> saveRecord());
+        alertDiaglog.setNegativeButton(this.getString(R.string.delete_announce), (dialogInterface, i) -> deleteRecord());
 
         alertDiaglog.show();
     }
@@ -170,7 +218,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecord(){
-        Toast.makeText(getApplicationContext(), "Record...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.record_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
         File folder = new File(Environment.getExternalStorageDirectory() + "/Recordings");
 
@@ -178,11 +226,11 @@ public class RecordActivity extends AppCompatActivity {
         {
             folder.mkdir();
         }
-        chrnmterTime.setBase(SystemClock.elapsedRealtime());
-        chrnmterTime.start();
+        chronometerTime.setBase(SystemClock.elapsedRealtime());
+        chronometerTime.start();
 
-        Intent intentInform = new Intent(this, RecordingActivity.class);
-        startForegroundService(intentInform);
+        Intent intentInform = new Intent(this, RecordingService.class);
+        startService(intentInform);
 
         recorder.startRecording();
         recorder.startPlotting(graphView);
@@ -201,14 +249,14 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        Toast.makeText(this, "Resume", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
-        chrnmterTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
-        chrnmterTime.start();
+        chronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
+        chronometerTime.start();
         recorder.resumeRecording();
 
-        Intent intentInform = new Intent(this, RecordingActivity.class);
+        Intent intentInform = new Intent(this, RecordingService.class);
         intentInform.setAction("RESUME_RECORDING");
         startService(intentInform);
 
@@ -216,18 +264,18 @@ public class RecordActivity extends AppCompatActivity {
     }
     public void PauseRecord()
     {
-        Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
         recorder.pauseRecording();
 
-        samples = recorder.getSamples();
+        List samples = recorder.getSamples();
         graphView.showFullGraph(samples);
 
-        timeWhenPaused = SystemClock.elapsedRealtime() - chrnmterTime.getBase();
-        chrnmterTime.stop();
+        timeWhenPaused = SystemClock.elapsedRealtime() - chronometerTime.getBase();
+        chronometerTime.stop();
 
-        Intent intentInform = new Intent(this, RecordingActivity.class);
+        Intent intentInform = new Intent(this, RecordingService.class);
         intentInform.setAction("PAUSE_RECORDING");
         startService(intentInform);
     }
@@ -238,10 +286,6 @@ public class RecordActivity extends AppCompatActivity {
 
             if (state == TelephonyManager.CALL_STATE_RINGING) {
                 PauseRecord();
-
-            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-
-            } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
             }
             super.onCallStateChanged(state, incomingNumber);
         }
@@ -257,26 +301,23 @@ public class RecordActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-        Toast.makeText(getApplicationContext(), "Đang dừng nè má", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
-        Toast.makeText(getApplicationContext(), "Đang hủy nè má", Toast.LENGTH_SHORT).show();
+        recorder.stopRecording();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
         super.onDestroy();
     }
 
     @SuppressLint("NonConstantResourceId")
     public void changeLayoutFromRecord(View view){
-        switch (view.getId()) {
-            case R.id.record_btn_back: {
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("isRecording", flagRecording);
-                editor.apply();
-                finish();
-                break;
-            }
+        if (view.getId() == R.id.record_btn_back) {
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isRecording", flagRecording);
+            editor.apply();
+            finish();
         }
     }
 }

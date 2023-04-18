@@ -55,7 +55,7 @@
     <string name="error_convert_voice_to_text">Error, please try again!</string>
     <string name="api_free">Free API does not support</string>
 
-    <string name="insertion" translatable="false">Insertion</string>
+    <string name="insertion">Insertion</string>
     <string name="folder_private_title">Private folder</string>
 
     <string name="demo_min_label"></string>
@@ -65,5 +65,25 @@
     <string name="combine_title">Combine</string>
     <string name="combine_cancel">Clear</string>
     <string name="menu_title">Edit Menu</string>
+    <string name="add_successfull">Successful Add</string>
+    <string name="remove_file">File is deleted</string>
+    <string name="save_file">Saved_</string>
+    <string name="save_announce">Save</string>
+    <string name="save_record_announce">Save Record</string>
+    <string name="delete_announce">Delete</string>
+    <string name="YN_save_announce">Do you want to save record?</string>
+    <string name="resume_announce">Resume</string>
+    <string name="pause_announce">Pause</string>
+    <string name="repeat_mode">Repeat Mode</string>
+    <string name="cancel_repeat_mode">Cancel Repeat Mode</string>
+    <string name="combine_YN">Do you want to combine?</string>
+    <string name="combine_success">Successfully Combine</string>
+    <string name="cancel_announce">Cancel</string>
+    <string name="record_announce">Record...</string>
+    <string name="broadcast_title">Recording in progress</string>
+    <string name="broadcast_action">Tap to stop recording</string>
+    <string name="add_file_announce">You can only add file once!</string>
 
+    <string name="converting">Converting...</string>
+    <string name="loading">Loading...</string>
 </resources>

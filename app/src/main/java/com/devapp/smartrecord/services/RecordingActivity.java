@@ -2,6 +2,7 @@ package com.devapp.smartrecord.services;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,14 +22,12 @@ public class RecordingActivity extends AppCompatActivity {
     private volatile Boolean stop = false;
     private MediaRecorder mediaRecorder;
     private GraphView graphView;
+    private String finalName;
     File file;
     private String fileName;
     private long longValue[];
     private String fileExt;
-    private RecordingActivity() {
-
-//        Log.e(TAG, "RecordingService: " + fileExt);
-    }
+    private RecordingActivity() {}
 
     public void setFileExt(String mainExt){
         fileExt = mainExt;
@@ -141,6 +140,7 @@ public class RecordingActivity extends AppCompatActivity {
         if(fileName == null)
         {
             fileName = "Record";
+            finalName = fileName + fileExt;
         }
 
         file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + fileExt);
@@ -148,6 +148,7 @@ public class RecordingActivity extends AppCompatActivity {
             int i = 1;
             while (file.exists())
             {
+                finalName = fileName + " (" + i + ")" + fileExt;
                 file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + " (" + i + ")" + fileExt);
                 i++;
             }
@@ -165,8 +166,6 @@ public class RecordingActivity extends AppCompatActivity {
             mediaRecorder.start();
             startTime = System.currentTimeMillis();
         } catch (IOException e) {
-//            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//            Toast.makeText(getApplicationContext(), "Failed to prepare MediaRecorder: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         pointList.clear();
@@ -181,6 +180,11 @@ public class RecordingActivity extends AppCompatActivity {
             }
         });
         mRecordingThread.start();
+    }
+
+    public String getFileName()
+    {
+        return finalName;
     }
 
     @Override

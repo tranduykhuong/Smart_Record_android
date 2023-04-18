@@ -3,6 +3,7 @@ package com.devapp.smartrecord.editmenu.combine;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -11,9 +12,13 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,21 +43,25 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
-public class CombineActivity extends AppCompatActivity {
-    private boolean flagPlaying = false, flagDelete = true;
+public class CombineActivity extends AppCompatActivity implements CombineModalAdapter.OnItemClickListener{
+    private boolean flagPlaying = false, flagDelete = true, flagChoose = false;
     private int cntBtn = 0,  currentPosition = 0;
     private RecyclerView rcvCombineAudio;
     private CombineAudioAdapter combineAudioAdapter;
-    private List<Audio> audioList;
-    private String pathSound, fileName, finalName, deleteName;
+    private List<Audio> audioList, listAddFile;
+    private String pathSound, fileName, finalName, deleteName, fileExit;
     private TextView txtName, txtCurTime, txtDurationTime;
     private Button btnCombine, btnCancel;
-    private ImageButton btnPlay;
+    private ImageButton btnPlay, btnAddFile;
+    private int size;
+    private File[] files;
     private final MediaPlayer mediaPlayer  = new MediaPlayer();
     private SeekBar seekBar;
     private File outputFile;
     private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
     private final Handler handler = new Handler();
+    private File recordingsDirectory;
+    private boolean[] checkedArray;
 
     public void addFileSound(String FName)
     {
@@ -70,28 +79,354 @@ public class CombineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_combine);
         Objects.requireNonNull(getSupportActionBar()).hide();
 
-        //NHẬN PATH TỪ MENU
+        //RECEIVE PATH TỪ MENU
         Intent intent = getIntent();
         pathSound = intent.getStringExtra("PATH_KEY");
         BoundView();
 
-        //GÁN FILE MẶC ĐỊNH
+        //SET FILE DEFAULT
         fileName = pathSound.substring(pathSound.lastIndexOf("/") + 1);
         File file = new File(tempPath + fileName);
         String name = file.getName();
-        String fileExit = name.substring(name.lastIndexOf("."));
+        fileExit = name.substring(name.lastIndexOf("."));
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String fileSize = decimalFormat.format(1.0 * file.length() / (1024 * 1024));
         audioList.add(new Audio(name, formatTime(file), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_audio_item));
 
         //ADD SOUND
-//        addFileSound("Record (12).mp3");
 
         finalName = "CB_" + fileName;
         txtName.setText(finalName);
 
         //COMBINE LIST AUDIO
+        ConcatAudio();
 
+        //SET DEFAULT
+        CheckColor();
+        seekBar.setProgress(0);
+        btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+        txtCurTime.setText("00:00:00");
+
+        try {
+            if(audioList.size() > 1)
+            {
+                mediaPlayer.setDataSource(tempPath + finalName);
+                txtDurationTime.setText(formatTime(outputFile));
+            }
+            else {
+                mediaPlayer.setDataSource(tempPath + fileName);
+                txtDurationTime.setText(formatTime(file));
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        btnPlay.setOnClickListener(view -> {
+            flagPlaying = !flagPlaying;
+            if(cntBtn == 0 && flagPlaying)
+            {
+                try {
+                    btnPlay.setImageResource(R.drawable.ic_pause_combine_main);
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    seekBar.setMax(mediaPlayer.getDuration());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                cntBtn = 1;
+            }
+            else if(cntBtn == 1 && !flagPlaying)
+            {
+                btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+                currentPosition = mediaPlayer.getCurrentPosition();
+                mediaPlayer.pause();
+            }
+            else if(cntBtn == 1)
+            {
+                btnPlay.setImageResource(R.drawable.ic_pause_combine_main);
+                mediaPlayer.seekTo(currentPosition);
+                mediaPlayer.start();
+            }
+
+        });
+
+        btnAddFile.setOnClickListener(view -> {
+            flagChoose = true;
+            LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.modal_add_file_combine, null);
+
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+            boolean focusable = true;
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+
+            TextView btnDestroyNote = popupView.findViewById(R.id.combine_modal_destroy);
+            TextView btnOkRecordNote = popupView.findViewById(R.id.combine_modal_add);
+            RecyclerView modalList = popupView.findViewById(R.id.listView_show_note);
+
+            recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/");
+            if (recordingsDirectory.listFiles() != null)
+                size = Objects.requireNonNull(recordingsDirectory.listFiles()).length;
+            if (recordingsDirectory.exists()) {
+                files = recordingsDirectory.listFiles();
+                if (files != null) {
+                    for (File file1 : files) {
+                        if (file1.isFile() && file1.getName().endsWith(".mp3") || file1.getName().endsWith(".m4a") || file1.getName().endsWith(".aac")) {
+                            String fileName = file1.getName();
+                            String fileSize1 = decimalFormat.format(1.0 * file1.length() / (1024 * 1024));
+                            listAddFile.add(new Audio(fileName, formatTime(file1), fileSize1 + " MB", "", R.drawable.ic_play_audio_item));
+                        }
+                    }
+                }
+            }
+
+            assert files != null;
+            checkedArray = new boolean[files.length];
+
+            CombineModalAdapter combineModalAdapter = new CombineModalAdapter(popupView.getContext(), this);
+            combineModalAdapter.setData(listAddFile);
+
+            modalList.setLayoutManager(new LinearLayoutManager(popupView.getContext()));
+            modalList.setAdapter(combineModalAdapter);
+
+            btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
+
+            btnOkRecordNote.setOnClickListener(view1 -> {
+                for(int i = 0; i < checkedArray.length; i++)
+                {
+                    if(checkedArray[i])
+                    {
+                        addFileSound(listAddFile.get(i).getName());
+                    }
+                }
+
+                ResetAdapter();
+
+                //COMBINE
+                ConcatAudio();
+
+                //XÉT LẠI MEDIA PLAYER
+                try {
+                    mediaPlayer.stop();
+                    mediaPlayer.setDataSource(tempPath + finalName);
+                    txtDurationTime.setText(formatTime(outputFile));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                CheckOnceAdd();
+
+                popupWindow.setOnDismissListener(() -> Toast.makeText(view1.getContext(), popupView.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show());
+
+                popupWindow.dismiss();
+            });
+
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress);
+                }
+                txtCurTime.setText(formatTime(progress));
+                seekBar.setProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        Runnable mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mediaPlayer != null) {
+                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                    seekBar.setProgress(mCurrentPosition);
+                    txtCurTime.setText(formatTime(mCurrentPosition));
+                }
+                // Lặp lại Runnable sau 100ms
+                handler.postDelayed(this, 100);
+            }
+        };
+        handler.postDelayed(mRunnable, 100);
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            seekBar.setProgress(0);
+            txtCurTime.setText("00:00:00");
+
+            flagPlaying = false;
+            cntBtn = 0;
+            btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+        });
+
+        btnCombine.setOnClickListener(view -> ConfirmCombine());
+
+        btnCancel.setOnClickListener(view -> {
+            if (audioList.size() > 1) {
+                audioList = audioList.subList(0, 1);
+            }
+
+            combineAudioAdapter.notifyDataSetChanged();
+            combineAudioAdapter.setData(audioList);
+            seekBar.setProgress(0);
+            btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+            txtCurTime.setText("00:00:00");
+            CheckColor();
+
+            try {
+                mediaPlayer.stop();
+                mediaPlayer.setDataSource(tempPath + fileName);
+                txtDurationTime.setText(formatTime(file));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            flagChoose = false;
+        });
+    }
+
+    public void CheckColor(){
+        if(audioList.size() > 1)
+        {
+            btnCancel.setEnabled(true);
+            @SuppressLint("Recycle") TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.textColor});
+            int textColor = typedArray.getColor(0, 0);
+            btnCancel.setTextColor(textColor);
+            btnCombine.setEnabled(true);
+            btnCombine.setTextColor(ContextCompat.getColor(this, R.color.pink_500));
+        }
+        else {
+            btnCancel.setEnabled(false);
+            btnCombine.setEnabled(false);
+            btnCancel.setTextColor(Color.GRAY);
+            btnCombine.setTextColor(Color.GRAY);
+        }
+    }
+    private void ConfirmCombine(){
+        AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
+        alertDiaglog.setTitle(this.getString(R.string.combine_title));
+        alertDiaglog.setIcon(R.mipmap.ic_launcher);
+        alertDiaglog.setMessage(this.getString(R.string.combine_YN));
+        alertDiaglog.setPositiveButton(this.getString(R.string.combine_title), (dialogInterface, i) -> {
+            Toast.makeText(getApplicationContext(), this.getString(R.string.combine_success), Toast.LENGTH_LONG).show();
+            flagDelete = false;
+            finish();
+        });
+        alertDiaglog.setNegativeButton(this.getString(R.string.cancel_announce), (dialogInterface, i) -> {
+            File fileDl = new File(tempPath + deleteName);
+            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+            if (fileDel.exists()) {
+                fileDel.delete();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_announce), Toast.LENGTH_LONG).show();
+            }
+
+            onBackPressed();
+        });
+
+        alertDiaglog.show();
+    }
+    public void BoundView(){
+        txtName = findViewById(R.id.combine_txt_name);
+        txtCurTime = findViewById(R.id.combine_time_current);
+        txtDurationTime = findViewById(R.id.combine_time_total);
+        rcvCombineAudio = findViewById(R.id.combine_rcv_audio_list);
+        rcvCombineAudio.setLayoutManager(new LinearLayoutManager(this));
+        audioList = new ArrayList<>();
+        combineAudioAdapter = new CombineAudioAdapter(this);
+        combineAudioAdapter.setData(audioList);
+        rcvCombineAudio.setAdapter(combineAudioAdapter);
+        seekBar = findViewById(R.id.combine_seekbar);
+        btnPlay = findViewById(R.id.combine_btn_play);
+        btnCombine = findViewById(R.id.combine_btn_combine);
+        btnCancel = findViewById(R.id.combine_btn_cancel);
+        btnAddFile = findViewById(R.id.combine_add_file);
+        listAddFile = new ArrayList<>();
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String formatTime(File file) {
+        long durationInMillis = 0;
+
+        try {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(file.getAbsolutePath());
+            String durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            durationInMillis = Long.parseLong(durationStr);
+            retriever.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        long hours = TimeUnit.MILLISECONDS.toHours(durationInMillis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis) - TimeUnit.HOURS.toMinutes(hours);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String formatTime(int duration) {
+        int hours = duration / 3600000;
+        int minutes = (duration % 3600000) / 60000;
+        int seconds = ((duration % 3600000) % 60000) / 1000;
+
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mediaPlayer.stop();
+        if(flagDelete)
+        {
+            File fileDl = new File(tempPath + deleteName);
+            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+            if (fileDel.exists()) {
+                fileDel.delete();
+            }
+        }
+        super.onDestroy();
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    public void changeLayoutFromCombine(View view) {
+        if (view.getId() == R.id.combine_btn_back) {
+            onBackPressed();
+        }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        if(checkedArray[position])
+        {
+            checkedArray[position] = false;
+        }
+        else {
+            checkedArray[position] = true;
+        }
+    }
+    public void ResetAdapter(){
+        combineAudioAdapter.notifyDataSetChanged();
+        combineAudioAdapter.setData(audioList);
+        seekBar.setProgress(0);
+        btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+        txtCurTime.setText("00:00:00");
+        CheckColor();
+    }
+
+    public void ConcatAudio(){
         outputFile = new File(tempPath + finalName);
         if(outputFile.exists()) {
             int i = 1;
@@ -101,6 +436,9 @@ public class CombineActivity extends AppCompatActivity {
                 outputFile = new File(tempPath + finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit);
                 i++;
             }
+        }
+        else {
+            deleteName = finalName;
         }
 
         int rc;
@@ -169,256 +507,16 @@ public class CombineActivity extends AppCompatActivity {
                 }
             }
         }
-
-        //XÉT MẶC ĐỊNH MỚI VÀO
-        CheckColor();
-        seekBar.setProgress(0);
-        btnPlay.setImageResource(R.drawable.ic_play_combine_main);
-        txtCurTime.setText("00:00:00");
-
-        try {
-            if(audioList.size() > 1)
-            {
-                mediaPlayer.setDataSource(tempPath + finalName);
-                txtDurationTime.setText(formatTime(outputFile));
-            }
-            else {
-                mediaPlayer.setDataSource(tempPath + fileName);
-                txtDurationTime.setText(formatTime(file));
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        btnPlay.setOnClickListener(view -> {
-            flagPlaying = !flagPlaying;
-            if(cntBtn == 0 && flagPlaying)
-            {
-                try {
-                    btnPlay.setImageResource(R.drawable.ic_pause_combine_main);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    seekBar.setMax(mediaPlayer.getDuration());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                cntBtn = 1;
-            }
-            else if(cntBtn == 1 && !flagPlaying)
-            {
-                btnPlay.setImageResource(R.drawable.ic_play_combine_main);
-                currentPosition = mediaPlayer.getCurrentPosition();
-                mediaPlayer.pause();
-            }
-            else if(cntBtn == 1)
-            {
-                btnPlay.setImageResource(R.drawable.ic_pause_combine_main);
-                mediaPlayer.seekTo(currentPosition);
-                mediaPlayer.start();
-            }
-
-        });
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    mediaPlayer.seekTo(progress);
-                }
-                txtCurTime.setText(formatTime(progress));
-                seekBar.setProgress(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Không làm gì khi bắt đầu kéo SeekBar
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Không làm gì khi kết thúc kéo SeekBar
-            }
-        });
-
-        Runnable mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mediaPlayer != null) {
-                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                    seekBar.setProgress(mCurrentPosition);
-                    txtCurTime.setText(formatTime(mCurrentPosition));
-                }
-                // Lặp lại Runnable sau 100ms
-                handler.postDelayed(this, 100);
-            }
-        };
-        handler.postDelayed(mRunnable, 100);
-
-        mediaPlayer.setOnCompletionListener(mp -> {
-            seekBar.setProgress(0);
-            txtCurTime.setText("00:00:00");
-
-            flagPlaying = false;
-            cntBtn = 0;
-            btnPlay.setImageResource(R.drawable.ic_play_combine_main);
-        });
-
-        btnCombine.setOnClickListener(view -> ConfirmCombine());
-
-        btnCancel.setOnClickListener(view -> {
-            if (audioList.size() > 1) {
-                audioList = audioList.subList(0, 1);
-            }
-
-            combineAudioAdapter.notifyDataSetChanged();
-            combineAudioAdapter.setData(audioList);
-            seekBar.setProgress(0);
-            btnPlay.setImageResource(R.drawable.ic_play_combine_main);
-            txtCurTime.setText("00:00:00");
-            CheckColor();
-
-            try {
-                mediaPlayer.stop();
-                mediaPlayer.setDataSource(tempPath + fileName);
-                txtDurationTime.setText(formatTime(file));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 
-    public void CheckColor()
+    public void CheckOnceAdd()
     {
-        if(audioList.size() > 1)
+        if(flagChoose)
         {
-            btnCancel.setEnabled(true);
-            @SuppressLint("Recycle") TypedArray typedArray = obtainStyledAttributes(new int[]{R.attr.textColor});
-            int textColor = typedArray.getColor(0, 0);
-            btnCancel.setTextColor(textColor);
-            btnCombine.setEnabled(true);
-            btnCombine.setTextColor(ContextCompat.getColor(this, R.color.pink_500));
-        }
-        else {
-            btnCancel.setEnabled(false);
-            btnCombine.setEnabled(false);
-            btnCancel.setTextColor(Color.GRAY);
-            btnCombine.setTextColor(Color.GRAY);
+            btnAddFile.setOnClickListener(view -> {
+                Toast.makeText(this, this.getString(R.string.add_file_announce), Toast.LENGTH_SHORT).show();
+            });
         }
     }
-    private void ConfirmCombine(){
-        AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
-        alertDiaglog.setTitle("Combination");
-        alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage("Do you want to combine?");
-        alertDiaglog.setPositiveButton("Combine", (dialogInterface, i) -> {
-            Toast.makeText(getApplicationContext(), "Successfull Combine", Toast.LENGTH_LONG).show();
-            flagDelete = false;
-            onBackPressed();
-        });
-        alertDiaglog.setNegativeButton("Cancel", (dialogInterface, i) -> {
-            File fileDl = new File(tempPath + deleteName);
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-                Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_LONG).show();
-            }
 
-            onBackPressed();
-        });
-
-        alertDiaglog.show();
-    }
-    public void BoundView(){
-        txtName = findViewById(R.id.combine_txt_name);
-        txtCurTime = findViewById(R.id.combine_time_current);
-        txtDurationTime = findViewById(R.id.combine_time_total);
-        rcvCombineAudio = findViewById(R.id.combine_rcv_audio_list);
-        rcvCombineAudio.setLayoutManager(new LinearLayoutManager(this));
-        audioList = new ArrayList<>();
-        combineAudioAdapter = new CombineAudioAdapter(this);
-        combineAudioAdapter.setData(audioList);
-        rcvCombineAudio.setAdapter(combineAudioAdapter);
-        seekBar = findViewById(R.id.combine_seekbar);
-        btnPlay = findViewById(R.id.combine_btn_play);
-        btnCombine = findViewById(R.id.combine_btn_combine);
-        btnCancel = findViewById(R.id.combine_btn_cancel);
-
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String formatTime(File file) {
-        long durationInMillis = 0;
-
-        try {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(file.getAbsolutePath());
-            String durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            durationInMillis = Long.parseLong(durationStr);
-            retriever.release();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        long hours = TimeUnit.MILLISECONDS.toHours(durationInMillis);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(durationInMillis) - TimeUnit.HOURS.toMinutes(hours);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
-
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String formatTime(int duration) {
-        int hours = duration / 3600000;
-        int minutes = (duration % 3600000) / 60000;
-        int seconds = ((duration % 3600000) % 60000) / 1000;
-
-
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if(flagDelete)
-        {
-            File fileDl = new File(tempPath + deleteName);
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-            }
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        if(flagDelete)
-        {
-            File fileDl = new File(tempPath + deleteName);
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-            }
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        if(flagDelete)
-        {
-            File fileDl = new File(tempPath + deleteName);
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-            }
-        }
-        super.onStop();
-    }
-
-    public void changeLayoutFromCombine(View view) {
-        if (view.getId() == R.id.combine_btn_back) {
-            onBackPressed();
-        }
-    }
 }

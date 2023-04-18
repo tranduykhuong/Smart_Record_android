@@ -62,4 +62,25 @@
     <string name="combine_title">Hợp nhất</string>
     <string name="combine_cancel">Xóa</string>
     <string name="menu_title">Chỉnh sửa Audio</string>
+    <string name="add_successfull">Thêm thành công</string>
+    <string name="remove_file">File đã xóa</string>
+    <string name="save_file">Đã lưu_</string>
+
+    <string name="converting">Đang chuyển đổi...</string>
+    <string name="loading">Đang xử lý...</string>
+    <string name="save_announce">Lưu</string>
+    <string name="save_record_announce">Lưu bản ghi</string>
+    <string name="delete_announce">Xóa</string>
+    <string name="YN_save_announce">Bạn có muốn lưu bản ghi?</string>
+    <string name="resume_announce">Tiếp tục</string>
+    <string name="pause_announce">Dừng</string>
+    <string name="repeat_mode">Chế độ lặp lại</string>
+    <string name="cancel_repeat_mode">Bỏ lặp lại</string>
+    <string name="combine_YN">Bạn có muốn hợp nhất?</string>
+    <string name="combine_success">Hợp nhất thành công</string>
+    <string name="cancel_announce">Hủy</string>
+    <string name="record_announce">Ghi...</string>
+    <string name="broadcast_title">Đang ghi âm...</string>
+    <string name="broadcast_action">Chạm để dừng</string>
+    <string name="add_file_announce">Bạn chỉ có thể thêm 1 lần!</string>
 </resources>
