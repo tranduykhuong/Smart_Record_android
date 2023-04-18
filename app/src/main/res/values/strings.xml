@@ -105,4 +105,7 @@
     <string name="adjust_foolproof">Foolproof</string>
     <string name="adjust_volume">Volume</string>
     <string name="adjust_speed">Speed</string>
+
+    <string name="harmonic_title">Harmonic</string>
+    <string name="harmonic_success">Successfully Harmonic</string>
 </resources>
