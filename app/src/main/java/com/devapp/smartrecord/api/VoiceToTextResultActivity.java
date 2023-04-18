@@ -2,6 +2,7 @@ package com.devapp.smartrecord.api;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +46,7 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private TextView twResult;
     private ImageView btnPlay;
-
+    private SeekBar seekbar;
     private TextView btnChoiceLanguage;
     private TextView btnSummary;
     private TextView twEnglish;
@@ -140,6 +142,28 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
             thread.start();
         });
 
+        //INITIALIZE SEEKBAR
+        seekbar = findViewById(R.id.voice_text_seekbar);
+        seekbar.setProgress(0);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress);
+                }
+//                twCurrentTime.setText(formatTime(progress));
+                seekBar.setProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
         Intent intent = getIntent();
         data = intent.getStringExtra("data");
         isSummary = intent.getStringExtra("isSummary");
@@ -165,12 +189,14 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
             btnPlay.setImageResource(R.drawable.ic_play);
             btnPlay.setTag("ic_play");
         });
+
         duration = mediaPlayer.getDuration();
         twDuration = findViewById(R.id.tw_duration);
         twDuration.setText(String.format(Locale.getDefault(), "%02d:%02d", (duration / 1000) / 60, (duration / 1000) % 60));
 
         btnPlay = findViewById(R.id.btn_play_text);
         btnPlay.setOnClickListener(v -> {
+            seekbar.setMax(mediaPlayer.getDuration());
             ImageView imageView = (ImageView) v;
             if (imageView.getTag() == null || imageView.getTag().equals("ic_play")) {
                 imageView.setImageResource(R.drawable.ic_pause);
@@ -193,7 +219,7 @@ public class VoiceToTextResultActivity extends AppCompatActivity {
                     public void run() {
                         if (mediaPlayer != null) {
                             int currentPosition = mediaPlayer.getCurrentPosition();
-
+                            seekbar.setProgress(currentPosition);
                             twCurrentTime.setText(String.format(Locale.getDefault(), "%02d:%02d", (currentPosition / 1000) / 60, (currentPosition / 1000) % 60));
                             handler.postDelayed(this, 1000); // update every 1 second
                         }

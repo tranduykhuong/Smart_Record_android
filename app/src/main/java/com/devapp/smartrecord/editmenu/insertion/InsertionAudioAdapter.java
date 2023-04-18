@@ -69,12 +69,9 @@ public class InsertionAudioAdapter extends RecyclerView.Adapter<InsertionAudioAd
         holder.sizeAudio.setText(audio.getSize());
         holder.createDateAudio.setText(audio.getCreateDate());
 
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null)
-                    listener.onItemClick(holder.getAbsoluteAdapterPosition());
-            }
+        holder.relativeLayout.setOnClickListener(view -> {
+            if (listener != null)
+                listener.onItemClick(holder.getAbsoluteAdapterPosition());
         });
     }
     @Override

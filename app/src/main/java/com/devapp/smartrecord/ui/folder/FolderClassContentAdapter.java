@@ -50,8 +50,9 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
 
     private ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
-    public FolderClassContentAdapter(Context context) {
+    public FolderClassContentAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
+        this.listener = listener;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -77,12 +78,8 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, holder.getAbsoluteAdapterPosition()+"", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(context, HomeFragment.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt("count", 10);
-//                    startActivity(context.getApplicationContext(), intent, bundle);
-//                    context.startActivity(intent);
+                if (listener != null)
+                    listener.onItemClick(holder.getAbsoluteAdapterPosition());
             }
         });
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(position));

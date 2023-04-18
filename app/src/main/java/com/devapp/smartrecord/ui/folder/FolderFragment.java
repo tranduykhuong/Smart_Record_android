@@ -1,14 +1,16 @@
 package com.devapp.smartrecord.ui.folder;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,17 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentFolderBinding;
 import com.devapp.smartrecord.editmenu.adjust.AdjustActivity;
 import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
-import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -42,30 +43,160 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
-public class FolderFragment extends Fragment{
+public class FolderFragment extends Fragment implements FolderClassContentAdapter.OnItemClickListener, FolderChildFragment.DataPassListener {
     private FragmentFolderBinding binding;
     private FolderClassContentAdapter adapterFolder;
     private ArrayList<FolderCLassContent> listFolder;
     private final boolean mSortByNameAscending = true;
     private Double sizeFolder = 0.0;
-    private TextView totalFolder;
-    private TextView totalSizeFolder;
+    private TextView totalFolder, totalSizeFolder, textFolder, textCatholic, textTotalChoice;
+    private RelativeLayout infoLayout;
+    private LinearLayout recordLayout;
+    private ImageButton imageTotalChoice, addFolder;
     private RecyclerView rcvFolder;
     private OnClickButtonItem dataPasser;
+    private boolean isEdit = false, isTotalChecked = false;
+    private boolean[] selectedItems;
+    private int[] listItemChoice;
+    private FolderChildFragment folderChild;
 
     public interface OnClickButtonItem {
         void onClickButton(String data);
     }
 
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        dataPasser = (OnClickButtonItem) context;
+//    }
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        dataPasser = (OnClickButtonItem) context;
+    public void onItemClick(int position){
+        if (isEdit){
+            if (selectedItems[position]){
+                listFolder.get(position).setImage(R.drawable.ic_circle_folder);
+                adapterFolder.notifyDataSetChanged();
+                selectedItems[position] = false;
+            }
+            else {
+                listFolder.get(position).setImage(R.drawable.ic_circle_checked_folder);
+                adapterFolder.notifyDataSetChanged();
+                selectedItems[position] = true;
+//                if (isTotalChecked){
+//                    imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
+//                    adapterFolder.notifyDataSetChanged();
+//                    isTotalChecked = false;
+//                }
+            }
+        }
+    }
+
+    @Override
+    public void handleRemoveMultiFolder() {
+        handleValueSelected();
+        //Tạo ra dialog để xác nhận xóa hay không
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+        builder.setMessage(getView().getContext().getString(R.string.question_delete));
+        builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int j) {
+                int count = 0;
+                for (int i = 0; i < listItemChoice.length; i++) {
+                    if (i != 0){
+                        listItemChoice[i] -= count;
+                    }
+                    FolderCLassContent folder = listFolder.get(listItemChoice[i]);
+                    String folderName = folder.getTitle();
+                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
+                    File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "Thùng rác");
+
+                    try {
+                        File destinationFile = new File(destinationFolder, folderName); // Tạo tệp đích mới
+                        boolean success = sourceFile.renameTo(destinationFile);
+                        if (success) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+                            listFolder.remove(listItemChoice[i]);
+                            adapterFolder.notifyItemRemoved(listItemChoice[i]);
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    count++;
+                }
+
+
+                listItemChoice = null;
+                selectedItems = new boolean[listFolder.size()];
+                Arrays.fill(selectedItems, false);
+            }
+        });
+        builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+    public void handleMoveMultiFolder(View view){
+        handleValueSelected();
+        //Tạo ra dialog để xác nhận xóa hay không
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+        builder.setMessage(getView().getContext().getString(R.string.question_delete));
+        builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int j) {
+                int count = 0;
+                for (int i = 0; i < listItemChoice.length; i++) {
+                    if (i != 0){
+                        listItemChoice[i] -= count;
+                    }
+                    FolderCLassContent folder = listFolder.get(listItemChoice[i]);
+                    String folderName = folder.getTitle();
+                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
+                    File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "Thư mục riêng tư");
+
+                    try {
+                        File destinationFile = new File(destinationFolder, folderName); // Tạo tệp đích mới
+                        boolean success = sourceFile.renameTo(destinationFile);
+                        if (success) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+                            listFolder.remove(listItemChoice[i]);
+                            adapterFolder.notifyItemRemoved(listItemChoice[i]);
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    count++;
+                }
+
+
+//                listItemChoice = null;
+//                selectedItems = new boolean[listFolder.size()];
+//                Arrays.fill(selectedItems, false);
+            }
+        });
+        builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
     }
 
 
@@ -78,15 +209,13 @@ public class FolderFragment extends Fragment{
         showInfoAdapter();
         createFolderPrivate("Thư mục riêng tư");
 
-        // Lấy dữ liệu được truyền vào từ activity
+//         Lấy dữ liệu được truyền vào từ activity
         Bundle args = getArguments();
         if (args != null){
-            String data = args.getString("data");
-            Toast.makeText(getActivity(), data, Toast.LENGTH_SHORT).show();
+            isEdit = args.getBoolean("isEdit");
         }
 
-        // Gửi dữ liệu từ fragment vào activity
-//        dataPasser.onClickButton(data);
+        showMultiFolder();
 
         return root;
     }
@@ -95,16 +224,70 @@ public class FolderFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        isEdit = false;
+        for (int i = 0; i < listFolder.size(); i++){
+            listFolder.get(i).setImage(R.drawable.ic_pink500_folder);
+        }
+        adapterFolder.notifyDataSetChanged();
+    }
+    private void showMultiFolder(){
+        if (isEdit) {
+            totalSizeFolder.setVisibility(View.GONE);
+            textFolder.setVisibility(View.GONE);
+            textCatholic.setVisibility(View.GONE);
+            addFolder.setVisibility(View.GONE);
+            recordLayout.setVisibility(View.GONE);
+
+            imageTotalChoice = binding.folderTotalChoice;
+            imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
+            totalFolder.setText("Chọn tất cả");
+            totalFolder.setTextSize(16);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) infoLayout.getLayoutParams();
+            RelativeLayout.LayoutParams paramsText = (RelativeLayout.LayoutParams) totalFolder.getLayoutParams();
+            params.leftMargin = 30;
+            paramsText.leftMargin = 14;
+
+            imageTotalChoice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isTotalChecked) {
+                        imageTotalChoice.setImageResource(R.drawable.ic_circle_checked_folder);
+                        for (int i = 0; i < listFolder.size(); i++) {
+                            listFolder.get(i).setImage(R.drawable.ic_circle_checked_folder);
+                        }
+                        adapterFolder.notifyDataSetChanged();
+                        Arrays.fill(selectedItems, true);
+//                        isTotalChecked = true;
+                    } else {
+                        imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
+                        for (int i = 0; i < listFolder.size(); i++) {
+                            listFolder.get(i).setImage(R.drawable.ic_circle_folder);
+                        }
+                        adapterFolder.notifyDataSetChanged();
+//                        Arrays.fill(selectedItems, false);
+                        isTotalChecked = false;
+                    }
+                }
+            });
+
+            choiceMultiFolder();
+            showChildFragment();
+        }
     }
 
     private void folderView(FragmentFolderBinding binding){
-        final LinearLayout menuFilter = binding.folderWrapDay;
-        final TextView folderFilterTitle = binding.folderDay;
-        final androidx.appcompat.widget.SearchView searchView = binding.searchFolderEdt;
-        final RelativeLayout privateFolder = binding.folderItemPrivateRow;
-        final ImageButton addFolder = binding.folderAddItem;
+        LinearLayout menuFilter = binding.folderWrapDay;
+        infoLayout = binding.folderWrapInfo;
+        recordLayout = binding.folderWrapRecord;
+        TextView folderFilterTitle = binding.folderDay;
+        androidx.appcompat.widget.SearchView searchView = binding.searchFolderEdt;
+        RelativeLayout privateFolder = binding.folderItemPrivateRow;
+        addFolder = binding.folderAddItem;
         totalFolder = binding.folderAmount;
         totalSizeFolder = binding.folderCapacity;
+        textFolder = binding.folder;
+        textCatholic = binding.folderCatholic;
         rcvFolder = binding.folderRcvList;
 
         // Lấy InputMethodManager từ Context
@@ -309,7 +492,7 @@ public class FolderFragment extends Fragment{
 //                    }
 //                });
 //            }
-            Intent intent = new Intent(getActivity(), InsertionActivity.class);
+            Intent intent = new Intent(getActivity(), AdjustActivity.class);
             startActivity(intent);
         });
 
@@ -384,7 +567,7 @@ public class FolderFragment extends Fragment{
         rcvFolder.setLayoutManager(new LinearLayoutManager(getContext()));
         listFolder = new ArrayList<>();
         listFolder = (ArrayList<FolderCLassContent>) getListFolder();
-        adapterFolder = new FolderClassContentAdapter(getContext());
+        adapterFolder = new FolderClassContentAdapter(getContext(), this);
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
         sortList(listFolder,"day", mSortByNameAscending);
@@ -392,6 +575,9 @@ public class FolderFragment extends Fragment{
         totalSizeFolder.setText(decimalFormat.format(sizeFolder));
         adapterFolder.setData(listFolder);
         rcvFolder.setAdapter(adapterFolder);
+
+        selectedItems = new boolean[listFolder.size()];
+        Arrays.fill(selectedItems, false);
     }
 
     private void createFolderPrivate(String name){
@@ -400,6 +586,28 @@ public class FolderFragment extends Fragment{
         if(!folderPrivate.exists()) {
             folderPrivate.mkdir(); // Tạo thư mục mới nếu chưa tồn tại
         }
+    }
+
+    private void choiceMultiFolder(){
+        for (int i = 0; i < listFolder.size(); i++){
+            listFolder.get(i).setImage(R.drawable.ic_circle_folder);
+        }
+        adapterFolder.notifyDataSetChanged();
+    }
+
+    private void showChildFragment() {
+        // Replace this fragment with the child fragment
+        folderChild = new FolderChildFragment(this);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.folder_wrap_fragment, folderChild);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void handleValueSelected(){
+        listItemChoice = IntStream.range(0, selectedItems.length)
+                .filter(i -> selectedItems[i])
+                .toArray();
     }
 
     public interface OnButtonClickListener {
@@ -439,7 +647,7 @@ public class FolderFragment extends Fragment{
                         sizeFolder = sizeFolder + 1.0 * size / (1024*1024);
                         Date lastModifiedDate = new Date(folder.lastModified());
                         @SuppressLint("SimpleDateFormat") String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " bản ghi - ",fileSize+" MB", formattedDate, R.drawable.ic_pink500_folder));
+                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " " + getContext().getString(R.string.folder_file) + " ",fileSize+" MB", formattedDate, R.drawable.ic_pink500_folder));
                     }
                 }
             }

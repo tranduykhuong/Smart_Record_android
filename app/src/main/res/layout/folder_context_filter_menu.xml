@@ -21,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="Sắp xếp theo"
+            android:text="@string/folder_filter_title"
+            android:textColor="?attr/textColor"
             android:gravity="center"
             />
         <TextView
@@ -37,7 +38,7 @@
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Ngày"
+            android:text="@string/folder_day"
             android:gravity="center"
             />
         <TextView
@@ -53,7 +54,7 @@
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Tên"
+            android:text="@string/folder_name"
             android:gravity="center"
             />
         <TextView
@@ -68,7 +69,7 @@
             android:layout_height="wrap_content"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Kích thước"
+            android:text="@string/folder_size"
             android:padding="18dp"
             android:gravity="center"
             />
@@ -84,7 +85,7 @@
         android:padding="18dp"
         android:textSize="20dp"
         android:textColor="@color/pink_500"
-        android:text="Hủy"
+        android:text="@string/cancel_announce"
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_radius_white_filter_folder"

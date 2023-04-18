@@ -82,4 +82,25 @@
     <string name="record_announce">Ghi...</string>
     <string name="broadcast_title">Đang ghi âm...</string>
     <string name="broadcast_action">Chạm để dừng</string>
+    <string name="add_file_announce">Bạn chỉ có thể thêm 1 lần!</string>
+    <string name="only_mp3">Chỉ hợp nhất được .mp3</string>
+
+    <string name="folder">\ Thư mục -\ </string>
+    <string name="folder_day">Ngày</string>
+    <string name="folder_name">Tên</string>
+    <string name="folder_size">Kích thước</string>
+    <string name="folder_filter_title">Sắp xếp theo</string>
+    <string name="folder_file">bản ghi -</string>
+    <string name="folder_create_folder">Tạo thư mục</string>
+    <string name="folder_create_folder_hint">Nhập tên thư mục</string>
+    <string name="folder_create_password">Tạo mật khẩu</string>
+    <string name="folder_password_hint">Nhập vào mật khẩu</string>
+    <string name="folder_more_menu_title">Chọn</string>
+    <string name="folder_more_menu_item_rename">Đổi tên</string>
+
+    <string name="adjust_title">Điều chỉnh</string>
+    <string name="adjust_foolproof">Cao độ</string>
+    <string name="adjust_volume">Chỉnh âm</string>
+    <string name="adjust_speed">Tốc độ</string>
+
 </resources>
