@@ -1,24 +1,29 @@
 package com.devapp.smartrecord;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Image;
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.devapp.smartrecord.api.VoiceToTextActivity;
+import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -38,9 +44,6 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -63,9 +66,9 @@ public class ReplayActivity  extends AppCompatActivity {
     private Button btnSpeed;
     private SeekBar skbarReplay;
     private LineChart chart;
-    ArrayList<Float> wf;
     private byte[] waveform;
     private List<Entry> entries;
+    private ArrayList<String> listNote;
     private final Handler handler = new Handler();
     private boolean isSeekBarTouched = false;
     private int progressWidth;
@@ -89,7 +92,7 @@ public class ReplayActivity  extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         String nameSound;
-        
+
         if(action.equals("FromHome"))
         {
             nameSound = intent.getStringExtra("Name");
@@ -119,16 +122,15 @@ public class ReplayActivity  extends AppCompatActivity {
 
         BoundView();
         playCurrentSong(currentSongIndex);
-
-        getHistoryNote();
     }
 
-    public void getHistoryNote(){
+    public void getHistoryNote(int position){
         SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
-        String json = sharedPreferences.getString(files[currentSongIndex].getName(), null);
+        String json = sharedPreferences.getString(files[position].getName(), null);
+        listNote = new ArrayList<>();
 
         if (json != null) {
-            JSONArray jsonArray = null;
+            JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(json);
             } catch (JSONException e) {
@@ -138,11 +140,54 @@ public class ReplayActivity  extends AppCompatActivity {
             for (int i = 0; i < jsonArray.length(); i++) {
                 try {
                     String note = jsonArray.getString(i);
+                    listNote.add(note);
                     Log.d("note: ", note);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
             }
+        }
+    }
+
+    public void InitChart(){
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(false);
+        chart.setPinchZoom(true);
+        chart.getDescription().setEnabled(false);
+        chart.setVisibleXRangeMinimum(60 * 1000f);
+
+        chart.setDrawGridBackground(true);
+        chart.setGridBackgroundColor(Color.WHITE);
+
+        chart.getXAxis().setGranularity(1000f);
+        chart.getXAxis().setSpaceMin(1000f);
+        chart.getXAxis().setDrawLabels(false); //
+        chart.getXAxis().setEnabled(false); //
+        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getAxisRight().setDrawGridLines(false);
+        chart.getLegend().setEnabled(false);
+
+        // Read data from file
+        File fileWave = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
+        byte[] data = new byte[(int) fileWave.length()];
+        try (FileInputStream inputStream = new FileInputStream(fileWave)) {
+            inputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        double[] samples = new double[data.length / 2];
+        for (int i = 0; i < samples.length; i++) {
+            short sample = (short) (((data[i * 2 + 1] & 0xff) << 8) | (data[i * 2] & 0xff));
+            samples[i] = (double) sample / Short.MAX_VALUE;
+        }
+
+        waveform = new byte[samples.length + 1];
+        for (int i = 0; i < samples.length; i = i + 1) {
+            waveform[i] = (byte) (samples[i] * 100);
         }
     }
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -154,71 +199,19 @@ public class ReplayActivity  extends AppCompatActivity {
         btnSpeed =  findViewById(R.id.btn_speed_replay);
         skbarReplay =  findViewById(R.id.skbar_replay);
         hrzScrollView = findViewById(R.id.replay_horizontal);
+        ImageButton btnListNote = findViewById(R.id.replay_btn_list);
         ImageButton btnPrevReplay = findViewById(R.id.btn_prev_replay);
         ImageButton btnNextReplay = findViewById(R.id.btn_next_replay);
         ImageButton btnBackWard = findViewById(R.id.btn_pr5_replay);
         ImageButton btnForward = findViewById(R.id.btn_next5_replay);
         ImageButton btnRepeat = findViewById(R.id.btn_repeat_replay);
+        ImageButton btnAlarm = findViewById(R.id.replay_btn_alarm);
 
-        // Khởi tạo biểu đồ tần số âm thanh
+        // Initialize chart
         chart = findViewById(R.id.replay_chart);
-        chart.setTouchEnabled(true);
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(false);
-        chart.setPinchZoom(true);
-        chart.getDescription().setEnabled(false);
-        chart.setVisibleXRangeMinimum(60 * 1000f);
-        // Vẽ lưới nền và thiết lập màu nền cho lưới
-        chart.setDrawGridBackground(true);
-        chart.setGridBackgroundColor(Color.WHITE);
+        InitChart();
 
-        // Thiết lập khoảng cách giữa các đường lưới trên trục X và Y
-        chart.getXAxis().setGranularity(1000f);
-        chart.getXAxis().setSpaceMin(1000f);
-        chart.getXAxis().setDrawLabels(false); //
-        chart.getXAxis().setEnabled(false); //
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisRight().setEnabled(false);
-        chart.getAxisLeft().setDrawGridLines(false);
-        chart.getAxisRight().setDrawGridLines(false);
-        chart.getLegend().setEnabled(false);
-
-        // Đọc dữ liệu từ tệp
-//        File fileWave = new File(files[currentSongIndex].getAbsolutePath());
-        File fileWave = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
-        byte[] data = new byte[(int) fileWave.length()];
-        try (FileInputStream inputStream = new FileInputStream(fileWave)) {
-            inputStream.read(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-//        ByteBuffer buffer = ByteBuffer.wrap(data);
-//        buffer.order(ByteOrder.LITTLE_ENDIAN);
-//        IntBuffer intBuffer = buffer.asIntBuffer();
-
-//        wf = new ArrayList<>();
-//        while (intBuffer.hasRemaining()) {
-//            int sample = intBuffer.get();
-//            float amplitude = (float) (Math.abs((float) sample) / 32768.0);
-//            // sử dụng cường độ âm thanh tại mỗi mẫu dữ liệu ở đây
-//            wf.add(amplitude);
-//        }
-
-        // Chuyển đổi các mẫu âm thanh sang dạng số thực và chuẩn hóa
-        double[] samples = new double[data.length / 2];
-        for (int i = 0; i < samples.length; i++) {
-            short sample = (short) (((data[i * 2 + 1] & 0xff) << 8) | (data[i * 2] & 0xff));
-            samples[i] = (double) sample / Short.MAX_VALUE;
-        }
-
-        // Chuyển sang waveform
-        waveform = new byte[samples.length + 1];
-        for (int i = 0; i < samples.length; i = i + 1) {
-            waveform[i] = (byte) (samples[i] * 100);
-        }
-
-        // Cập nhật vẽ chart
+        // Update chart
         updateChart();
 
         //SEEKBAR
@@ -305,15 +298,14 @@ public class ReplayActivity  extends AppCompatActivity {
             }
             txtTimeCur.start();
         });
-
         btnRepeat.setOnClickListener(view -> {
             flagRepeat = !flagRepeat;
             if(flagRepeat)
             {
-                Toast.makeText(getApplicationContext(), "Chế độ lặp lại", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.repeat_mode), Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(getApplicationContext(), "Bỏ lặp lại", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_repeat_mode), Toast.LENGTH_LONG).show();
             }
         });
         btnPrevReplay.setOnClickListener(view -> {
@@ -374,6 +366,44 @@ public class ReplayActivity  extends AppCompatActivity {
                 txtTimeCur.stop();
             }
         });
+        btnListNote.setOnClickListener(view -> {
+            LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.modal_show_note, null);
+
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+            boolean focusable = true;
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+
+            ListView listView = popupView.findViewById(R.id.listView_show_note);
+            TextView btnDestroyNote = popupView.findViewById(R.id.replay_cancel_note);
+
+            ArrayAdapter arrayAdapter = new ArrayAdapter(popupView.getContext(), android.R.layout.simple_list_item_1, listNote);
+            listView.setAdapter(arrayAdapter);
+            listView.setOnItemClickListener((adapterView, view1, i, l) -> {
+                String TimeNote = listNote.get(i).substring(0, 5);
+
+                String[] parts = TimeNote.split(":");
+                int minutes = Integer.parseInt(parts[0]);
+                int seconds = Integer.parseInt(parts[1]);
+                int totalTime = (minutes * 60 + seconds) * 1000;
+
+                mediaPlayer.seekTo(totalTime);
+                txtTimeCur.setBase(SystemClock.elapsedRealtime() - totalTime);
+                txtTimeCur.start();
+                popupWindow.dismiss();
+            });
+
+            btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
+        });
+        btnAlarm.setOnClickListener(view -> {
+            File inputFilePath = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
+            HandleDataAlarm handleDataAlarm = HandleDataAlarm.getInstance(this);
+            handleDataAlarm.addReminder(inputFilePath.getAbsolutePath());
+        });
+
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
             if(flagRepeat)
@@ -485,6 +515,7 @@ public class ReplayActivity  extends AppCompatActivity {
             txtTimeCur.setBase(SystemClock.elapsedRealtime());
             txtTimeCur.start();
             txtTimeTotal.setText(getTotalTime());
+            getHistoryNote(currentSongIndex);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -497,7 +528,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private String getTimeString(int millis) {
         int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(millis);
         int seconds = (int) (TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(minutes));
+                TimeUnit.MINUTES.toSeconds(minutes));
         return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
     }
 
@@ -528,6 +559,9 @@ public class ReplayActivity  extends AppCompatActivity {
                 Intent intent = new Intent(this, VoiceToTextActivity.class);
                 intent.putExtra("PATH_KEY", file.getAbsolutePath());
                 startActivity(intent);
+                break;
+            }
+            case R.id.replay_btn_voice_trans:{
                 break;
             }
         }

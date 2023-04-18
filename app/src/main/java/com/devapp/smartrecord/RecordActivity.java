@@ -16,7 +16,6 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,13 +32,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.devapp.smartrecord.services.RecordingActivity;
+import com.devapp.smartrecord.services.RecordingService;
 import com.suman.voice.graphviewlibrary.GraphView;
 
 import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -47,7 +46,6 @@ import java.util.Objects;
 public class RecordActivity extends AppCompatActivity {
     private boolean flagRecording = false;
     long timeWhenPaused = 0;
-    private String fileName;
     private ImageButton btnPlay;
     private Chronometer chronometerTime;
     private TextView txtRecordName;
@@ -132,7 +130,7 @@ public class RecordActivity extends AppCompatActivity {
                 editor.putString(recorder.getFileName(), json);
                 editor.apply();
 
-                Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show();
                 popupWindow.dismiss();
             });
 
@@ -146,6 +144,10 @@ public class RecordActivity extends AppCompatActivity {
         recorder.stopWithNoSave();
         Toast.makeText(getApplicationContext(), this.getString(R.string.remove_file), Toast.LENGTH_LONG).show();
 
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("STOP_RECORDING");
+        startService(intentInform);
+
         Intent returnHome = new Intent(this, HomeActivity.class);
         startActivity(returnHome);
     }
@@ -153,16 +155,20 @@ public class RecordActivity extends AppCompatActivity {
         recorder.stopRecording();
         Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
 
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("STOP_RECORDING");
+        startService(intentInform);
+
         Intent returnHome = new Intent(this, HomeActivity.class);
         startActivity(returnHome);
     }
     private void confirmDelete(){
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
-        alertDiaglog.setTitle("Lưu bản ghi");
+        alertDiaglog.setTitle(this.getString(R.string.save_record_announce));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage("Bạn có muốn lưu bản ghi?");
-        alertDiaglog.setPositiveButton("Lưu", (dialogInterface, i) -> saveRecord());
-        alertDiaglog.setNegativeButton("Xóa", (dialogInterface, i) -> deleteRecord());
+        alertDiaglog.setMessage(this.getString(R.string.YN_save_announce));
+        alertDiaglog.setPositiveButton(this.getString(R.string.save_announce), (dialogInterface, i) -> saveRecord());
+        alertDiaglog.setNegativeButton(this.getString(R.string.delete_announce), (dialogInterface, i) -> deleteRecord());
 
         alertDiaglog.show();
     }
@@ -212,7 +218,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecord(){
-        Toast.makeText(getApplicationContext(), "Record...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.record_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
         File folder = new File(Environment.getExternalStorageDirectory() + "/Recordings");
 
@@ -222,6 +228,9 @@ public class RecordActivity extends AppCompatActivity {
         }
         chronometerTime.setBase(SystemClock.elapsedRealtime());
         chronometerTime.start();
+
+        Intent intentInform = new Intent(this, RecordingService.class);
+        startService(intentInform);
 
         recorder.startRecording();
         recorder.startPlotting(graphView);
@@ -240,18 +249,22 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        Toast.makeText(this, "Resume", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
         chronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
         chronometerTime.start();
         recorder.resumeRecording();
 
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("RESUME_RECORDING");
+        startService(intentInform);
+
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     public void PauseRecord()
     {
-        Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
         recorder.pauseRecording();
@@ -261,6 +274,10 @@ public class RecordActivity extends AppCompatActivity {
 
         timeWhenPaused = SystemClock.elapsedRealtime() - chronometerTime.getBase();
         chronometerTime.stop();
+
+        Intent intentInform = new Intent(this, RecordingService.class);
+        intentInform.setAction("PAUSE_RECORDING");
+        startService(intentInform);
     }
 
     PhoneStateListener phoneStateListener = new PhoneStateListener() {
@@ -284,12 +301,12 @@ public class RecordActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-        Toast.makeText(getApplicationContext(), "Đang dừng nè má", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
-        Toast.makeText(getApplicationContext(), "Đang hủy nè má", Toast.LENGTH_SHORT).show();
+        recorder.stopRecording();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
         super.onDestroy();
     }
 

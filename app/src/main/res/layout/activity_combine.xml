@@ -54,14 +54,14 @@
 
         <TextView
             android:id="@+id/combine_txt_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="3"
             android:gravity="center_horizontal"
             android:paddingHorizontal="40dp"
-            android:paddingRight="40dp"
-            android:text="08_08_56, ngày 18 tháng 3, 2023"
+            android:paddingEnd="40dp"
+            android:text=""
             android:textColor="?attr/textColor"
             android:textSize="17sp" />
 
@@ -70,10 +70,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/combine_rcv_audio_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="?attr/backgroundState"
-        ></androidx.recyclerview.widget.RecyclerView>
+        android:background="?attr/backgroundState" />
 
     <LinearLayout
         android:layout_width="match_parent"

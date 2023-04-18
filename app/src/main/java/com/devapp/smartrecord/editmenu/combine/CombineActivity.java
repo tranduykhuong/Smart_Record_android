@@ -3,6 +3,7 @@ package com.devapp.smartrecord.editmenu.combine;
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -11,9 +12,13 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,16 +48,19 @@ public class CombineActivity extends AppCompatActivity {
     private int cntBtn = 0,  currentPosition = 0;
     private RecyclerView rcvCombineAudio;
     private CombineAudioAdapter combineAudioAdapter;
-    private List<Audio> audioList;
+    private List<Audio> audioList, listAddFile;
     private String pathSound, fileName, finalName, deleteName;
     private TextView txtName, txtCurTime, txtDurationTime;
     private Button btnCombine, btnCancel;
-    private ImageButton btnPlay;
+    private ImageButton btnPlay, btnAddFile;
+    private int size;
+    private File[] files;
     private final MediaPlayer mediaPlayer  = new MediaPlayer();
     private SeekBar seekBar;
     private File outputFile;
     private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
     private final Handler handler = new Handler();
+    private File recordingsDirectory;
 
     public void addFileSound(String FName)
     {
@@ -70,12 +78,12 @@ public class CombineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_combine);
         Objects.requireNonNull(getSupportActionBar()).hide();
 
-        //NHẬN PATH TỪ MENU
+        //RECEIVE PATH TỪ MENU
         Intent intent = getIntent();
         pathSound = intent.getStringExtra("PATH_KEY");
         BoundView();
 
-        //GÁN FILE MẶC ĐỊNH
+        //SET FILE DEFAULT
         fileName = pathSound.substring(pathSound.lastIndexOf("/") + 1);
         File file = new File(tempPath + fileName);
         String name = file.getName();
@@ -91,7 +99,6 @@ public class CombineActivity extends AppCompatActivity {
         txtName.setText(finalName);
 
         //COMBINE LIST AUDIO
-
         outputFile = new File(tempPath + finalName);
         if(outputFile.exists()) {
             int i = 1;
@@ -170,7 +177,7 @@ public class CombineActivity extends AppCompatActivity {
             }
         }
 
-        //XÉT MẶC ĐỊNH MỚI VÀO
+        //SET DEFAULT
         CheckColor();
         seekBar.setProgress(0);
         btnPlay.setImageResource(R.drawable.ic_play_combine_main);
@@ -220,6 +227,54 @@ public class CombineActivity extends AppCompatActivity {
 
         });
 
+        btnAddFile.setOnClickListener(view -> {
+            LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.modal_add_file_combine, null);
+
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+            boolean focusable = true;
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+
+            TextView btnDestroyNote = popupView.findViewById(R.id.combine_modal_destroy);
+            TextView btnOkRecordNote = popupView.findViewById(R.id.combine_modal_add);
+            RecyclerView modalList = popupView.findViewById(R.id.listView_show_note);
+
+            audioList = new ArrayList<>();
+            recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/");
+            if (recordingsDirectory.listFiles() != null)
+                size = Objects.requireNonNull(recordingsDirectory.listFiles()).length;
+            if (recordingsDirectory.exists()) {
+                files = recordingsDirectory.listFiles();
+                if (files != null) {
+                    for (File file1 : files) {
+                        if (file1.isFile() && file1.getName().endsWith(".mp3") || file1.getName().endsWith(".m4a") || file1.getName().endsWith(".aac")) {
+                            String fileName = file1.getName();
+                            String fileSize1 = decimalFormat.format(1.0 * file1.length() / (1024 * 1024));
+                            listAddFile.add(new Audio(fileName, formatTime(file1), fileSize1 + " MB", "", R.drawable.ic_play_audio_item));
+                        }
+                    }
+                }
+            }
+
+            CombineModalAdapter combineModalAdapter = new CombineModalAdapter(popupView.getContext());
+            combineModalAdapter.setData(listAddFile);
+
+            modalList.setLayoutManager(new LinearLayoutManager(popupView.getContext()));
+            modalList.setAdapter(combineModalAdapter);
+
+            btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
+
+            btnOkRecordNote.setOnClickListener(view1 -> {
+
+
+                popupWindow.dismiss();
+            });
+
+        });
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -232,12 +287,10 @@ public class CombineActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // Không làm gì khi bắt đầu kéo SeekBar
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Không làm gì khi kết thúc kéo SeekBar
             }
         });
 
@@ -308,20 +361,20 @@ public class CombineActivity extends AppCompatActivity {
     }
     private void ConfirmCombine(){
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
-        alertDiaglog.setTitle("Combination");
+        alertDiaglog.setTitle(this.getString(R.string.combine_title));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage("Do you want to combine?");
-        alertDiaglog.setPositiveButton("Combine", (dialogInterface, i) -> {
-            Toast.makeText(getApplicationContext(), "Successfull Combine", Toast.LENGTH_LONG).show();
+        alertDiaglog.setMessage(this.getString(R.string.combine_YN));
+        alertDiaglog.setPositiveButton(this.getString(R.string.combine_title), (dialogInterface, i) -> {
+            Toast.makeText(getApplicationContext(), this.getString(R.string.combine_success), Toast.LENGTH_LONG).show();
             flagDelete = false;
             onBackPressed();
         });
-        alertDiaglog.setNegativeButton("Cancel", (dialogInterface, i) -> {
+        alertDiaglog.setNegativeButton(this.getString(R.string.cancel_announce), (dialogInterface, i) -> {
             File fileDl = new File(tempPath + deleteName);
             File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
             if (fileDel.exists()) {
                 fileDel.delete();
-                Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_announce), Toast.LENGTH_LONG).show();
             }
 
             onBackPressed();
@@ -343,6 +396,8 @@ public class CombineActivity extends AppCompatActivity {
         btnPlay = findViewById(R.id.combine_btn_play);
         btnCombine = findViewById(R.id.combine_btn_combine);
         btnCancel = findViewById(R.id.combine_btn_cancel);
+        btnAddFile = findViewById(R.id.combine_add_file);
+        listAddFile = new ArrayList<>();
 
     }
 
