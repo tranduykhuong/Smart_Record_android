@@ -175,7 +175,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                 files = recordingsDirectory.listFiles();
                 if (files != null) {
                     for (File file1 : files) {
-                        if (file1.isFile() && file1.getName().endsWith(".mp3") || file1.getName().endsWith(".m4a") || file1.getName().endsWith(".aac")) {
+                        if (file1.isFile() && file1.getName().endsWith(fileExit)) {
                             String fileName = file1.getName();
                             String fileSize1 = decimalFormat.format(1.0 * file1.length() / (1024 * 1024));
                             listAddFile.add(new Audio(fileName, formatTime(file1), fileSize1 + " MB", "", R.drawable.ic_play_audio_item));
@@ -184,7 +184,9 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                 }
             }
 
-            checkedArray = new boolean[files.length];
+            if (files != null) {
+                checkedArray = new boolean[files.length];
+            }
 
             CombineModalAdapter combineModalAdapter = new CombineModalAdapter(popupView.getContext(), this);
             combineModalAdapter.setData(listAddFile);
@@ -195,29 +197,36 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
 
             btnOkRecordNote.setOnClickListener(view1 -> {
-                for(int i = 0; i < checkedArray.length; i++)
+                if(fileExit.equals(".mp3"))
                 {
-                    if(checkedArray[i])
+                    for(int i = 0; i < checkedArray.length; i++)
                     {
-                        addFileSound(listAddFile.get(i).getName());
+                        if(checkedArray[i])
+                        {
+                            addFileSound(listAddFile.get(i).getName());
+                        }
                     }
+
+                    ResetAdapter();
+
+
+                    //COMBINE
+                    ConcatAudio();
+
+                    //XÉT LẠI MEDIA PLAYER
+                    try {
+                        mediaPlayer.stop();
+                        mediaPlayer.setDataSource(outputFile.getPath());
+                        txtDurationTime.setText(formatTime(outputFile));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    CheckOnceAdd();
                 }
-
-                ResetAdapter();
-
-                //COMBINE
-                ConcatAudio();
-
-                //XÉT LẠI MEDIA PLAYER
-                try {
-                    mediaPlayer.stop();
-                    mediaPlayer.setDataSource(outputFile.getPath());
-                    txtDurationTime.setText(formatTime(outputFile));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                else {
+                    popupView.getContext().getString(R.string.only_mp3);
                 }
-
-                CheckOnceAdd();
 
                 popupWindow.setOnDismissListener(() -> Toast.makeText(view1.getContext(), popupView.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show());
 
@@ -351,7 +360,6 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         btnAddFile = findViewById(R.id.combine_add_file);
         listAddFile = new ArrayList<>();
     }
-
     @SuppressLint("DefaultLocale")
     private String formatTime(File file) {
         long durationInMillis = 0;
@@ -372,13 +380,11 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
-
     @SuppressLint("DefaultLocale")
     private String formatTime(int duration) {
         int hours = duration / 3600000;
         int minutes = (duration % 3600000) / 60000;
         int seconds = ((duration % 3600000) % 60000) / 1000;
-
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
@@ -406,7 +412,6 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             onBackPressed();
         }
     }
-
     @Override
     public void onItemClick(int position) {
         if(checkedArray[position])
@@ -426,7 +431,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         txtCurTime.setText("00:00:00");
         CheckColor();
     }
-
+    @SuppressLint("DefaultLocale")
     public void ConcatAudio(){
         int rc;
         String[] command = null;
@@ -470,7 +475,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                             in2 = new File(inputPaths.get(i + 1));
                             String outputName = String.format("%sconcat_%d.mp3", tempPath, i / 2);
                             outputPaths.add(outputName);
-                            command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", fileExit.substring(1), "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputName};
+                            command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", "mp3", "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputName};
                         } else {
                             outputPaths.add(inputPaths.get(i));
                         }
