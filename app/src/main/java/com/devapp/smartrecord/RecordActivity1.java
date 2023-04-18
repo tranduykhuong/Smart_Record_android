@@ -1,8 +1,12 @@
 package com.devapp.smartrecord;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +20,7 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,45 +32,55 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.devapp.smartrecord.services.RecordingActivity;
 import com.devapp.smartrecord.services.RecordingService;
 import com.suman.voice.graphviewlibrary.GraphView;
+import com.suman.voice.graphviewlibrary.WaveSample;
 
 import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class RecordActivity extends AppCompatActivity {
-    private boolean flagRecording = false;
-    long timeWhenPaused = 0;
+public class RecordActivity1 extends AppCompatActivity {
+    private boolean flagRecording;
     private ImageButton btnPlay;
-    private Chronometer chronometerTime;
     private TextView txtRecordName;
+    private TextView twCurrentTime;
     private GraphView graphView;
-    private RecordingActivity recorder;
     private TelephonyManager telephonyManager;
     private JSONArray jsonArray;
+    private final List<WaveSample> pointList = new ArrayList<>();
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "MissingInflatedId"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
         Objects.requireNonNull(getSupportActionBar()).hide();
         jsonArray = new JSONArray();
+        pointList.clear();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, new IntentFilter("record-activity-event"));
+
+        twCurrentTime = findViewById(R.id.record_current_time);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        flagRecording = sharedPreferences.getBoolean("isRecording", false);
 
         ImageButton btnStop = findViewById(R.id.record_btn_stop);
         ImageButton btnNote = findViewById(R.id.record_btn_note);
         btnPlay = findViewById(R.id.record_btn_play);
-//        chronometerTime = findViewById(R.id.record_time_recording);
         txtRecordName = findViewById(R.id.record_name);
         graphView = findViewById(R.id.graphView);
         graphView.setGraphColor(Color.rgb(18, 17, 17));
@@ -73,25 +88,24 @@ public class RecordActivity extends AppCompatActivity {
         graphView.setTimeColor(Color.rgb(0, 0, 0));
         graphView.setWaveLengthPX(13);
 
-        recorder = RecordingActivity.getInstance();
-
-        getLocation();
-
-        ConfigurationClass config = new ConfigurationClass(getApplicationContext());
-        config.getConfig();
-        recorder.setFileExt("." + config.getFileFormat());
+        if (graphView != null) {
+            graphView.setMasterList(pointList);
+            graphView.startPlotting();
+        }
 
         startRecord();
 
         btnPlay.setOnClickListener(view -> recordAudio());
 
         btnStop.setOnClickListener(view -> {
-            flagRecording = true;
+            flagRecording = false;
             btnPlay.setImageResource(R.drawable.ic_play_record);
-            chronometerTime.setBase(SystemClock.elapsedRealtime());
-            chronometerTime.stop();
             confirmDelete();
         });
+
+        if (flagRecording) {
+            ResumeRecord();
+        }
 
         btnNote.setOnClickListener(view -> {
             PauseRecord();
@@ -114,20 +128,19 @@ public class RecordActivity extends AppCompatActivity {
             TextView btnOkRecordNote = popupView.findViewById(R.id.record_modal_ok_note);
             EditText edtNote = popupView.findViewById(R.id.record_note_edt);
 
-            long seconds = timeWhenPaused / 1000;
-            String TimePause = String.format(Locale.getDefault(), "%02d:%02d", seconds / 60, seconds % 60);
-            headingTimeNote.setText(TimePause);
+//            long seconds = timeWhenPaused / 1000;
+//            String TimePause = String.format(Locale.getDefault(), "%02d:%02d", seconds / 60, seconds % 60);
+//            headingTimeNote.setText(TimePause);
 
             btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
 
             btnOkRecordNote.setOnClickListener(view1 -> {
-                jsonArray.put(TimePause + " - " + edtNote.getText());
+//                jsonArray.put(TimePause + " - " + edtNote.getText());
 
                 String json = jsonArray.toString();
 
-                SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(recorder.getFileName(), json);
+//                editor.putString(recorder.getFileName(), json);
                 editor.apply();
 
                 Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show();
@@ -136,84 +149,57 @@ public class RecordActivity extends AppCompatActivity {
 
             popupWindow.setOnDismissListener(() -> {
              ResumeRecord();
+             flagRecording = true;
             });
         });
-
     }
-    private void deleteRecord(){
-        recorder.stopWithNoSave();
-        Toast.makeText(getApplicationContext(), this.getString(R.string.remove_file), Toast.LENGTH_LONG).show();
 
-        Intent intentInform = new Intent(this, RecordingService.class);
-        intentInform.setAction("STOP_RECORDING");
-        startService(intentInform);
+    private BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int current_time = intent.getIntExtra("CURRENT_TIME", 0);
+            String fileName = intent.getStringExtra("FILE_NAME");
+            int x = intent.getIntExtra("GRAPH_COOR", 0);
+            int y = intent.getIntExtra("GRAPH_VALUE", 0);
+            if (current_time != 0) {
+                twCurrentTime.setText(String.format(Locale.getDefault(), "%02d:%02d", current_time / 60, current_time % 60));
+                txtRecordName.setText(fileName);
+            } else {
+                pointList.add(new WaveSample(x, y));
+            }
+        }
+    };
 
-        Intent returnHome = new Intent(this, HomeActivity.class);
-        startActivity(returnHome);
-    }
-    private void saveRecord(){
-        recorder.stopRecording();
-        Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
-
-        Intent intentInform = new Intent(this, RecordingService.class);
-        intentInform.setAction("STOP_RECORDING");
-        startService(intentInform);
-
-        Intent returnHome = new Intent(this, HomeActivity.class);
-        startActivity(returnHome);
-    }
     private void confirmDelete(){
+        if (graphView!= null) {
+            graphView.stopPlotting();
+        }
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
         alertDiaglog.setTitle(this.getString(R.string.save_record_announce));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
         alertDiaglog.setMessage(this.getString(R.string.YN_save_announce));
-        alertDiaglog.setPositiveButton(this.getString(R.string.save_announce), (dialogInterface, i) -> saveRecord());
-        alertDiaglog.setNegativeButton(this.getString(R.string.delete_announce), (dialogInterface, i) -> deleteRecord());
+        alertDiaglog.setPositiveButton(this.getString(R.string.save_announce), (dialogInterface, i) -> {
+            Intent intent = new Intent("record-event");
+            intent.putExtra("ACTION_RECORD", "SAVE_RECORDING");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+            Intent returnHome = new Intent(this, HomeActivity.class);
+            startActivity(returnHome);
+        });
+        alertDiaglog.setNegativeButton(this.getString(R.string.delete_announce), (dialogInterface, i) -> {
+            Intent intent = new Intent("record-event");
+            intent.putExtra("ACTION_RECORD", "NO_SAVE_RECORDING");
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+            Intent returnHome = new Intent(this, HomeActivity.class);
+            startActivity(returnHome);
+        });
 
         alertDiaglog.show();
     }
 
-    @SuppressLint("SetTextI18n")
-    public void getLocation(){
-        //GET LOCATION
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-        double latitude = 0, longitude = 0;
-
-        if(location != null)
-        {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-        }
-
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-                String addressString = address.getAddressLine(0);
-                String finalAddress = addressString.substring(0, addressString.indexOf(','));
-                finalAddress = finalAddress.replace("/", "-");
-                txtRecordName.setText(finalAddress);
-                recorder.setOutputFilePath(finalAddress);
-            }
-        } catch (IOException e) {
-            txtRecordName.setText("Record");
-            recorder.setOutputFilePath("Record");
-            e.printStackTrace();
-        }
-    }
-
-    public void recordAudio(){
-        onRecord(flagRecording);
+    public void recordAudio() {
+        onRecord(!flagRecording);
         flagRecording = !flagRecording;
     }
 
@@ -226,19 +212,11 @@ public class RecordActivity extends AppCompatActivity {
         {
             folder.mkdir();
         }
-        chronometerTime.setBase(SystemClock.elapsedRealtime());
-        chronometerTime.start();
-
-        Intent intentInform = new Intent(this, RecordingService.class);
-        startService(intentInform);
-
-        recorder.startRecording();
-        recorder.startPlotting(graphView);
 
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     private void onRecord(boolean start) {
-        if(start)
+        if (start)
         {
             ResumeRecord();
         }
@@ -249,74 +227,74 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
-        chronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
-        chronometerTime.start();
-        recorder.resumeRecording();
+        if (graphView != null) {
+            graphView.startPlotting();
+            graphView.resume();
+        }
 
-        Intent intentInform = new Intent(this, RecordingService.class);
-        intentInform.setAction("RESUME_RECORDING");
-        startService(intentInform);
+        Intent intent = new Intent("record-event");
+        intent.putExtra("ACTION_RECORD", "RESUME_RECORDING");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     public void PauseRecord()
     {
-        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
-        recorder.pauseRecording();
+        if (graphView != null) {
+            graphView.pause();
+        }
 
-        List samples = recorder.getSamples();
-        graphView.showFullGraph(samples);
-
-        timeWhenPaused = SystemClock.elapsedRealtime() - chronometerTime.getBase();
-        chronometerTime.stop();
-
-        Intent intentInform = new Intent(this, RecordingService.class);
-        intentInform.setAction("PAUSE_RECORDING");
-        startService(intentInform);
+        Intent intent = new Intent("record-event");
+        intent.putExtra("ACTION_RECORD", "PAUSE_RECORDING");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     PhoneStateListener phoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-
             if (state == TelephonyManager.CALL_STATE_RINGING) {
                 PauseRecord();
             }
             super.onCallStateChanged(state, incomingNumber);
         }
     };
+
     protected void onResume() {
         super.onResume();
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        if (graphView!= null) {
+            graphView.stopPlotting();
+        }
     }
 
     @Override
     protected void onDestroy() {
-        recorder.stopRecording();
-        Toast.makeText(getApplicationContext(), this.getString(R.string.save_file) + recorder.getOutputFilePath(), Toast.LENGTH_LONG).show();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        if (graphView!= null) {
+            graphView.stopPlotting();
+        }
         super.onDestroy();
     }
 
     @SuppressLint("NonConstantResourceId")
     public void changeLayoutFromRecord(View view){
+        if (graphView!= null) {
+            graphView.stopPlotting();
+        }
         if (view.getId() == R.id.record_btn_back) {
-            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isRecording", flagRecording);
-            editor.apply();
             finish();
         }
     }
