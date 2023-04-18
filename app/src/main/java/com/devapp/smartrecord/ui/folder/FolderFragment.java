@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentFolderBinding;
+import com.devapp.smartrecord.editmenu.adjust.AdjustActivity;
 import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
 
 import java.io.File;
@@ -184,9 +185,9 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                 }
 
 
-                listItemChoice = null;
-                selectedItems = new boolean[listFolder.size()];
-                Arrays.fill(selectedItems, false);
+//                listItemChoice = null;
+//                selectedItems = new boolean[listFolder.size()];
+//                Arrays.fill(selectedItems, false);
             }
         });
         builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
@@ -257,14 +258,14 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         }
                         adapterFolder.notifyDataSetChanged();
                         Arrays.fill(selectedItems, true);
-                        isTotalChecked = true;
+//                        isTotalChecked = true;
                     } else {
                         imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
                         for (int i = 0; i < listFolder.size(); i++) {
                             listFolder.get(i).setImage(R.drawable.ic_circle_folder);
                         }
                         adapterFolder.notifyDataSetChanged();
-                        Arrays.fill(selectedItems, false);
+//                        Arrays.fill(selectedItems, false);
                         isTotalChecked = false;
                     }
                 }
@@ -491,7 +492,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 //                    }
 //                });
 //            }
-            Intent intent = new Intent(getActivity(), InsertionActivity.class);
+            Intent intent = new Intent(getActivity(), AdjustActivity.class);
             startActivity(intent);
         });
 
@@ -646,7 +647,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         sizeFolder = sizeFolder + 1.0 * size / (1024*1024);
                         Date lastModifiedDate = new Date(folder.lastModified());
                         @SuppressLint("SimpleDateFormat") String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " bản ghi - ",fileSize+" MB", formattedDate, R.drawable.ic_pink500_folder));
+                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " " + getContext().getString(R.string.folder_file) + " ",fileSize+" MB", formattedDate, R.drawable.ic_pink500_folder));
                     }
                 }
             }

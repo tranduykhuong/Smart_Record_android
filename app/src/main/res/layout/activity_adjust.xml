@@ -9,7 +9,7 @@
         android:id="@+id/adjust_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/pink_500"
+        android:background="?attr/foregroundColor"
         android:paddingVertical="20dp"
         >
 
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Điều chỉnh"
+                android:text="@string/adjust_title"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -79,8 +79,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cao độ"
-                android:textColor="@color/black"
+                android:text="@string/adjust_foolproof"
+                android:textColor="?attr/textColor"
                 android:layout_marginBottom="14dp"
                 android:layout_gravity="center"/>
 
@@ -130,29 +130,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-2400"
+                    android:textColor="?attr/textColor"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-1200"
+                    android:textColor="?attr/textColor"
                     android:layout_marginHorizontal="38dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
+                    android:textColor="?attr/textColor"
                     android:layout_marginHorizontal="14dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1200"
+                    android:textColor="?attr/textColor"
                     android:layout_marginHorizontal="41dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2400"
+                    android:textColor="?attr/textColor"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -165,8 +170,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chỉnh âm"
-                android:textColor="@color/black"
+                android:text="@string/adjust_volume"
+                android:textColor="?attr/textColor"
                 android:layout_marginBottom="14dp"
                 android:layout_gravity="center"/>
 
@@ -216,29 +221,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-24dB"
+                    android:textColor="?attr/textColor"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-12dB"
+                    android:textColor="?attr/textColor"
                     android:layout_marginHorizontal="38dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
+                    android:textColor="?attr/textColor"
                     android:layout_marginHorizontal="14dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12dB"
+                    android:textColor="?attr/textColor"
                     android:layout_marginHorizontal="41dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="24dB"
+                    android:textColor="?attr/textColor"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -251,8 +261,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tốc độ"
-                android:textColor="@color/black"
+                android:text="@string/adjust_speed"
+                android:textColor="?attr/textColor"
                 android:layout_marginBottom="14dp"
                 android:layout_gravity="center"/>
 
@@ -300,60 +310,41 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="x0.25"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="x0.5"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="x1"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="x2"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="x3" />-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="x0.25"
+                    android:layout_marginRight="40dp"
+                    android:textColor="?attr/textColor"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="x0.5"
-                    android:layout_marginHorizontal="38dp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginRight="40dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="40dp"
+                    android:textColor="?attr/textColor"
+                    android:text="x1"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="x2"
-                    android:layout_marginHorizontal="41dp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginLeft="30dp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="x3"
+                    android:layout_marginLeft="60dp"
+                    android:textColor="?attr/textColor"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -444,14 +435,15 @@
                     android:id="@+id/adjust_destroy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hủy"
+                    android:text="@string/cancel_announce"
+                    android:textColor="?attr/textColor"
                     android:textSize="16dp"/>
 
                 <ImageButton
                     android:id="@+id/adiust_btn_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="93dp"
+                    android:layout_marginLeft="53dp"
                     android:layout_marginRight="47dp"
                     android:background="@drawable/bg_record_btn_folder"
                     android:src="@drawable/ic_play_adjust" />
@@ -461,7 +453,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/pink_500"
-                    android:text="Điều chỉnh"
+                    android:text="@string/adjust_title"
                     android:textSize="16dp"/>
             </LinearLayout>
 
