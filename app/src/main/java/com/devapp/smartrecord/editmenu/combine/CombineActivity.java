@@ -216,8 +216,10 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                     //XÉT LẠI MEDIA PLAYER
                     try {
                         mediaPlayer.stop();
-                        mediaPlayer.setDataSource(outputFile.getPath());
+//                            mediaPlayer.setDataSource(outputFile.getPath());
+                        mediaPlayer.setDataSource(outputFile.getAbsolutePath());
                         txtDurationTime.setText(formatTime(outputFile));
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -257,12 +259,10 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         Runnable mRunnable = new Runnable() {
             @Override
             public void run() {
-                if (mediaPlayer != null) {
-                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                    seekBar.setProgress(mCurrentPosition);
-                    txtCurTime.setText(formatTime(mCurrentPosition));
-                }
-                // Lặp lại Runnable sau 100ms
+                int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                seekBar.setProgress(mCurrentPosition);
+                txtCurTime.setText(formatTime(mCurrentPosition));
+
                 handler.postDelayed(this, 100);
             }
         };
