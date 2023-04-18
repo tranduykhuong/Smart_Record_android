@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.editmenu.insertion.InsertionAudioAdapter;
 import com.devapp.smartrecord.ui.home.Audio;
 
 import java.util.List;
@@ -21,9 +22,13 @@ public class CombineModalAdapter extends RecyclerView.Adapter<CombineModalAdapte
     private final Context context;
     private List<Audio> audioList;
     private Boolean flagCheck;
-
-    public CombineModalAdapter(Context context) {
+    private CombineModalAdapter.OnItemClickListener listener;
+    public CombineModalAdapter(Context context, OnItemClickListener listener) {
+        this.listener = listener;
         this.context = context;
+    }
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 
     @NonNull
@@ -46,6 +51,8 @@ public class CombineModalAdapter extends RecyclerView.Adapter<CombineModalAdapte
         holder.linearLayout.setOnClickListener(view -> {
             flagCheck = holder.checkBox.isChecked();
             holder.checkBox.setChecked(!flagCheck);
+            if (listener != null)
+                listener.onItemClick(holder.getAbsoluteAdapterPosition());
         });
     }
 

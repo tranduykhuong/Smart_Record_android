@@ -79,4 +79,5 @@
     <string name="record_announce">Ghi...</string>
     <string name="broadcast_title">Đang ghi âm...</string>
     <string name="broadcast_action">Chạm để dừng</string>
+    <string name="add_file_announce">Bạn chỉ có thể thêm 1 lần!</string>
 </resources>

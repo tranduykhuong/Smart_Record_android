@@ -82,6 +82,7 @@
     <string name="record_announce">Record...</string>
     <string name="broadcast_title">Recording in progress</string>
     <string name="broadcast_action">Tap to stop recording</string>
+    <string name="add_file_announce">You can only add file once!</string>
 
 
 </resources>

@@ -43,13 +43,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
-public class CombineActivity extends AppCompatActivity {
-    private boolean flagPlaying = false, flagDelete = true;
+public class CombineActivity extends AppCompatActivity implements CombineModalAdapter.OnItemClickListener{
+    private boolean flagPlaying = false, flagDelete = true, flagChoose = false;
     private int cntBtn = 0,  currentPosition = 0;
     private RecyclerView rcvCombineAudio;
     private CombineAudioAdapter combineAudioAdapter;
     private List<Audio> audioList, listAddFile;
-    private String pathSound, fileName, finalName, deleteName;
+    private String pathSound, fileName, finalName, deleteName, fileExit;
     private TextView txtName, txtCurTime, txtDurationTime;
     private Button btnCombine, btnCancel;
     private ImageButton btnPlay, btnAddFile;
@@ -61,6 +61,7 @@ public class CombineActivity extends AppCompatActivity {
     private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
     private final Handler handler = new Handler();
     private File recordingsDirectory;
+    private boolean[] checkedArray;
 
     public void addFileSound(String FName)
     {
@@ -87,95 +88,18 @@ public class CombineActivity extends AppCompatActivity {
         fileName = pathSound.substring(pathSound.lastIndexOf("/") + 1);
         File file = new File(tempPath + fileName);
         String name = file.getName();
-        String fileExit = name.substring(name.lastIndexOf("."));
+        fileExit = name.substring(name.lastIndexOf("."));
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String fileSize = decimalFormat.format(1.0 * file.length() / (1024 * 1024));
         audioList.add(new Audio(name, formatTime(file), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_audio_item));
 
         //ADD SOUND
-//        addFileSound("Record (12).mp3");
 
         finalName = "CB_" + fileName;
         txtName.setText(finalName);
 
         //COMBINE LIST AUDIO
-        outputFile = new File(tempPath + finalName);
-        if(outputFile.exists()) {
-            int i = 1;
-            while (outputFile.exists())
-            {
-                deleteName = finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit;
-                outputFile = new File(tempPath + finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit);
-                i++;
-            }
-        }
-
-        int rc;
-        String[] command = null;
-        String filter = "concat=n=%d:v=0:a=1";
-        int count = 0;
-
-        List<String> inputPaths = new ArrayList<>();
-        for (Audio audio : audioList) {
-            File ifi = new File(tempPath + audio.getName());
-            inputPaths.add(ifi.getAbsolutePath());
-        }
-
-        if(audioList.size() > 1)
-        {
-            while (inputPaths.size() > 0) {
-                int numInputs = inputPaths.size();
-                if (numInputs == 1) {
-                    try {
-                        FileUtils.copyFile(new File(inputPaths.get(0)), outputFile);
-                        count++;
-
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                } else if (numInputs == 2) {
-                    File in1 = new File(inputPaths.get(0));
-                    File in2 = new File(inputPaths.get(1));
-                    command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", "mp3", "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputFile.getAbsolutePath()};
-                    rc = FFmpeg.execute(command);
-                    if (rc == RETURN_CODE_SUCCESS) {
-                        count++;
-                    }
-                    break;
-                } else {
-                    List<String> outputPaths = new ArrayList<>();
-                    for (int i = 0; i < numInputs; i += 2) {
-                        File in1 = new File(inputPaths.get(i));
-                        File in2;
-                        if (i + 1 < numInputs) {
-                            in2 = new File(inputPaths.get(i + 1));
-                            String outputName = String.format("%sconcat_%d.mp3", tempPath, i / 2);
-                            outputPaths.add(outputName);
-                            command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", fileExit.substring(1), "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputName};
-                        } else {
-                            outputPaths.add(inputPaths.get(i));
-                        }
-                        rc = FFmpeg.execute(command);
-                        if (rc == RETURN_CODE_SUCCESS) {
-                            count++;
-                        }
-                    }
-                    inputPaths = outputPaths;
-                }
-            }
-
-            if (count == 0) {
-                throw new RuntimeException("No input files to concat.");
-            }
-
-            File[] filesToDelete = new File(tempPath).listFiles((dir, named) -> named.matches("concat_.*\\.mp3"));
-            if (filesToDelete != null) {
-                for (File files : filesToDelete) {
-                    files.delete();
-                }
-            }
-        }
+        ConcatAudio();
 
         //SET DEFAULT
         CheckColor();
@@ -228,8 +152,9 @@ public class CombineActivity extends AppCompatActivity {
         });
 
         btnAddFile.setOnClickListener(view -> {
+            flagChoose = true;
             LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.modal_add_file_combine, null);
+            @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.modal_add_file_combine, null);
 
             int width = LinearLayout.LayoutParams.MATCH_PARENT;
             int height = LinearLayout.LayoutParams.MATCH_PARENT ;
@@ -242,7 +167,6 @@ public class CombineActivity extends AppCompatActivity {
             TextView btnOkRecordNote = popupView.findViewById(R.id.combine_modal_add);
             RecyclerView modalList = popupView.findViewById(R.id.listView_show_note);
 
-            audioList = new ArrayList<>();
             recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/");
             if (recordingsDirectory.listFiles() != null)
                 size = Objects.requireNonNull(recordingsDirectory.listFiles()).length;
@@ -259,7 +183,10 @@ public class CombineActivity extends AppCompatActivity {
                 }
             }
 
-            CombineModalAdapter combineModalAdapter = new CombineModalAdapter(popupView.getContext());
+            assert files != null;
+            checkedArray = new boolean[files.length];
+
+            CombineModalAdapter combineModalAdapter = new CombineModalAdapter(popupView.getContext(), this);
             combineModalAdapter.setData(listAddFile);
 
             modalList.setLayoutManager(new LinearLayoutManager(popupView.getContext()));
@@ -268,7 +195,31 @@ public class CombineActivity extends AppCompatActivity {
             btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
 
             btnOkRecordNote.setOnClickListener(view1 -> {
+                for(int i = 0; i < checkedArray.length; i++)
+                {
+                    if(checkedArray[i])
+                    {
+                        addFileSound(listAddFile.get(i).getName());
+                    }
+                }
 
+                ResetAdapter();
+
+                //COMBINE
+                ConcatAudio();
+
+                //XÉT LẠI MEDIA PLAYER
+                try {
+                    mediaPlayer.stop();
+                    mediaPlayer.setDataSource(tempPath + finalName);
+                    txtDurationTime.setText(formatTime(outputFile));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                CheckOnceAdd();
+
+                popupWindow.setOnDismissListener(() -> Toast.makeText(view1.getContext(), popupView.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show());
 
                 popupWindow.dismiss();
             });
@@ -338,11 +289,12 @@ public class CombineActivity extends AppCompatActivity {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            flagChoose = false;
         });
     }
 
-    public void CheckColor()
-    {
+    public void CheckColor(){
         if(audioList.size() > 1)
         {
             btnCancel.setEnabled(true);
@@ -367,7 +319,7 @@ public class CombineActivity extends AppCompatActivity {
         alertDiaglog.setPositiveButton(this.getString(R.string.combine_title), (dialogInterface, i) -> {
             Toast.makeText(getApplicationContext(), this.getString(R.string.combine_success), Toast.LENGTH_LONG).show();
             flagDelete = false;
-            onBackPressed();
+            finish();
         });
         alertDiaglog.setNegativeButton(this.getString(R.string.cancel_announce), (dialogInterface, i) -> {
             File fileDl = new File(tempPath + deleteName);
@@ -398,7 +350,6 @@ public class CombineActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.combine_btn_cancel);
         btnAddFile = findViewById(R.id.combine_add_file);
         listAddFile = new ArrayList<>();
-
     }
 
     @SuppressLint("DefaultLocale")
@@ -434,6 +385,7 @@ public class CombineActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mediaPlayer.stop();
         if(flagDelete)
         {
             File fileDl = new File(tempPath + deleteName);
@@ -444,30 +396,8 @@ public class CombineActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
-    @Override
-    protected void onPause() {
-        if(flagDelete)
-        {
-            File fileDl = new File(tempPath + deleteName);
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-            }
-        }
-        super.onPause();
-    }
-
     @Override
     protected void onStop() {
-        if(flagDelete)
-        {
-            File fileDl = new File(tempPath + deleteName);
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
-            }
-        }
         super.onStop();
     }
 
@@ -476,4 +406,117 @@ public class CombineActivity extends AppCompatActivity {
             onBackPressed();
         }
     }
+
+    @Override
+    public void onItemClick(int position) {
+        if(checkedArray[position])
+        {
+            checkedArray[position] = false;
+        }
+        else {
+            checkedArray[position] = true;
+        }
+    }
+    public void ResetAdapter(){
+        combineAudioAdapter.notifyDataSetChanged();
+        combineAudioAdapter.setData(audioList);
+        seekBar.setProgress(0);
+        btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+        txtCurTime.setText("00:00:00");
+        CheckColor();
+    }
+
+    public void ConcatAudio(){
+        outputFile = new File(tempPath + finalName);
+        if(outputFile.exists()) {
+            int i = 1;
+            while (outputFile.exists())
+            {
+                deleteName = finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit;
+                outputFile = new File(tempPath + finalName.substring(0, finalName.lastIndexOf(".")) + " (" + i + ")" + fileExit);
+                i++;
+            }
+        }
+        else {
+            deleteName = finalName;
+        }
+
+        int rc;
+        String[] command = null;
+        String filter = "concat=n=%d:v=0:a=1";
+        int count = 0;
+
+        List<String> inputPaths = new ArrayList<>();
+        for (Audio audio : audioList) {
+            File ifi = new File(tempPath + audio.getName());
+            inputPaths.add(ifi.getAbsolutePath());
+        }
+
+        if(audioList.size() > 1)
+        {
+            while (inputPaths.size() > 0) {
+                int numInputs = inputPaths.size();
+                if (numInputs == 1) {
+                    try {
+                        FileUtils.copyFile(new File(inputPaths.get(0)), outputFile);
+                        count++;
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                } else if (numInputs == 2) {
+                    File in1 = new File(inputPaths.get(0));
+                    File in2 = new File(inputPaths.get(1));
+                    command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", "mp3", "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputFile.getAbsolutePath()};
+                    rc = FFmpeg.execute(command);
+                    if (rc == RETURN_CODE_SUCCESS) {
+                        count++;
+                    }
+                    break;
+                } else {
+                    List<String> outputPaths = new ArrayList<>();
+                    for (int i = 0; i < numInputs; i += 2) {
+                        File in1 = new File(inputPaths.get(i));
+                        File in2;
+                        if (i + 1 < numInputs) {
+                            in2 = new File(inputPaths.get(i + 1));
+                            String outputName = String.format("%sconcat_%d.mp3", tempPath, i / 2);
+                            outputPaths.add(outputName);
+                            command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", fileExit.substring(1), "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputName};
+                        } else {
+                            outputPaths.add(inputPaths.get(i));
+                        }
+                        rc = FFmpeg.execute(command);
+                        if (rc == RETURN_CODE_SUCCESS) {
+                            count++;
+                        }
+                    }
+                    inputPaths = outputPaths;
+                }
+            }
+
+            if (count == 0) {
+                throw new RuntimeException("No input files to concat.");
+            }
+
+            File[] filesToDelete = new File(tempPath).listFiles((dir, named) -> named.matches("concat_.*\\.mp3"));
+            if (filesToDelete != null) {
+                for (File files : filesToDelete) {
+                    files.delete();
+                }
+            }
+        }
+    }
+
+    public void CheckOnceAdd()
+    {
+        if(flagChoose)
+        {
+            btnAddFile.setOnClickListener(view -> {
+                Toast.makeText(this, this.getString(R.string.add_file_announce), Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
 }
