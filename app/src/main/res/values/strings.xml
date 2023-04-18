@@ -55,7 +55,7 @@
     <string name="error_convert_voice_to_text">Error, please try again!</string>
     <string name="api_free">Free API does not support</string>
 
-    <string name="insertion" translatable="false">Insertion</string>
+    <string name="insertion">Insertion</string>
     <string name="folder_private_title">Private folder</string>
 
     <string name="demo_min_label"></string>
@@ -69,5 +69,6 @@
     <string name="remove_file">File is deleted</string>
     <string name="save_file">Saved_</string>
 
-
+    <string name="converting">Converting...</string>
+    <string name="loading">Loading...</string>
 </resources>

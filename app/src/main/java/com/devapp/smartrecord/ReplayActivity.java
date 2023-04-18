@@ -524,7 +524,9 @@ public class ReplayActivity  extends AppCompatActivity {
                 break;
             }
             case R.id.replay_btn_text: {
+                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
                 Intent intent = new Intent(this, VoiceToTextActivity.class);
+                intent.putExtra("PATH_KEY", file.getAbsolutePath());
                 startActivity(intent);
                 break;
             }
