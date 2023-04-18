@@ -65,6 +65,9 @@
     <string name="add_successfull">Thêm thành công</string>
     <string name="remove_file">File đã xóa</string>
     <string name="save_file">Đã lưu_</string>
+
+    <string name="converting">Đang chuyển đổi...</string>
+    <string name="loading">Đang xử lý...</string>
     <string name="save_announce">Lưu</string>
     <string name="save_record_announce">Lưu bản ghi</string>
     <string name="delete_announce">Xóa</string>
