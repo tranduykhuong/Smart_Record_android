@@ -37,6 +37,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -46,6 +47,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
 import com.devapp.smartrecord.editmenu.cut.CutActivity;
+import com.devapp.smartrecord.services.RecordService;
 import com.devapp.smartrecord.ui.alarm.AlarmService;
 import com.devapp.smartrecord.ui.alarm.ReminderReceiver;
 import com.devapp.smartrecord.ui.folder.FolderFragment;
@@ -183,29 +185,22 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
 
     public void navigate_onclick(View view) {
         switch (view.getId()) {
-            case R.id.home_btn_record: {
-                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+            case R.id.home_btn_record:
+            case R.id.folder_btn_record: {
+//                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+//                startActivityForResult(intent, RECORDING_CODE);
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
+
+                if (isMarried == false) {
+                    Intent serviceIntent = new Intent(getApplicationContext(), RecordService.class);
+                    startForegroundService(serviceIntent);
+                }
+
+                Intent intent = new Intent(HomeActivity.this, RecordActivity1.class);
                 startActivityForResult(intent, RECORDING_CODE);
                 break;
             }
-            case R.id.folder_btn_record: {
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
-                if(isMarried == true)
-                {
-                    onBackPressed();
-                }
-                else {
-                    Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
-                    startActivityForResult(intent, RECORDING_CODE);
-                }
-                break;
-            }
-//            case R.id.record_btn_back: {
-//                Intent intent = new Intent(RecordActivity.class, ReplayActivity.class);
-//                startActivityForResult(intent, RECORDING_CODE);
-//                break;
-//            }
         }
     }
 

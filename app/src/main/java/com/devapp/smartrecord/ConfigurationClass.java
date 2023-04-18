@@ -51,7 +51,7 @@ public class ConfigurationClass {
         }
     }
 
-    protected boolean getConfig(){
+    public boolean getConfig(){
         FileInputStream fis = null;
         try {
             fis = context.openFileInput(filename);
