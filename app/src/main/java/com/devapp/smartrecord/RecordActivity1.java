@@ -158,6 +158,7 @@ public class RecordActivity1 extends AppCompatActivity {
     };
 
     private void confirmDelete(){
+        PauseRecord();
         if (graphView!= null) {
             graphView.stopPlotting();
         }
