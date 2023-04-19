@@ -22,14 +22,14 @@
             android:textSize="16sp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
-            android:textColor="@color/black"
-            android:text="Đổi tên thư mục"/>
+            android:textColor="?attr/textColor"
+            android:text="@string/rename_folder_title"/>
 
         <EditText
             android:id="@+id/folder_rename_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nhập tên thư mục mới"
+            android:hint="@string/rename_folder_hint"
             android:inputType="text"
             android:textSize="16sp"
             android:layout_marginTop="6dp"
@@ -63,7 +63,7 @@
                 android:textSize="18sp"
                 android:textColor="@color/pink_500"
                 android:paddingVertical="12dp"
-                android:text="Hủy"/>
+                android:text="@string/cancel_announce"/>
 
             <TextView
                 android:layout_width="1dp"

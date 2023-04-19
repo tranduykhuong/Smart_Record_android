@@ -114,11 +114,15 @@
     <string name="adjust_volume">Chỉnh âm</string>
     <string name="adjust_speed">Tốc độ</string>
 
-<<<<<<< HEAD
     <string name="modal_multi_folder_private">Di chuyển riêng tư</string>
-=======
     <string name="harmonic_title">Hòa âm</string>
     <string name="harmonic_success">Hòa âm hoàn tất</string>
->>>>>>> 025838e2cca8ffd752e4fd67abc6b338d66dfad3
 
+    <string name="select_folder_title">Select folder</string>
+    
+    <string name="rename_folder_question">Bạn có chắc muốn thay đổi tên thư mục thành\ </string>
+    <string name="rename_success">Đổi tên thư mục thành công</string>
+    <string name="rename_fail">Đổi tên thư mục thất bại!</string>
+    <string name="rename_folder_title">Đổi tên thư mục</string>
+    <string name="rename_folder_hint">Nhập tên thư mục mới</string>
 </resources>

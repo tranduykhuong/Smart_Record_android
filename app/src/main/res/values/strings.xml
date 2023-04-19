@@ -117,10 +117,15 @@
     <string name="adjust_volume">Volume</string>
     <string name="adjust_speed">Speed</string>
 
-<<<<<<< HEAD
     <string name="modal_multi_folder_private">Move private folder</string>
-=======
     <string name="harmonic_title">Harmonic</string>
     <string name="harmonic_success">Successfully Harmonic</string>
->>>>>>> 025838e2cca8ffd752e4fd67abc6b338d66dfad3
+    
+    <string name="select_folder_title">Select folder</string>
+
+    <string name="rename_folder_question">Are you sure you want to change the folder name to\ </string>
+    <string name="rename_success">Rename successfully</string>
+    <string name="rename_fail">Rename fail!</string>
+    <string name="rename_folder_title">Rename folder</string>
+    <string name="rename_folder_hint">Input new name folder</string>
 </resources>

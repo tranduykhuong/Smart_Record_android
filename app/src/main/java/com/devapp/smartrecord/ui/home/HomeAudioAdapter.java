@@ -58,6 +58,8 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
     private RecyclerView rcvFolder;
     private FolderModalAdapter adapterFolder;
     private Double sizeFolder = 0.0;
+    private String fileName;
+    private PopupWindow popupWindowMove;
 
     public HomeAudioAdapter(Context context, OnItemClickListener listener) {
         this.listener = listener;
@@ -72,7 +74,39 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
     @Override
     public void onItemClickModal(int position){
-        Toast.makeText(context, position + "", Toast.LENGTH_SHORT).show();
+        FolderCLassContent folder = listFolder.get(position);
+        String folderName = folder.getTitle();
+        File sourceFile  = new File(Environment.getExternalStorageDirectory() + "/Recordings/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
+        File destinationFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/" + folderName);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(context.getString(R.string.question_delete));
+        builder.setPositiveButton(context.getString(R.string.answer_yes), (dialogInterface, j) -> {
+            try {
+                if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
+                    File destinationFile = new File(destinationFolder, fileName); // Tạo tệp đích mới
+                    if (sourceFile.renameTo(destinationFile)) {// Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+                        audioList.remove(position);
+                        notifyItemRemoved(position);
+                        Toast.makeText(context, context.getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+
+                        popupWindowMove.dismiss();
+                    }else {
+                        Toast.makeText(context, context.getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(context, context.getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(context, context.getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton(context.getString(R.string.answer_no), (dialogInterface, i) -> {
+
+        });
+        builder.show();
     }
 
     @NonNull
@@ -211,6 +245,8 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
         });
         holder.homeMoreBtn.setOnClickListener(view -> {
+            fileName = audioList.get(holder.getAbsoluteAdapterPosition()).getName();
+
             // inflate the layout of the popup window
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.model_more_of_item_audio, null);
@@ -317,63 +353,21 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                     int width = LinearLayout.LayoutParams.MATCH_PARENT;
                     int height = LinearLayout.LayoutParams.MATCH_PARENT ;
                     boolean focusable = true; // lets taps outside the popup also dismiss it
-                    final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                    popupWindowMove = new PopupWindow(popupView, width, height, focusable);
                     // show the popup window
-                    popupWindow.showAtLocation(popupView, Gravity.BOTTOM, 0, 0);
+                    popupWindowMove.showAtLocation(popupView, Gravity.BOTTOM, 0, 0);
 
                     TextView btnMoveFileDestroy = popupView.findViewById(R.id.list_folder_move_modal_destroy);
                     btnMoveFileDestroy.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            popupWindow.dismiss();
+                            popupWindowMove.dismiss();
                         }
                     });
 
                     rcvFolder = popupView.findViewById(R.id.list_folder_move);
                     rcvFolder.setLayoutManager(new LinearLayoutManager(context));
                     rcvFolder.setAdapter(adapterFolder);
-
-
-
-//                    Audio audio1 = audioList.get(holder.getAbsoluteAdapterPosition());
-//                    String fileNameTrash = audio1.getName();
-//                    Log.e("TAG", "onClick: " + fileNameTrash);
-//                    File sourceFile  = new File(Environment.getExternalStorageDirectory() + "/Recordings/" + fileNameTrash); // Lấy đường dẫn đầy đủ đến tệp
-//                    File destinationFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/Thư mục riêng tư/");
-//
-//                    // Tạo thư mục thùng rác nếu chưa tồn tại
-//                    if (!destinationFolder.exists()) {
-//                        destinationFolder.mkdir();
-//                    }
-//
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-//                    builder.setMessage(view.getContext().getString(R.string.question_delete));
-//                    builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), (dialogInterface, j) -> {
-//                        try {
-//                            if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
-//                                File destinationFile = new File(destinationFolder, fileNameTrash); // Tạo tệp đích mới
-//                                if (sourceFile.renameTo(destinationFile)) {// Di chuyển tệp đến thư mục đích và kiểm tra kết quả
-//                                    audioList.remove(holder.getAbsoluteAdapterPosition());
-//                                    notifyItemRemoved(holder.getAbsoluteAdapterPosition());
-//                                    Toast.makeText(context, view.getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
-//
-//                                    listener.onItemClick(j);
-//                                }else {
-//                                    Toast.makeText(context, view.getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                            else {
-//                                Toast.makeText(context, view.getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            Toast.makeText(context, view.getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                    builder.setNegativeButton(view.getContext().getString(R.string.answer_no), (dialogInterface, i) -> {
-//
-//                    });
-//                    builder.show();
                 }
             });
 
@@ -539,9 +533,6 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
             File[] folders = recordingsDirectory.listFiles();
             if (folders != null) {
                 for (File folder : folders) {
-                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("Thùng rác")){
-                        continue;
-                    }
                     int amount = 0;
                     long size = 0;
 

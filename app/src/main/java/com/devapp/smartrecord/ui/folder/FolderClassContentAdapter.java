@@ -201,7 +201,7 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
                                 popupWindow.dismiss();
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                                builder.setMessage("Bạn có chắc muốn thay đổi tên thư mục thành \"" +edtRename.getText().toString() + "\"");
+                                builder.setMessage(v.getContext().getText(R.string.rename_folder_question) +edtRename.getText().toString() + "\"?");
 
                                 builder.setPositiveButton(v.getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
                                     @Override
@@ -213,9 +213,9 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
                                         folder.setTitle(edtRename.getText().toString());
 
                                         if (oldDirectory.renameTo(newDirectory)) {
-                                            Toast.makeText(context, "Đổi tên thư mục thành công", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(context, v.getContext().getText(R.string.rename_success), Toast.LENGTH_LONG).show();
                                         } else {
-                                            Toast.makeText(context, "Đổi tên thư mục không thành công", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(context, v.getContext().getText(R.string.rename_fail), Toast.LENGTH_LONG).show();
                                         }
 
                                         notifyDataSetChanged();

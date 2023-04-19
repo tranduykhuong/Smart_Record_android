@@ -472,7 +472,8 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("isFirstTime", false);
                         editor.putString("password", hashedPassword);
-                        editor.apply();
+//                        editor.apply();
+                        editor.commit();
                         Toast.makeText(popupView.getContext(), "Tạo mật khẩu thành công", Toast.LENGTH_LONG).show();
                         popupWindow.dismiss();
                     }
@@ -500,9 +501,9 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
                 btnDestroyMenuInputPrivate.setOnClickListener(v19 -> {
                     popupWindow.dismiss();
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.clear();
-                    editor.apply();
+//                    SharedPreferences.Editor editor = prefs.edit();
+//                    editor.clear();
+//                    editor.apply();
                 });
 
                 btnOkMenuInputPrivate.setOnClickListener(v110 -> {
@@ -516,8 +517,9 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
                         if (Objects.equals(hashedPassword, storedPassword)) {
                             Toast.makeText(popupView.getContext(), "Password đúng", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getActivity(), HomeFragment.class);
-                            startActivity(intent);
+//                            Intent intent = new Intent(getActivity(), HomeFragment.class);
+//                            startActivity(intent);
+
                             popupWindow.dismiss();
                         } else {
                             Toast.makeText(popupView.getContext(), "Password sai", Toast.LENGTH_LONG).show();
@@ -574,14 +576,14 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         Date lastModifiedDate = new Date(lastModifiedTime);
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         String formattedDate = dateFormat.format(lastModifiedDate);
-                        listFolder.add(new FolderCLassContent(edtInputNameFolder.getText().toString(), 0 + " bản ghi - ", 0 + " MB", formattedDate ,R.drawable.ic_pink500_folder));
-                        if (folderFilterTitle.getText().toString().equals("Ngày")){
+                        listFolder.add(new FolderCLassContent(edtInputNameFolder.getText().toString(), 0 + " " +  v.getContext().getText(R.string.folder_file).toString() + " ", 0 + " MB", formattedDate ,R.drawable.ic_pink500_folder));
+                        if (folderFilterTitle.getText().toString().equals("Ngày") || folderFilterTitle.getText().toString().equals("Day")){
                             sortList(listFolder, "day", mSortByNameAscending);
                         }
-                        else if(folderFilterTitle.getText().toString().equals("Tên")){
+                        else if(folderFilterTitle.getText().toString().equals("Tên") || folderFilterTitle.getText().toString().equals("Name")){
                             sortList(listFolder, "name", mSortByNameAscending);
                         }
-                        else if(folderFilterTitle.getText().toString().equals("Kích Thước")){
+                        else if(folderFilterTitle.getText().toString().equals("Kích Thước") || folderFilterTitle.getText().toString().equals("Size")){
                             sortList(listFolder, "size", mSortByNameAscending);
                         }
                         adapterFolder.notifyDataSetChanged();
@@ -657,7 +659,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
             File[] folders = recordingsDirectory.listFiles();
             if (folders != null) {
                 for (File folder : folders) {
-                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("Thùng rác")){
+                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("Private folder") || folder.getName().equalsIgnoreCase("Thùng rác") || folder.getName().equalsIgnoreCase("Trash")){
                         continue;
                     }
                     int amount = 0;
