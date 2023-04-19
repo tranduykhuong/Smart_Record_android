@@ -44,6 +44,8 @@ public class AdjustActivity extends AppCompatActivity {
     private int currPosition = 0;
     private int currentPosition = 0;
     private long timeWhenPaused = 0;
+    private String pathSound;
+    private Handler mainHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class AdjustActivity extends AppCompatActivity {
         setContentView(R.layout.activity_adjust);
         getSupportActionBar().hide();
 
+        Intent intent = getIntent();
+        pathSound = intent.getStringExtra("PATH_KEY");
         boundView();
         playCurrentAudio();
     }
@@ -69,8 +73,7 @@ public class AdjustActivity extends AppCompatActivity {
         adjustSeekBarVolume = this.findViewById(R.id.adjust_seekbar_volume);
         adjustSeekBarSpeed = this.findViewById(R.id.adjust_seekbar_speed);
 
-        String pathFile = Environment.getExternalStorageDirectory().toString() + "/Recordings/Voice Recorder/Thoại 001.m4a";
-        titleFile.setText(pathFile.substring(pathFile.lastIndexOf("/") + 1));
+        titleFile.setText(pathSound.substring(pathSound.lastIndexOf("/") + 1));
 
         SharedPreferences adjustMemories = getSharedPreferences("adjustMemories", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = adjustMemories.edit();
@@ -82,8 +85,9 @@ public class AdjustActivity extends AppCompatActivity {
             adjustSeekBarSpeed.setProgress(0);
         }
         else{
+            Toast.makeText(this, "nà ní cc", Toast.LENGTH_SHORT).show();
             adjustSeekBarFoolproof.setProgress(adjustMemories.getInt("adjustFoolproof", 0));
-            adjustSeekBarVolume.setProgress(adjustMemories.getInt("adjustFoolproof", 0));
+            adjustSeekBarVolume.setProgress(adjustMemories.getInt("adjustVolume", 0));
             adjustSeekBarSpeed.setProgress(adjustMemories.getInt("adjustSpeed", 0));
         }
 
@@ -217,20 +221,31 @@ public class AdjustActivity extends AppCompatActivity {
             }
         });
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        mainHandler = new Handler(Looper.getMainLooper());
+        Runnable updateSeekBarRunnable = new Runnable() {
             @Override
             public void run() {
-                int currentPosition = mediaPlayer.getCurrentPosition();
-                int totalDuration = mediaPlayer.getDuration();
-                float percentage = ((float) currentPosition / totalDuration) * 100;
-                seekBarTime.setProgress((int) percentage);
-                new Handler(Looper.getMainLooper()).postDelayed(this, 100);
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    int currentPosition = mediaPlayer.getCurrentPosition();
+                    int totalDuration = mediaPlayer.getDuration();
+                    float percentage = ((float) currentPosition / totalDuration) * 100;
+                    seekBarTime.setProgress((int) percentage);
+                    new Handler(Looper.getMainLooper()).postDelayed(this, 100);
 
-                if ((int)percentage >= 100){
-                    currTime.stop();
+                    if ((int) percentage >= 100) {
+                        currTime.stop();
+                        mediaPlayer.stop();
+                        btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                        // Hủy bỏ Runnable khi đạt đến cuối phát nhạc hoặc video
+                        mainHandler.removeCallbacks(this);
+                    } else {
+                        // Tiếp tục cập nhật thanh trượt sau 100ms
+//                    mainHandler.postDelayed(this, 100);
+                    }
                 }
             }
-        });
+        };
+        mainHandler.post(updateSeekBarRunnable);
 
         seekBarTime.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -273,8 +288,8 @@ public class AdjustActivity extends AppCompatActivity {
         btnDestroyAdjust.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putBoolean("isFirstTime", false);
-                onBackPressed();
+                mainHandler.removeCallbacksAndMessages(null);
+                    onBackPressed();
             }
         });
 
@@ -285,6 +300,10 @@ public class AdjustActivity extends AppCompatActivity {
                 editor.putInt("adjustFoolproof", adjustSeekBarFoolproof.getProgress());
                 editor.putInt("adjustVolume", adjustSeekBarVolume.getProgress());
                 editor.putInt("adjustSpeed", adjustSeekBarSpeed.getProgress());
+                editor.commit();
+
+                mediaPlayer.stop();
+                mediaPlayer.release();
                 onBackPressed();
             }
         });
@@ -293,15 +312,16 @@ public class AdjustActivity extends AppCompatActivity {
     private void playCurrentAudio(){
         try {
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(Environment.getExternalStorageDirectory().toString() + "/Recordings/Voice Recorder/Thoại 001.m4a");
-            mediaPlayer.prepare();
+            mediaPlayer.setDataSource(pathSound);
             currTime.setBase(SystemClock.elapsedRealtime());
+            mediaPlayer.prepare();
             currTime.stop();
             timeMax.setText(getTotalTime());
             params = mediaPlayer.getPlaybackParams();
             mediaPlayer.setVolume(0.5f, 0.5f);
             params.setPitch(1f);
             mediaPlayer.setPlaybackParams(params);
+            mediaPlayer.pause();
         } catch (IOException e) {
             Log.e("MediaPlayer", "prepare() failed");
             e.printStackTrace();
@@ -325,6 +345,7 @@ public class AdjustActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mainHandler.removeCallbacksAndMessages(null);
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;

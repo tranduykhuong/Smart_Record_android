@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,7 @@ import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentFolderBinding;
 import com.devapp.smartrecord.editmenu.adjust.AdjustActivity;
 import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
+import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -61,21 +64,31 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
     private LinearLayout recordLayout;
     private ImageButton imageTotalChoice, addFolder;
     private RecyclerView rcvFolder;
-    private OnClickButtonItem dataPasser;
+    private OnDataPass dataPasser;
     private boolean isEdit = false, isTotalChecked = false;
     private boolean[] selectedItems;
     private int[] listItemChoice;
     private FolderChildFragment folderChild;
 
-    public interface OnClickButtonItem {
-        void onClickButton(String data);
+    public interface OnDataPass {
+        void onDataPass(boolean data);
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        dataPasser = (OnClickButtonItem) context;
-//    }
+    // Method để gửi dữ liệu về Activity
+    public void passData(boolean isEdit) {
+        dataPasser.onDataPass(isEdit);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            dataPasser = (OnDataPass) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnDataPass");
+        }
+    }
     @Override
     public void onItemClick(int position){
         if (isEdit){
@@ -95,11 +108,23 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 //                }
             }
         }
+        else{
+            HomeFragment a = new HomeFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.navigation_folder, a);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     @Override
     public void handleRemoveMultiFolder() {
         handleValueSelected();
+        if (listItemChoice.length == 0){
+            Toast.makeText(getActivity(), getView().getContext().getText(R.string.announce_notify_warning_len_null), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         //Tạo ra dialog để xác nhận xóa hay không
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
         builder.setMessage(getView().getContext().getString(R.string.question_delete));
@@ -138,6 +163,8 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                 listItemChoice = null;
                 selectedItems = new boolean[listFolder.size()];
                 Arrays.fill(selectedItems, false);
+                adapterFolder.notifyDataSetChanged();
+                passData(false);
             }
         });
         builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
@@ -150,9 +177,14 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
     }
     public void handleMoveMultiFolder(View view){
         handleValueSelected();
+        if (listItemChoice.length == 0){
+            Toast.makeText(getActivity(), getView().getContext().getText(R.string.announce_notify_warning_len_null), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         //Tạo ra dialog để xác nhận xóa hay không
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
-        builder.setMessage(getView().getContext().getString(R.string.question_delete));
+        builder.setMessage(getView().getContext().getString(R.string.question_move));
         builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int j) {
@@ -172,22 +204,24 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         if (success) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
                             listFolder.remove(listItemChoice[i]);
                             adapterFolder.notifyItemRemoved(listItemChoice[i]);
-                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_private_successfully), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_private_unsuccessfully), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_private_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     count++;
                 }
 
 
-//                listItemChoice = null;
-//                selectedItems = new boolean[listFolder.size()];
-//                Arrays.fill(selectedItems, false);
+                listItemChoice = null;
+                selectedItems = new boolean[listFolder.size()];
+                Arrays.fill(selectedItems, false);
+                adapterFolder.notifyDataSetChanged();
+                passData(false);
             }
         });
         builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
@@ -258,7 +292,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         }
                         adapterFolder.notifyDataSetChanged();
                         Arrays.fill(selectedItems, true);
-//                        isTotalChecked = true;
+                        isTotalChecked = true;
                     } else {
                         imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
                         for (int i = 0; i < listFolder.size(); i++) {
@@ -399,101 +433,99 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
         });
 
         privateFolder.setOnClickListener(v -> {
-//            searchView.clearFocus();
-//            imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-//
-//            SharedPreferences prefs = Objects.requireNonNull(getContext()).getSharedPreferences("MyPrivateFolder", Context.MODE_PRIVATE);
-//            boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
-////                String password = prefs.getString("password", "");
-//
-//            if (isFirstTime) {
-//                // inflate the layout of the popup window
-//                LayoutInflater inflater12 = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                @SuppressLint("InflateParams") View popupView = inflater12.inflate(R.layout.folder_context_create_password_private, null);
-//
-//                // create the popup window
-//                int width = LinearLayout.LayoutParams.MATCH_PARENT;
-//                int height = LinearLayout.LayoutParams.MATCH_PARENT ;
-//                boolean focusable = true; // lets taps outside the popup also dismiss it
-//                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-//                // show the popup window
-//                // which view you pass in doesn't matter, it is only used for the window token
-//                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 100);
-//
-//                TextView btnDestroyMenuCreatePrivate = popupView.findViewById(R.id.folder_create_destroy_menu_private);
-//                TextView btnOkMenuCreatePrivate = popupView.findViewById(R.id.folder_create_ok_menu_private);
-//                EditText edtCreateassword = popupView.findViewById(R.id.folder_create_password_private);
-//
-//                btnDestroyMenuCreatePrivate.setOnClickListener(v17 -> popupWindow.dismiss());
-//
-//                btnOkMenuCreatePrivate.setOnClickListener(v18 -> {
-//                    String password = edtCreateassword.getText().toString();
-//                    String hashedPassword = hashSHA256(password);
-//                    if (edtCreateassword.getText().length() == 0){
-//                        Toast.makeText(popupView.getContext(), "Bạn chưa nhập password", Toast.LENGTH_LONG).show();
-//                    }
-//                    else{
-//                        // Sau đó, lưu trạng thái đã truy cập vào SharedPreferences
-//                        SharedPreferences.Editor editor = prefs.edit();
-//                        editor.putBoolean("isFirstTime", false);
-//                        editor.putString("password", hashedPassword);
-//                        editor.apply();
-//                        Toast.makeText(popupView.getContext(), "Tạo mật khẩu thành công", Toast.LENGTH_LONG).show();
-//                        popupWindow.dismiss();
-//                    }
-//                });
-//            } else {
-//                // Ứng dụng đã được truy cập trước đó
-//                // Thực hiện các thao tác bình thường của ứng dụng ở đây
-//                // inflate the layout of the popup window
-//                LayoutInflater inflater12 = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                @SuppressLint("InflateParams") View popupView = inflater12.inflate(R.layout.folder_context_input_password_private, null);
-//
-//                // create the popup window
-//                int width = LinearLayout.LayoutParams.MATCH_PARENT;
-//                int height = LinearLayout.LayoutParams.MATCH_PARENT ;
-//                boolean focusable = true; // lets taps outside the popup also dismiss it
-//                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-//                // show the popup window
-//                // which view you pass in doesn't matter, it is only used for the window token
-//                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-//
-//                TextView btnDestroyMenuInputPrivate = popupView.findViewById(R.id.folder_input_destroy_menu_private);
-//                TextView btnOkMenuInputPrivate = popupView.findViewById(R.id.folder_input_ok_menu_private);
-//                EditText edtInputPassword = popupView.findViewById(R.id.folder_input_password_private);
-//
-//                btnDestroyMenuInputPrivate.setOnClickListener(v19 -> {
-//                    popupWindow.dismiss();
-//                    SharedPreferences.Editor editor = prefs.edit();
-//                    editor.clear();
-//                    editor.apply();
-//                });
-//
-//                btnOkMenuInputPrivate.setOnClickListener(v110 -> {
-//                    if (edtInputPassword.getText().length() == 0){
-//                        Toast.makeText(popupView.getContext(), "Bạn chưa nhập password", Toast.LENGTH_LONG).show();
-//                    }
-//                    else{
-//                        String password = edtInputPassword.getText().toString();
-//                        String storedPassword = prefs.getString("password", "");
-//                        String hashedPassword = hashSHA256(password);
-//
-//                        if (Objects.equals(hashedPassword, storedPassword)) {
-//                            Toast.makeText(popupView.getContext(), "Password đúng", Toast.LENGTH_LONG).show();
-//                            Intent intent = new Intent(getActivity(), HomeFragment.class);
-//                            startActivity(intent);
-//                            popupWindow.dismiss();
-//                        } else {
-//                            Toast.makeText(popupView.getContext(), "Password sai", Toast.LENGTH_LONG).show();
-//                            edtInputPassword.setText("");
-//                        }
-//                    }
-//                });
-//            }
-            Intent intent = new Intent(getActivity(), AdjustActivity.class);
-            startActivity(intent);
+            searchView.clearFocus();
+            imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+            SharedPreferences prefs = Objects.requireNonNull(getContext()).getSharedPreferences("MyPrivateFolder", Context.MODE_PRIVATE);
+            boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
+//                String password = prefs.getString("password", "");
+
+            if (isFirstTime) {
+                // inflate the layout of the popup window
+                LayoutInflater inflater12 = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                @SuppressLint("InflateParams") View popupView = inflater12.inflate(R.layout.folder_context_create_password_private, null);
+
+                // create the popup window
+                int width = LinearLayout.LayoutParams.MATCH_PARENT;
+                int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+                boolean focusable = true; // lets taps outside the popup also dismiss it
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window token
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 100);
+
+                TextView btnDestroyMenuCreatePrivate = popupView.findViewById(R.id.folder_create_destroy_menu_private);
+                TextView btnOkMenuCreatePrivate = popupView.findViewById(R.id.folder_create_ok_menu_private);
+                EditText edtCreateassword = popupView.findViewById(R.id.folder_create_password_private);
+
+                btnDestroyMenuCreatePrivate.setOnClickListener(v17 -> popupWindow.dismiss());
+
+                btnOkMenuCreatePrivate.setOnClickListener(v18 -> {
+                    String password = edtCreateassword.getText().toString();
+                    String hashedPassword = hashSHA256(password);
+                    if (edtCreateassword.getText().length() == 0){
+                        Toast.makeText(popupView.getContext(), "Bạn chưa nhập password", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        // Sau đó, lưu trạng thái đã truy cập vào SharedPreferences
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("isFirstTime", false);
+                        editor.putString("password", hashedPassword);
+                        editor.apply();
+                        Toast.makeText(popupView.getContext(), "Tạo mật khẩu thành công", Toast.LENGTH_LONG).show();
+                        popupWindow.dismiss();
+                    }
+                });
+            } else {
+                // Ứng dụng đã được truy cập trước đó
+                // Thực hiện các thao tác bình thường của ứng dụng ở đây
+                // inflate the layout of the popup window
+                LayoutInflater inflater12 = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                @SuppressLint("InflateParams") View popupView = inflater12.inflate(R.layout.folder_context_input_password_private, null);
+
+                // create the popup window
+                int width = LinearLayout.LayoutParams.MATCH_PARENT;
+                int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+                boolean focusable = true; // lets taps outside the popup also dismiss it
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window token
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                TextView btnDestroyMenuInputPrivate = popupView.findViewById(R.id.folder_input_destroy_menu_private);
+                TextView btnOkMenuInputPrivate = popupView.findViewById(R.id.folder_input_ok_menu_private);
+                EditText edtInputPassword = popupView.findViewById(R.id.folder_input_password_private);
+
+                btnDestroyMenuInputPrivate.setOnClickListener(v19 -> {
+                    popupWindow.dismiss();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.clear();
+                    editor.apply();
+                });
+
+                btnOkMenuInputPrivate.setOnClickListener(v110 -> {
+                    if (edtInputPassword.getText().length() == 0){
+                        Toast.makeText(popupView.getContext(), "Bạn chưa nhập password", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        String password = edtInputPassword.getText().toString();
+                        String storedPassword = prefs.getString("password", "");
+                        String hashedPassword = hashSHA256(password);
+
+                        if (Objects.equals(hashedPassword, storedPassword)) {
+                            Toast.makeText(popupView.getContext(), "Password đúng", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getActivity(), HomeFragment.class);
+                            startActivity(intent);
+                            popupWindow.dismiss();
+                        } else {
+                            Toast.makeText(popupView.getContext(), "Password sai", Toast.LENGTH_LONG).show();
+                            edtInputPassword.setText("");
+                        }
+                    }
+                });
+            }
         });
 
         addFolder.setOnClickListener(v -> {

@@ -63,7 +63,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="?attr/backgroundColor"
         android:layout_below="@+id/adjust_wrap_address"
         android:layout_above="@+id/adjust_wrap_record"
         android:elevation="3dp"
@@ -357,7 +357,7 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="40dp"
         android:paddingTop="32dp"
-        android:background="@color/white"
+        android:background="?attr/foregroundColor"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -443,8 +443,8 @@
                     android:id="@+id/adiust_btn_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="53dp"
-                    android:layout_marginRight="47dp"
+                    android:layout_marginLeft="73dp"
+                    android:layout_marginRight="67dp"
                     android:background="@drawable/bg_record_btn_folder"
                     android:src="@drawable/ic_play_adjust" />
 

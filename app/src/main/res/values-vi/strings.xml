@@ -23,6 +23,12 @@
     <string name="announce_restored_successfully">Khôi phục thành công!</string>
     <string name="announce_restored_unsuccessfully">Khôi phục không thành công!</string>
 
+    <string name="question_move">Bạn có chắc chắn muốn di chuyển vào thư mục riêng tư?</string>
+    <string name="announce_moved_private_successfully">Chuyển vào thư mục riêng tư thành công!</string>
+    <string name="announce_moved_private_unsuccessfully">Chuyển vào thư mục riêng tư không thành công!</string>
+
+    <string name="announce_notify_warning_len_null">Bạn chưa chọn thư mục nào!</string>
+
     <string name="question_restored">Bạn có chắc chắn muốn khôi phục?</string>
     <string name="question_delete_permanently">Bạn chắc chắn muốn xóa vĩnh viễn?</string>
     <string name="annouce_file_not_exist">Tệp không tồn tại!</string>
@@ -97,10 +103,13 @@
     <string name="folder_password_hint">Nhập vào mật khẩu</string>
     <string name="folder_more_menu_title">Chọn</string>
     <string name="folder_more_menu_item_rename">Đổi tên</string>
+    <string name="folder_multi_choice">Chọn tất cả</string>
 
     <string name="adjust_title">Điều chỉnh</string>
     <string name="adjust_foolproof">Cao độ</string>
     <string name="adjust_volume">Chỉnh âm</string>
     <string name="adjust_speed">Tốc độ</string>
+
+    <string name="modal_multi_folder_private">Di chuyển riêng tư</string>
 
 </resources>

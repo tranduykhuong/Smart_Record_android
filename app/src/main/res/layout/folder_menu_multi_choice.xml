@@ -30,12 +30,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Xóa"/>
+                android:text="@string/combine_cancel"
+                android:textColor="@color/black_light"/>
         </LinearLayout>
         <TextView
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:paddingVertical="12dp"
+            android:textColor="@color/black_light"
             android:background="@drawable/bg_solid_right_folder"
             />
         <LinearLayout
@@ -55,7 +57,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Di chuyển riêng tư"/>
+                android:text="@string/modal_multi_folder_private"
+                android:textColor="@color/black_light"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

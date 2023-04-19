@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.DecimalFormat;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -23,6 +25,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.arthenica.mobileffmpeg.FFmpeg;
@@ -30,8 +34,12 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
+import com.devapp.smartrecord.ui.folder.FolderCLassContent;
+import com.devapp.smartrecord.ui.folder.FolderClassContentAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
@@ -40,11 +48,17 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.HomeAudioHolder>{
+public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.HomeAudioHolder> implements FolderModalAdapter.OnItemClickListener{
     private final Context context;
     private List<Audio> audioList;
     private final OnItemClickListener listener;
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
+
+    private ArrayList<FolderCLassContent> listFolder;
+    private RecyclerView rcvFolder;
+    private FolderModalAdapter adapterFolder;
+    private Double sizeFolder = 0.0;
+
     public HomeAudioAdapter(Context context, OnItemClickListener listener) {
         this.listener = listener;
         this.context = context;
@@ -54,6 +68,11 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         void onItemClick(int position);
         void playSound(String name);
         void onItemClickConvert(int position);
+    }
+
+    @Override
+    public void onItemClickModal(int position){
+        Toast.makeText(context, position + "", Toast.LENGTH_SHORT).show();
     }
 
     @NonNull
@@ -72,6 +91,13 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(position));
         viewBinderHelper.setOpenOnlyOne(true);
+
+        listFolder = new ArrayList<>();
+        listFolder = (ArrayList<FolderCLassContent>) getListFolder();
+        adapterFolder = new FolderModalAdapter(context, this);
+
+//        totalSizeFolder.setText(decimalFormat.format(sizeFolder));
+        adapterFolder.setData(listFolder);
 
         holder.homeShareBtn.setOnClickListener(view -> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -278,6 +304,78 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
             });
 
             //Di chuyển đến thư mục...
+            moveItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+
+                    // inflate the layout of the popup window
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    @SuppressLint("InflateParams") View popupView = inflater.inflate(R.layout.modal_move_file_to_folder, null);
+
+                    // create the popup window
+                    int width = LinearLayout.LayoutParams.MATCH_PARENT;
+                    int height = LinearLayout.LayoutParams.MATCH_PARENT ;
+                    boolean focusable = true; // lets taps outside the popup also dismiss it
+                    final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                    // show the popup window
+                    popupWindow.showAtLocation(popupView, Gravity.BOTTOM, 0, 0);
+
+                    TextView btnMoveFileDestroy = popupView.findViewById(R.id.list_folder_move_modal_destroy);
+                    btnMoveFileDestroy.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popupWindow.dismiss();
+                        }
+                    });
+
+                    rcvFolder = popupView.findViewById(R.id.list_folder_move);
+                    rcvFolder.setLayoutManager(new LinearLayoutManager(context));
+                    rcvFolder.setAdapter(adapterFolder);
+
+
+
+//                    Audio audio1 = audioList.get(holder.getAbsoluteAdapterPosition());
+//                    String fileNameTrash = audio1.getName();
+//                    Log.e("TAG", "onClick: " + fileNameTrash);
+//                    File sourceFile  = new File(Environment.getExternalStorageDirectory() + "/Recordings/" + fileNameTrash); // Lấy đường dẫn đầy đủ đến tệp
+//                    File destinationFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/Thư mục riêng tư/");
+//
+//                    // Tạo thư mục thùng rác nếu chưa tồn tại
+//                    if (!destinationFolder.exists()) {
+//                        destinationFolder.mkdir();
+//                    }
+//
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+//                    builder.setMessage(view.getContext().getString(R.string.question_delete));
+//                    builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), (dialogInterface, j) -> {
+//                        try {
+//                            if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
+//                                File destinationFile = new File(destinationFolder, fileNameTrash); // Tạo tệp đích mới
+//                                if (sourceFile.renameTo(destinationFile)) {// Di chuyển tệp đến thư mục đích và kiểm tra kết quả
+//                                    audioList.remove(holder.getAbsoluteAdapterPosition());
+//                                    notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+//                                    Toast.makeText(context, view.getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+//
+//                                    listener.onItemClick(j);
+//                                }else {
+//                                    Toast.makeText(context, view.getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                            else {
+//                                Toast.makeText(context, view.getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            Toast.makeText(context, view.getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                    builder.setNegativeButton(view.getContext().getString(R.string.answer_no), (dialogInterface, i) -> {
+//
+//                    });
+//                    builder.show();
+                }
+            });
 
             //Chuyển đổi định dạng file
             convertItem.setOnClickListener(view1 -> {
@@ -432,6 +530,46 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
     public void setData(List<Audio> audioList) {
         this.audioList = audioList;
         notifyDataSetChanged();
+    }
+
+    private List<FolderCLassContent> getListFolder() {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+        List<FolderCLassContent> folderList = new ArrayList<>();
+        File recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/");
+
+        if (recordingsDirectory.exists()) {
+            File[] folders = recordingsDirectory.listFiles();
+            if (folders != null) {
+                for (File folder : folders) {
+                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("Thùng rác")){
+                        continue;
+                    }
+                    int amount = 0;
+                    long size = 0;
+
+                    if (folder.isDirectory()) {
+                        File[] files = folder.listFiles();
+                        if (files != null) {
+                            for (File file : files) {
+                                if (file.isFile()) {
+                                    amount = amount + 1;
+                                    size = size + file.length();
+                                }
+                            }
+                        }
+                        String fileName = folder.getName();
+                        String amountFileOfFolder = String.valueOf(amount);
+                        String fileSize = decimalFormat.format(1.0 * size / (1024*1024));
+                        sizeFolder = sizeFolder + 1.0 * size / (1024*1024);
+                        Date lastModifiedDate = new Date(folder.lastModified());
+                        @SuppressLint("SimpleDateFormat") String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
+                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " " + context.getString(R.string.folder_file) + " ",fileSize+" MB", formattedDate, R.drawable.ic_pink500_folder));
+                    }
+                }
+            }
+        }
+        return folderList;
     }
 
     public static class HomeAudioHolder extends RecyclerView.ViewHolder {

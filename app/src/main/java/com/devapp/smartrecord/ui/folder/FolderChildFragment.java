@@ -24,6 +24,10 @@ public class FolderChildFragment extends Fragment {
         void handleMoveMultiFolder(View view);
     }
 
+    public FolderChildFragment(){
+
+    }
+
     public FolderChildFragment(DataPassListener mCallback) {
         // Required empty public constructor
         this.mCallback = mCallback;

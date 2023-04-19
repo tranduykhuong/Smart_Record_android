@@ -21,6 +21,12 @@
     <string name="announce_restored_successfully">Restored successfully!</string>
     <string name="announce_restored_unsuccessfully">Restored unsuccessfully!</string>
 
+    <string name="question_move">Are you sure you want to move it to the private folder?</string>
+    <string name="announce_moved_private_successfully">Successfully moved to private folder!</string>
+    <string name="announce_moved_private_unsuccessfully">Move to private folder failed!</string>
+
+    <string name="announce_notify_warning_len_null">You are not select any directory!</string>
+
     <string name="question_restored">Are you sure you want to restore?</string>
     <string name="question_delete_permanently">Are you sure you want to permanently delete?</string>
     <string name="annouce_file_not_exist">File does not exist!</string>
@@ -93,16 +99,19 @@
     <string name="folder_name">Name</string>
     <string name="folder_size">Size</string>
     <string name="folder_filter_title">Sort by</string>
-    <string name="folder_file">file -</string>
+    <string name="folder_file">files -</string>
     <string name="folder_create_folder">Create folder</string>
     <string name="folder_create_folder_hint">Input name folder</string>
     <string name="folder_create_password">Create password</string>
     <string name="folder_password_hint">Input password</string>
     <string name="folder_more_menu_title">Select</string>
     <string name="folder_more_menu_item_rename">Rename</string>
+    <string name="folder_multi_choice">Select all</string>
 
     <string name="adjust_title">Adjust</string>
     <string name="adjust_foolproof">Foolproof</string>
     <string name="adjust_volume">Volume</string>
     <string name="adjust_speed">Speed</string>
+
+    <string name="modal_multi_folder_private">Move private folder</string>
 </resources>

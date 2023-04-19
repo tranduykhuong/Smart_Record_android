@@ -63,7 +63,6 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
     @Override
     public FolderHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_item_background_row, parent, false);
-
         return new FolderHolder(view);
     }
 
@@ -91,7 +90,7 @@ public class FolderClassContentAdapter extends RecyclerView.Adapter<FolderClassC
                 FolderCLassContent folder = listFolder.get(holder.getAbsoluteAdapterPosition());
                 String folderName = folder.getTitle();
                 File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
-                File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "Thùng rác");
+                File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", (String) view.getContext().getText(R.string.title_trash));
 
                 // Tạo thư mục thùng rác nếu chưa tồn tại
                 if (!destinationFolder.exists()) {
