@@ -67,6 +67,7 @@
             android:layout_marginLeft="50dp"/>
 
         <ImageButton
+            android:id="@+id/replay_btn_variation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"

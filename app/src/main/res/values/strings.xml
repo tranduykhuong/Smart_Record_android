@@ -11,10 +11,14 @@
     <string name="title_folder">Folder</string>
     <string name="title_alarm">Alarm</string>
     <string name="title_trash">Trash</string>
+    <string name="title_variation_page">Change the sound</string>
+    <string name="title_variation">Sound variation</string>
 
     <string name="title_search">Search</string>
     <string name="question_delete">Are you sure you want to move it to the trash?</string>
+    <string name="question_save">Are you sure you want to save?</string>
     <string name="announce_moved_successfully">Successfully moved to trash!</string>
+    <string name="announce_save_successfully">Successfully save!</string>
     <string name="announce_moved_unsuccessfully">Move to trash failed!</string>
     <string name="announce_deleted_successfully">Deleted successfully!</string>
     <string name="announce_deleted_unsuccessfully">Deleted unsuccessfully!</string>
