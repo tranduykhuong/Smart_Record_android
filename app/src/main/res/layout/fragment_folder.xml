@@ -9,47 +9,17 @@
     android:background="#efefef"
     tools:context=".ui.folder.FolderFragment">
 
-    <TextView
-        android:id="@+id/text_folder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <RelativeLayout
+        android:id="@+id/folder_wrap_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/backgroundColor"
         tools:ignore="MissingConstraints">
-
-<!--        <EditText-->
-<!--            android:id="@+id/search_folder_edt"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="Tìm kiếm"-->
-<!--            android:layout_marginTop="6dp"-->
-<!--            android:layout_marginBottom="14dp"-->
-<!--            android:layout_marginLeft="10dp"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:drawableLeft="@drawable/ic_search_folder"-->
-<!--            android:padding="10dp"-->
-<!--            android:drawablePadding="16dp"-->
-<!--            android:textCursorDrawable="@null"-->
-<!--            android:background="@drawable/bg_search_folder"-->
-<!--            tools:ignore="MissingConstraints"-->
-<!--            />-->
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_folder_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tìm Kiếm"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="10dp"
@@ -57,9 +27,8 @@
             android:text="@drawable/curson_color_search_folder"
             android:background="@drawable/bg_search_folder"
             app:iconifiedByDefault="false"
-            app:queryHint="Tìm Kiếm..."
+            app:queryHint="@string/title_search"
             />
-
 
         <RelativeLayout
             android:id="@+id/folder_wrap_info"
@@ -69,19 +38,28 @@
             android:layout_below="@id/search_folder_edt"
             android:layout_marginLeft="26dp"
             >
+            <ImageButton
+                android:id="@+id/folder_total_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                />
             <TextView
                 android:id="@+id/folder_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:text="2"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/folder_total_choice"
                 />
             <TextView
                 android:id="@+id/folder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Thư mục - "
+                android:text="@string/folder"
                 android:textSize="15sp"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/folder_amount"
                 />
             <TextView
@@ -89,13 +67,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="11"
+                android:layout_centerVertical="true"
                 android:textSize="15sp"
                 android:layout_toRightOf="@id/folder"
                 />
             <TextView
+                android:id="@+id/folder_catholic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" MB"
+                android:layout_centerVertical="true"
                 android:textSize="15sp"
                 android:layout_toRightOf="@id/folder_capacity"
                 />
@@ -105,7 +86,7 @@
             android:id="@+id/folder_item_private_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="?attr/foregroundColor"
             android:orientation="horizontal"
             android:paddingTop="16dp"
             android:layout_below="@+id/folder_wrap_info"
@@ -125,7 +106,7 @@
                 android:text="@string/folder_private_title"
                 android:layout_alignBottom="@id/folder_item_private_image"
                 android:layout_marginBottom="6dp"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:layout_toRightOf="@id/folder_item_private_image"
                 />
 
@@ -144,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/folder_item_private_row"
             android:layout_above="@id/folder_wrap_record"
+            android:background="?attr/backgroundColor"
             ></androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
@@ -160,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:text="Ngày"
+                android:text="@string/folder_day"
                 android:textColor="@color/pink_500"
                 />
             <ImageView

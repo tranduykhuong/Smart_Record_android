@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/combine_add_item"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:paddingLeft="20dp"
@@ -16,21 +18,28 @@
         android:layout_marginBottom="10dp"
         android:background="?attr/backgroundColor">
 
+        <CheckBox
+            android:id="@+id/combine_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/combine_txt_name_item"
-                android:layout_width="wrap_content"
+                android:id="@+id/combine_add_name_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
                 android:textSize="16sp"
                 android:textColor="?attr/textColor"
                 android:gravity="left"
                 android:text="08_08_56, ngày 18 tháng 3, 2023"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                tools:ignore="RtlHardcoded" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,7 +47,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/combine_txt_time"
+                    android:id="@+id/combine_add_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
@@ -47,17 +56,6 @@
                     android:layout_gravity="center"
                     android:gravity="center_horizontal"
                     android:text="00:00 - 00:06" />
-
-                <TextView
-                    android:id="@+id/combine_txt_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/x1_text"
-                    android:layout_gravity="center"
-                    android:gravity="center_horizontal"
-                    android:text="MP3 - 155KB" />
 
             </LinearLayout>
 

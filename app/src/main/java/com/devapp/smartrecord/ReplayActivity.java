@@ -143,7 +143,6 @@ public class ReplayActivity  extends AppCompatActivity {
                 try {
                     String note = jsonArray.getString(i);
                     listNote.add(note);
-                    Log.d("note: ", note);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -305,10 +304,10 @@ public class ReplayActivity  extends AppCompatActivity {
             flagRepeat = !flagRepeat;
             if(flagRepeat)
             {
-                Toast.makeText(getApplicationContext(), this.getString(R.string.repeat_mode), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.repeat_mode), Toast.LENGTH_SHORT).show();
             }
             else {
-                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_repeat_mode), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), this.getString(R.string.cancel_repeat_mode), Toast.LENGTH_SHORT).show();
             }
         });
         btnPrevReplay.setOnClickListener(view -> {
@@ -573,8 +572,13 @@ public class ReplayActivity  extends AppCompatActivity {
                 break;
             }
             case R.id.replay_btn_text: {
+                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
                 Intent intent = new Intent(this, VoiceToTextActivity.class);
+                intent.putExtra("PATH_KEY", file.getAbsolutePath());
                 startActivity(intent);
+                break;
+            }
+            case R.id.replay_btn_voice_trans:{
                 break;
             }
         }

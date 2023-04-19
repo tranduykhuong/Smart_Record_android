@@ -37,7 +37,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -45,6 +47,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.devapp.smartrecord.api.VoiceToTextActivity;
 import com.devapp.smartrecord.api.VoiceToTextResultActivity;
 import com.devapp.smartrecord.editmenu.cut.CutActivity;
+import com.devapp.smartrecord.services.RecordService;
 import com.devapp.smartrecord.ui.alarm.AlarmService;
 import com.devapp.smartrecord.ui.alarm.ReminderReceiver;
 import com.devapp.smartrecord.ui.folder.FolderFragment;
@@ -69,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
     private BottomNavigationView navView;
     private ImageView btn_setting, btn_edit;
     private ConfigurationClass config;
+    private boolean isEdit = true;
 
     ActivityResultLauncher<String[]> requestPermissionLauncher;
     private String[] permissions = new String[]{
@@ -143,21 +147,30 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Truyền dữ liệu từ activity vào fragment
-                FolderFragment fragment = (FolderFragment) getSupportFragmentManager().findFragmentById(R.id.folder_background);
-                if (fragment != null){
-                    Bundle args = new Bundle();
-                    args.putString("data", "Thông tin cần truyền");
-                    fragment.setArguments(args);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.folder_background, fragment)
-                            .commit();
+                boolean currEdit = isEdit;
+                isEdit = !isEdit;
+                NavController navController = Navigation.findNavController(HomeActivity.this, R.id.nav_host_fragment_activity_main);
+                NavDestination currentDestination = navController.getCurrentDestination();
+                if (currentDestination != null) {
+                    int currentFragmentId = currentDestination.getId();
+                    // sử dụng currentFragmentId để xác định fragment hiện tại
+                    if (currentFragmentId == R.id.navigation_folder){
+                        Bundle args = new Bundle();
+                        args.putBoolean("isEdit", currEdit);
+                        navController.navigate(R.id.navigation_folder, args);
+                        if (currEdit){
+                            btn_edit.setImageResource(R.drawable.ic_close);
+                        }
+                        else{
+                            btn_edit.setImageResource(R.drawable.ic_edit);
+                        }
+
+                    }
+                    // Xử lý ở các fragment còn lại
+                    else{
+                        Toast.makeText(HomeActivity.this, currentFragmentId + "", Toast.LENGTH_SHORT).show();
+                    }
                 }
-//                Intent intent = new Intent(HomeActivity.this, FolderFragment.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putBoolean("isChoice", true);
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, EDIT_CODE);
             }
         });
 
@@ -172,29 +185,22 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
 
     public void navigate_onclick(View view) {
         switch (view.getId()) {
-            case R.id.home_btn_record: {
-                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+            case R.id.home_btn_record:
+            case R.id.folder_btn_record: {
+//                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+//                startActivityForResult(intent, RECORDING_CODE);
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
+
+                if (isMarried == false) {
+                    Intent serviceIntent = new Intent(getApplicationContext(), RecordService.class);
+                    startForegroundService(serviceIntent);
+                }
+
+                Intent intent = new Intent(HomeActivity.this, RecordActivity1.class);
                 startActivityForResult(intent, RECORDING_CODE);
                 break;
             }
-            case R.id.folder_btn_record: {
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
-                if(isMarried == true)
-                {
-                    onBackPressed();
-                }
-                else {
-                    Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
-                    startActivityForResult(intent, RECORDING_CODE);
-                }
-                break;
-            }
-//            case R.id.record_btn_back: {
-//                Intent intent = new Intent(RecordActivity.class, ReplayActivity.class);
-//                startActivityForResult(intent, RECORDING_CODE);
-//                break;
-//            }
         }
     }
 

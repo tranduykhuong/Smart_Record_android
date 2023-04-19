@@ -69,6 +69,9 @@
     <string name="add_successfull">Thêm thành công</string>
     <string name="remove_file">File đã xóa</string>
     <string name="save_file">Đã lưu_</string>
+
+    <string name="converting">Đang chuyển đổi...</string>
+    <string name="loading">Đang xử lý...</string>
     <string name="save_announce">Lưu</string>
     <string name="save_record_announce">Lưu bản ghi</string>
     <string name="delete_announce">Xóa</string>
@@ -80,4 +83,31 @@
     <string name="combine_YN">Bạn có muốn hợp nhất?</string>
     <string name="combine_success">Hợp nhất thành công</string>
     <string name="cancel_announce">Hủy</string>
+    <string name="record_announce">Ghi...</string>
+    <string name="broadcast_title">Đang ghi âm...</string>
+    <string name="broadcast_action">Chạm để dừng</string>
+    <string name="add_file_announce">Bạn chỉ có thể thêm 1 lần!</string>
+    <string name="only_mp3">Chỉ hợp nhất được .mp3</string>
+
+    <string name="folder">\ Thư mục -\ </string>
+    <string name="folder_day">Ngày</string>
+    <string name="folder_name">Tên</string>
+    <string name="folder_size">Kích thước</string>
+    <string name="folder_filter_title">Sắp xếp theo</string>
+    <string name="folder_file">bản ghi -</string>
+    <string name="folder_create_folder">Tạo thư mục</string>
+    <string name="folder_create_folder_hint">Nhập tên thư mục</string>
+    <string name="folder_create_password">Tạo mật khẩu</string>
+    <string name="folder_password_hint">Nhập vào mật khẩu</string>
+    <string name="folder_more_menu_title">Chọn</string>
+    <string name="folder_more_menu_item_rename">Đổi tên</string>
+
+    <string name="adjust_title">Điều chỉnh</string>
+    <string name="adjust_foolproof">Cao độ</string>
+    <string name="adjust_volume">Chỉnh âm</string>
+    <string name="adjust_speed">Tốc độ</string>
+
+    <string name="harmonic_title">Hòa âm</string>
+    <string name="harmonic_success">Hòa âm hoàn tất</string>
+
 </resources>

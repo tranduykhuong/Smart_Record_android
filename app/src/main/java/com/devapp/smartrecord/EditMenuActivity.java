@@ -48,26 +48,25 @@ public class EditMenuActivity extends AppCompatActivity {
             }
             case R.id.adjust_btn_insertion:{
                 Intent intent = new Intent(this, InsertionActivity.class);
+                intent.putExtra("PATH_KEY", pathSound);
                 startActivity(intent);
                 break;
             }
             case R.id.adjust_btn_adjust: {
-                LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.activity_adjust, null);
-                int width = LinearLayout.LayoutParams.MATCH_PARENT;
-                int height = LinearLayout.LayoutParams.MATCH_PARENT ;
-                boolean focusable = true;
-                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-                popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+                Intent intent = new Intent(this, AdjustActivity.class);
+                intent.putExtra("PATH_KEY", pathSound);
+                startActivity(intent);
                 break;
             }
             case R.id.adjust_btn_divide:{
                 Intent intent = new Intent(this, DivideActivity.class);
+                intent.putExtra("PATH_KEY", pathSound);
                 startActivity(intent);
                 break;
             }
             case R.id.adjust_btn_harmonic:{
                 Intent intent = new Intent(this, HarmonicActivity.class);
+                intent.putExtra("PATH_KEY", pathSound);
                 startActivity(intent);
                 break;
             }

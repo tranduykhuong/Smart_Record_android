@@ -77,7 +77,6 @@ public class CutActivity extends AppCompatActivity {
         Intent intent = getIntent();
         audioFilePath = intent.getStringExtra("PATH_KEY");
 
-
         hrzScrollView = findViewById(R.id.cut_horizontal);
         twMin = findViewById(R.id.tw_min);
         twMax = findViewById(R.id.tw_max);

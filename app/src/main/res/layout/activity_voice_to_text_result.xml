@@ -85,7 +85,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:text="Alo 1234 tôi là sinh viên trường khoa học tự nhiên"
+                android:text="Đang xử lý"
                 android:textSize="16dp" />
         </LinearLayout>
         <LinearLayout
@@ -95,59 +95,67 @@
             android:background="?attr/foregroundColor"
             android:layout_weight="1"
             android:orientation="vertical">
-            <ProgressBar
-                android:id="@+id/progressBar"
+            <SeekBar
+                android:id="@+id/voice_text_seekbar"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="10dp"
-                android:layout_height="10dp"
-                android:indeterminateDrawable="@color/pink_300"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_centerInParent="true"
-                android:scaleY="2"
+                android:layout_height="11dp"
+                android:thumb="@drawable/ic_thumb_seekbar"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="30"
+                android:layout_marginBottom="8dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTint="@color/bg_progressbar"
+                android:progressTint="@color/pink_500"
+                android:progressDrawable="@drawable/replay_prb_custom"
                 android:layout_weight="9"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/tw_current_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="16dp"
                     android:layout_weight="1"
                     android:text="00:12" />
                 <TextView
+                    android:id="@+id/tw_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="16dp"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:text="01:05" />
+                    android:text="00:00" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
                 android:paddingBottom="24dp">
+<!--                <ImageView-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:src="@drawable/ic_upload"-->
+<!--                    tools:ignore="RtlCompat" />-->
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:src="@drawable/ic_upload"
-                    tools:ignore="RtlCompat" />
-                <ImageView
+                    android:id="@+id/btn_play_text"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:layout_weight="1"
                     android:textAlignment="center"
-                    android:src="@drawable/ic_play_audio_item"/>
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:src="@drawable/ic_reconvert"
-                    tools:ignore="RtlCompat" />
+                    android:src="@drawable/ic_play"/>
+<!--                <ImageView-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:src="@drawable/ic_reconvert"-->
+<!--                    tools:ignore="RtlCompat" />-->
             </LinearLayout>
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

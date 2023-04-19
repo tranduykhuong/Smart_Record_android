@@ -65,7 +65,7 @@ public class RecordActivity extends AppCompatActivity {
         ImageButton btnStop = findViewById(R.id.record_btn_stop);
         ImageButton btnNote = findViewById(R.id.record_btn_note);
         btnPlay = findViewById(R.id.record_btn_play);
-        chronometerTime = findViewById(R.id.record_time_recording);
+//        chronometerTime = findViewById(R.id.record_time_recording);
         txtRecordName = findViewById(R.id.record_name);
         graphView = findViewById(R.id.graphView);
         graphView.setGraphColor(Color.rgb(18, 17, 17));
@@ -218,7 +218,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecord(){
-        Toast.makeText(getApplicationContext(), "Record...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), this.getString(R.string.record_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
         File folder = new File(Environment.getExternalStorageDirectory() + "/Recordings");
 
@@ -249,7 +249,7 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
         chronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
@@ -264,7 +264,7 @@ public class RecordActivity extends AppCompatActivity {
     }
     public void PauseRecord()
     {
-        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
         recorder.pauseRecording();
