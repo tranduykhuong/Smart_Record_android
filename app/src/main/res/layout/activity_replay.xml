@@ -67,12 +67,8 @@
             android:layout_marginLeft="50dp"/>
 
         <ImageButton
-<<<<<<< HEAD
             android:id="@+id/replay_btn_variation"
-=======
-            android:id="@+id/replay_btn_voice_trans"
             android:onClick="changeLayoutFromReplay"
->>>>>>> 7d80a2c6bc0b0ebc5a3944db5da93b4aeaba2923
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"

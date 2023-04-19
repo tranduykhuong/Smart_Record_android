@@ -578,7 +578,11 @@ public class ReplayActivity  extends AppCompatActivity {
                 startActivity(intent);
                 break;
             }
-            case R.id.replay_btn_voice_trans:{
+            case R.id.replay_btn_variation:{
+                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
+                Intent intent = new Intent(this, VariationActivity.class);
+                intent.putExtra("PATH_KEY", file.getAbsolutePath());
+                startActivity(intent);
                 break;
             }
         }
