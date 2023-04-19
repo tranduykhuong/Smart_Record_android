@@ -1,31 +1,20 @@
 package com.devapp.smartrecord;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -36,18 +25,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.devapp.smartrecord.services.RecordingActivity;
-import com.devapp.smartrecord.services.RecordingService;
 import com.suman.voice.graphviewlibrary.GraphView;
 import com.suman.voice.graphviewlibrary.WaveSample;
 
 import org.json.JSONArray;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +47,7 @@ public class RecordActivity1 extends AppCompatActivity {
     private TelephonyManager telephonyManager;
     private JSONArray jsonArray;
     private final List<WaveSample> pointList = new ArrayList<>();
+    private String timeWhenNote, fileName;
 
     @SuppressLint({"ClickableViewAccessibility", "MissingInflatedId"})
     @Override
@@ -128,19 +114,20 @@ public class RecordActivity1 extends AppCompatActivity {
             TextView btnOkRecordNote = popupView.findViewById(R.id.record_modal_ok_note);
             EditText edtNote = popupView.findViewById(R.id.record_note_edt);
 
-//            long seconds = timeWhenPaused / 1000;
-//            String TimePause = String.format(Locale.getDefault(), "%02d:%02d", seconds / 60, seconds % 60);
-//            headingTimeNote.setText(TimePause);
+            timeWhenNote = (String) twCurrentTime.getText();
+
+            headingTimeNote.setText(timeWhenNote);
 
             btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
 
             btnOkRecordNote.setOnClickListener(view1 -> {
-//                jsonArray.put(TimePause + " - " + edtNote.getText());
+                jsonArray.put(timeWhenNote + " - " + edtNote.getText());
 
                 String json = jsonArray.toString();
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.putString(recorder.getFileName(), json);
+                SharedPreferences sharedPreferences1 = getSharedPreferences("myPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences1.edit();
+                editor.putString((String) txtRecordName.getText(), json);
                 editor.apply();
 
                 Toast.makeText(this, view.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show();
@@ -158,7 +145,7 @@ public class RecordActivity1 extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             int current_time = intent.getIntExtra("CURRENT_TIME", 0);
-            String fileName = intent.getStringExtra("FILE_NAME");
+            fileName = intent.getStringExtra("FILE_NAME");
             int x = intent.getIntExtra("GRAPH_COOR", 0);
             int y = intent.getIntExtra("GRAPH_VALUE", 0);
             if (current_time != 0) {

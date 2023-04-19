@@ -232,7 +232,7 @@ public class RecordService extends Service {
 
             Intent intent = new Intent("record-activity-event");
             intent.putExtra("CURRENT_TIME", elapsedTime);
-            intent.putExtra("FILE_NAME", fileName);
+            intent.putExtra("FILE_NAME", finalName);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
             builder.setSubText(getFormattedTime(elapsedTime));
