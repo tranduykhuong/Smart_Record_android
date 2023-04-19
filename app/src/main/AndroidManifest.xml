@@ -88,6 +88,9 @@
             android:name=".RecordActivity"
             android:exported="true" />
         <activity
+            android:name=".RecordActivity1"
+            android:exported="true" />
+        <activity
             android:name=".api.VoiceToTextActivity"
             android:exported="true" />
         <activity
@@ -129,6 +132,9 @@
             android:exported="true"/>
         <service
             android:name=".services.RecordingService"
+            android:exported="true"/>
+        <service
+            android:name=".services.RecordService"
             android:exported="true"/>
 
     </application>

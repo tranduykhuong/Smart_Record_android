@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
     private final Handler handler = new Handler();
     private File recordingsDirectory;
     private boolean[] checkedArray;
+    private Runnable mRunnable;
 
     public void addFileSound(String FName)
     {
@@ -118,6 +120,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
 
         try {
             mediaPlayer.setDataSource(tempPath + fileName);
+            mediaPlayer.prepare();
             txtDurationTime.setText(formatTime(file));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -127,14 +130,9 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             flagPlaying = !flagPlaying;
             if(cntBtn == 0 && flagPlaying)
             {
-                try {
-                    btnPlay.setImageResource(R.drawable.ic_pause_combine_main);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    seekBar.setMax(mediaPlayer.getDuration());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                btnPlay.setImageResource(R.drawable.ic_pause_combine_main);
+                mediaPlayer.start();
+                seekBar.setMax(mediaPlayer.getDuration());
                 cntBtn = 1;
             }
             else if(cntBtn == 1 && !flagPlaying)
@@ -209,15 +207,15 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
 
                     ResetAdapter();
 
-
                     //COMBINE
                     ConcatAudio();
 
                     //XÉT LẠI MEDIA PLAYER
                     try {
-                        mediaPlayer.stop();
-//                            mediaPlayer.setDataSource(outputFile.getPath());
+                        mediaPlayer.reset();
+                        //mediaPlayer.setDataSource(tempPath + finalName);
                         mediaPlayer.setDataSource(outputFile.getAbsolutePath());
+                        mediaPlayer.prepare();
                         txtDurationTime.setText(formatTime(outputFile));
 
                     } catch (IOException e) {
@@ -256,22 +254,25 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             }
         });
 
-        Runnable mRunnable = new Runnable() {
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
-            public void run() {
-                int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                seekBar.setProgress(mCurrentPosition);
-                txtCurTime.setText(formatTime(mCurrentPosition));
-
-                handler.postDelayed(this, 100);
+            public void onPrepared(MediaPlayer mp) {
+                mRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        int currentPosition = mediaPlayer.getCurrentPosition();
+                        seekBar.setProgress(currentPosition);
+                        txtCurTime.setText(formatTime(currentPosition));
+                        handler.postDelayed(this, 200);
+                    }
+                };
+                handler.post(mRunnable);
             }
-        };
-        handler.postDelayed(mRunnable, 100);
+        });
 
-        mediaPlayer.setOnCompletionListener(mp -> {
+        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
             seekBar.setProgress(0);
             txtCurTime.setText("00:00:00");
-
             flagPlaying = false;
             cntBtn = 0;
             btnPlay.setImageResource(R.drawable.ic_play_combine_main);
@@ -475,7 +476,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                             in2 = new File(inputPaths.get(i + 1));
                             String outputName = String.format("%sconcat_%d.mp3", tempPath, i / 2);
                             outputPaths.add(outputName);
-                            command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", "mp3", "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputName};
+                            command = new String[]{"-i", in1.getAbsolutePath(), "-i", in2.getAbsolutePath(), "-filter_complex", String.format(filter, 2), "-f", "mp3", "-acodec", "libmp3lame", "-ab", "128k", "-ar", "44100", "-ac", "2", outputFile.getAbsolutePath()};
                         } else {
                             outputPaths.add(inputPaths.get(i));
                         }
@@ -501,8 +502,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         }
     }
 
-    public void CheckOnceAdd()
-    {
+    public void CheckOnceAdd() {
         if(flagChoose)
         {
             btnAddFile.setOnClickListener(view -> {

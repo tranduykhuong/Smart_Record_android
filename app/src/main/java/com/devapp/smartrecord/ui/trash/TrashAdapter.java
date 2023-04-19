@@ -65,6 +65,9 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
             File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + fileName); // Lấy đường dẫn đầy đủ đến tệp
             File destinationFolder = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/");
 
+            if (!destinationFolder.exists()) {
+                destinationFolder.mkdir();
+            }
             //Tạo ra dialog để xác nhận khôi phục hay không
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
             builder.setMessage(view.getContext().getString(R.string.question_restored));
@@ -113,6 +116,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
                         Log.e("TAG", "onClick: " + file);
                         itemList.remove(holder.getAbsoluteAdapterPosition());
                         file.delete();
+                        listener.onItemClick(j);
                         notifyItemRemoved(holder.getAbsoluteAdapterPosition());
                         Toast.makeText(context, view.getContext().getString(R.string.announce_deleted_successfully), Toast.LENGTH_SHORT).show();
                     } else {

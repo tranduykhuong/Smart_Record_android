@@ -12,12 +12,16 @@
     <string name="title_folder">Thư mục</string>
     <string name="title_alarm">Nhắc nhở</string>
     <string name="title_trash">Thùng rác</string>
+    <string name="title_variation_page">Thay đổi tiếng động</string>
+    <string name="title_variation">Hiệu ứng âm thanh</string>
 
     <string name="title_search">Tìm kiếm</string>
 
     <string name="question_delete">Bạn có chắc chắn muốn chuyển vào thùng rác?</string>
+    <string name="question_save">Bạn có chắc chắn muốn lưu?</string>
     <string name="announce_moved_successfully">Chuyển vào thùng rác thành công!</string>
     <string name="announce_moved_unsuccessfully">Chuyển vào thùng rác không thành công!</string>
+    <string name="announce_save_successfully">Lưu thành công!</string>
     <string name="announce_deleted_successfully">Xóa thành công!</string>
     <string name="announce_deleted_unsuccessfully">Xóa không thành công!</string>
     <string name="announce_restored_successfully">Khôi phục thành công!</string>
@@ -110,6 +114,11 @@
     <string name="adjust_volume">Chỉnh âm</string>
     <string name="adjust_speed">Tốc độ</string>
 
+<<<<<<< HEAD
     <string name="modal_multi_folder_private">Di chuyển riêng tư</string>
+=======
+    <string name="harmonic_title">Hòa âm</string>
+    <string name="harmonic_success">Hòa âm hoàn tất</string>
+>>>>>>> 025838e2cca8ffd752e4fd67abc6b338d66dfad3
 
 </resources>

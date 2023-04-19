@@ -65,7 +65,7 @@ public class RecordActivity extends AppCompatActivity {
         ImageButton btnStop = findViewById(R.id.record_btn_stop);
         ImageButton btnNote = findViewById(R.id.record_btn_note);
         btnPlay = findViewById(R.id.record_btn_play);
-        chronometerTime = findViewById(R.id.record_time_recording);
+//        chronometerTime = findViewById(R.id.record_time_recording);
         txtRecordName = findViewById(R.id.record_name);
         graphView = findViewById(R.id.graphView);
         graphView.setGraphColor(Color.rgb(18, 17, 17));

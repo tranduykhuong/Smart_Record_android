@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.devapp.smartrecord.api.VoiceToTextActivity;
+import com.devapp.smartrecord.soundvariation.VariationActivity;
 import com.devapp.smartrecord.ui.alarm.HandleDataAlarm;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -62,7 +63,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private TextView txtNameReplay, txtTimeTotal;
     private HorizontalScrollView hrzScrollView;
     private Chronometer txtTimeCur;
-    private ImageButton btnPlayReplay;
+    private ImageButton btnPlayReplay, btnVariation;
     private Button btnSpeed;
     private SeekBar skbarReplay;
     private LineChart chart;
@@ -75,6 +76,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private int realWidth;
     private float rate1, rate2, rate3;
     private Runnable highlight;
+    private String nameSound;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +93,7 @@ public class ReplayActivity  extends AppCompatActivity {
 
         Intent intent = getIntent();
         String action = intent.getAction();
-        String nameSound;
+
 
         if(action.equals("FromHome"))
         {
@@ -560,7 +562,11 @@ public class ReplayActivity  extends AppCompatActivity {
                 startActivity(intent);
                 break;
             }
-            case R.id.replay_btn_voice_trans:{
+            case R.id.replay_btn_variation:{
+                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/" + files[currentSongIndex].getName());
+                Intent intent = new Intent(this, VariationActivity.class);
+                intent.putExtra("PATH_KEY", file.getAbsolutePath());
+                startActivity(intent);
                 break;
             }
         }
@@ -574,6 +580,7 @@ public class ReplayActivity  extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        skbarReplay.setProgress(0);
         mediaPlayer.stop();
         handler.removeCallbacks(highlight);
         super.onDestroy();

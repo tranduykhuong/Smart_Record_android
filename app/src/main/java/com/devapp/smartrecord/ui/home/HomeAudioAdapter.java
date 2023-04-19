@@ -474,9 +474,6 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
             if (!destinationFolder.exists()) {
                 destinationFolder.mkdir();
             }
-            else {
-
-            }
 
             //Tạo ra dialog để xác nhận xóa hay không
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());

@@ -97,7 +97,9 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         itemList = new ArrayList<>();
         trashDirectory = new File(Environment.getExternalStorageDirectory().toString()+"/Recordings/TrashAudio/");
-
+        if (!trashDirectory.exists()) {
+            trashDirectory.mkdir();
+        }
         Log.e("sdnfsdhfk", String.valueOf(trashDirectory));
         if (trashDirectory != null && trashDirectory.listFiles() != null)
             size = trashDirectory.listFiles().length;
