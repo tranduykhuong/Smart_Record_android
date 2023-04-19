@@ -128,4 +128,16 @@
     <string name="rename_fail">Rename fail!</string>
     <string name="rename_folder_title">Rename folder</string>
     <string name="rename_folder_hint">Input new name folder</string>
+
+    <string name="create_folder_success">Create successfully</string>
+    <string name="create_folder_exist">Folder name already exists</string>
+    <string name="create_folder_warning">You have not entered the folder name</string>
+
+    <string name="folder_password_warning">You have not entered the password</string>
+    <string name="folder_password_create_success">Create password successfully</string>
+    <string name="folder_password_fail">Password wrong</string>
+
+    <string name="question_move_folder">Are you sure you want to move into this folder?</string>
+    <string name="announce_moved_folder_successfully">Successfully moved to new folder</string>
+    <string name="announce_moved_folder_fail">Fail moved to new folder</string>
 </resources>

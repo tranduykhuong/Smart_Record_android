@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         >
 
         <LinearLayout
+            android:id="@+id/insert_side_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
-                android:background="?attr/actionBarColor"
+                android:background="@null"
                 android:elevation="0dp"
                 android:outlineProvider="none"
                 android:src="@drawable/ic_back" />
@@ -31,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/insertion"
-                android:background="@color/pink_500"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:paddingTop="16dp"
@@ -40,15 +39,14 @@
                 />
         </LinearLayout>
 
-
         <LinearLayout
+            android:id="@+id/insert_file_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bg_color"
-            android:orientation="vertical"
-            android:layout_marginTop="54dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/insert_side_bar"
             >
             <TextView
+                android:id="@+id/insert_name_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
@@ -57,73 +55,203 @@
                 android:background="#EFEFEF"
                 android:textAlignment="center"
                 android:textColor="#616060"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="323dp"
-                android:src="@drawable/img_fre_tmp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/img_range_tmp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/insert_wrap_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundColor"
+            android:orientation="vertical"
+            android:layout_below="@+id/insert_file_name"
+            android:layout_above="@+id/insert_wrap_adjust"
+            >
+
+            <HorizontalScrollView
+                android:id="@+id/insert_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:scrollbarThumbVertical="@null"
+                android:scrollbarTrackVertical="@null"
+                >
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/insert_chart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:ignore="MissingClass" />
+            </HorizontalScrollView>
+
+            <!-- Your main layout here -->
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/insert_item_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/foregroundColor"
+                android:orientation="horizontal"
+                android:paddingTop="8dp"
+                >
+
+                <ImageView
+                    android:id="@+id/insert_item_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignBottom="@id/insert_item_amount"
+                    android:layout_alignTop="@id/insert_item_title"
+                    android:layout_marginHorizontal="10dp"
+                    android:src="@drawable/ic_play_audio_item" />
+
+                <TextView
+                    android:id="@+id/insert_item_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:textColor="?attr/textColor"
+                    android:layout_toRightOf="@id/insert_item_image"
+                    />
+
+                <TextView
+                    android:id="@+id/insert_item_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_toRightOf="@id/insert_item_image"
+                    android:layout_below="@id/insert_item_title"
+                    />
+
+
+                <TextView
+                    android:id="@+id/insert_item_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_toRightOf="@id/insert_item_amount"
+                    android:layout_below="@id/insert_item_title"
+                    />
+
+                <TextView
+                    android:id="@+id/insert_item_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginRight="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/insert_item_title"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:textColor="?attr/textColor"
+                    android:background="@drawable/bg_solid_bottom_filter_folder"
+                    android:layout_below="@id/insert_item_amount"
+                    android:layout_marginTop="10dp"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/insert_wrap_adjust"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="?attr/foregroundColor"
             android:padding="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="20dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:textAlignment="center"
-                    android:text="1x"
-                    tools:ignore="RtlCompat" />
+                android:paddingBottom="10dp">
                 <ImageView
+                    android:id="@+id/insert_play_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:layout_weight="1"
                     android:textAlignment="center"
-                    android:src="@drawable/ic_play_audio_item"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:gravity="center_vertical"
-                    android:text="0.21"
-                    tools:ignore="RtlCompat" />
+                    android:src="@drawable/ic_play"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginVertical="6dp"
+                >
+
+                <SeekBar
+                    android:id="@+id/insert_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="11dp"
+                    android:thumb="@drawable/ic_thumb_seekbar"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="30"
+                    android:layout_marginBottom="8dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="@color/bg_progressbar"
+                    android:progressTint="@color/pink_500"
+                    android:progressDrawable="@drawable/replay_prb_custom" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/insert_time_current"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:layout_weight="1"
+                        android:textColor="?attr/textColor"
+                        android:gravity="left"
+                        android:layout_marginLeft="12dp"
+                        android:text="00:00:50" />
+
+                    <TextView
+                        android:id="@+id/insert_time_max"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="?attr/textColor"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:layout_marginRight="12dp"
+                        android:text="00:01:39" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/insert_destroy"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/textColor"
                     android:textSize="16sp"
                     android:gravity="center_vertical"
-                    android:text="Hủy"
+                    android:text="@string/cancel_announce"
                     tools:ignore="RtlCompat" />
                 <ImageButton
                     android:id="@+id/insert_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_bottom_nav_item"
+                    android:background="@drawable/bg_record_btn_folder"
                     android:padding="14dp"
                     android:src="@drawable/ic_plus" />
                 <TextView
@@ -134,9 +262,9 @@
                     android:textSize="16sp"
                     android:textColor="@color/pink_300"
                     android:gravity="center_vertical"
-                    android:text="Chèn"
+                    android:text="@string/insertion"
                     tools:ignore="RtlCompat" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

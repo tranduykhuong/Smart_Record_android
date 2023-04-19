@@ -9,7 +9,7 @@
         android:id="@+id/adjust_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/foregroundColor"
+        android:background="?attr/actionBarColor"
         android:paddingVertical="20dp"
         >
 

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.devapp.smartrecord.R;
+import com.devapp.smartrecord.ui.folder.FolderCLassContent;
 
 import java.io.File;
 import java.util.List;
@@ -151,7 +152,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setData(List<Item> itemList) {
+    public void setDataItem(List<Item> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
     }

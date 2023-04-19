@@ -1,30 +1,22 @@
-package com.devapp.smartrecord.editmenu.insertion;
+package com.devapp.smartrecord.ui.home;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.icu.text.DecimalFormat;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ui.folder.FolderCLassContent;
-import com.devapp.smartrecord.ui.folder.FolderClassContentAdapter;
-import com.devapp.smartrecord.ui.home.Audio;
 
 import java.io.File;
 import java.text.ParseException;
@@ -34,13 +26,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class InsertionListFile extends AppCompatActivity implements InsertionAudioAdapter.OnItemClickListener{
-    private List<Audio> audioList;
+public class FolderModalList extends AppCompatActivity implements FolderModalAdapter.OnItemClickListener{
+    private List<FolderCLassContent> folderList;
     private RecyclerView rcvInsertAudio;
-    private InsertionAudioAdapter insertAudioAdapter;
+    private FolderModalAdapter folderMoveAdapter;
     private File recordingsDirectory;
     private double sumCapacity = 0;
     private int sumAmountFile = 0;
@@ -58,7 +49,6 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
         TextView btnDestroy = (TextView) this.findViewById(R.id.insert_fragment_destroy);
         TextView amountFile = (TextView) this.findViewById(R.id.insert_fragment_amount);
         TextView sizeTotalFile = (TextView) this.findViewById(R.id.insert_fragment_size);
-        final androidx.appcompat.widget.SearchView searchView = (SearchView) this.findViewById(R.id.insert_fragment_search_edt);
 
         btnDestroy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,79 +57,29 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
             }
         });
 
-        // Lấy InputMethodManager từ Context
-        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(this).getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Lắng nghe sự kiện chạm màn hình
-        this.findViewById(android.R.id.content).setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                // Kiểm tra xem SearchView có đang được chỉnh sửa không
-                if (!searchView.isIconified()) {
-                    // Ẩn bàn phím và hủy focus của SearchView
-                    searchView.clearFocus();
-                    imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-                }
-            }
-            return false;
-        });
-
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                String searchText = newText.toLowerCase().trim();
-                List<Audio> filteredList = new ArrayList<>();
-
-                for (Audio item : audioList) {
-                    String itemText = item.getName().toLowerCase();
-                    if (itemText.contains(searchText)) {
-                        filteredList.add(item);
-                    }
-                }
-                if (filteredList.isEmpty()) {
-                    // Hiển thị message thông báo không tìm thấy kết quả tương ứng
-                    Toast.makeText(getApplicationContext(), "Không tìm thấy kết quả phù hợp", Toast.LENGTH_SHORT).show();
-                }
-
-                // Đặt danh sách đã lọc vào adapter và cập nhật adapter
-                insertAudioAdapter.filterList(filteredList);
-                insertAudioAdapter.notifyDataSetChanged();
-
-                return true;
-            }
-        });
-
         rcvInsertAudio.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         getAudioList();
         String strFileSize = decimalFormat.format(1.0 * sumCapacity / 1024);
         amountFile.setText(sumAmountFile + "");
         sizeTotalFile.setText(strFileSize + "");
-        insertAudioAdapter = new InsertionAudioAdapter(getApplicationContext(), this);
+        folderMoveAdapter = new FolderModalAdapter(getApplicationContext(), this);
 
-        insertAudioAdapter.setData(audioList);
-        rcvInsertAudio.setAdapter(insertAudioAdapter);
+        folderMoveAdapter.setData(folderList);
+        rcvInsertAudio.setAdapter(folderMoveAdapter);
     }
 
     @Override
-    public void onItemClick(int position){
+    public void onItemClickModal(int position){
+        Toast.makeText(this, position +"", Toast.LENGTH_SHORT).show();
         Intent returnIntent = getIntent();
-        Bundle bundle = new Bundle();
-        bundle.putString("name", audioList.get(position).getName());
-        bundle.putString("size", audioList.get(position).getSize());
-        bundle.putString("maxTime", audioList.get(position).getTimeOfAudio());
-        bundle.putString("day", audioList.get(position).getCreateDate());
-        returnIntent.putExtra("result", bundle);
+        returnIntent.putExtra("result", "dữ liệu cần trả về");
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
-    private List<Audio> getAudioList() {
+    private List<FolderCLassContent> getAudioList() {
         java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat("#.##");
-        audioList = new ArrayList<>();
+        folderList = new ArrayList<>();
         recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             size = recordingsDirectory.listFiles().length;
@@ -152,9 +92,6 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
                         sumAmountFile += 1;
                     }
                     else if (file.isDirectory()){
-                        if (file.getName().equals("Thư mục riêng tư")){
-                            continue;
-                        }
                         File[] listNewFile = file.listFiles();
                         for (File newFile : listNewFile){
                             if (newFile.isFile() && newFile.getName().endsWith(".mp3") || newFile.getName().endsWith(".wav") || newFile.getName().endsWith(".m4a")) {
@@ -165,14 +102,14 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
                     }
                 }
             }
-            Collections.sort(audioList, new Comparator<Audio>() {
+            Collections.sort(folderList, new Comparator<FolderCLassContent>() {
                 @Override
-                public int compare(Audio audio1, Audio audio2) {
+                public int compare(FolderCLassContent folder1, FolderCLassContent forlder2) {
                     Date date1 = null;
                     Date date2 = null;
                     try {
-                        date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio1.getCreateDate());
-                        date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio2.getCreateDate());
+                        date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(folder1.getHour());
+                        date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(forlder2.getHour());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -184,7 +121,8 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
                 }
             });
         }
-        return audioList;
+
+        return folderList;
     }
 
     private void getFile(File file){
@@ -193,7 +131,7 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
         sumCapacity += (1.0 * file.length() / (1024 * 1.0));
         Date lastModifiedDate = new Date(file.lastModified());
         String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-        audioList.add(new Audio(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_play_audio_item));
+        folderList.add(new FolderCLassContent(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_pink500_folder));
     }
 
     @NonNull

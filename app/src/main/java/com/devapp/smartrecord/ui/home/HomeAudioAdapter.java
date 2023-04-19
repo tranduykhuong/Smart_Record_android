@@ -80,7 +80,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         File destinationFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/" + folderName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(context.getString(R.string.question_delete));
+        builder.setMessage(context.getString(R.string.question_move_folder));
         builder.setPositiveButton(context.getString(R.string.answer_yes), (dialogInterface, j) -> {
             try {
                 if (sourceFile.exists()) { //Kiểm tra tệp có tồn tại hay không
@@ -88,11 +88,11 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                     if (sourceFile.renameTo(destinationFile)) {// Di chuyển tệp đến thư mục đích và kiểm tra kết quả
                         audioList.remove(position);
                         notifyItemRemoved(position);
-                        Toast.makeText(context, context.getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.announce_moved_folder_successfully), Toast.LENGTH_SHORT).show();
 
                         popupWindowMove.dismiss();
                     }else {
-                        Toast.makeText(context, context.getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.announce_moved_folder_fail), Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
@@ -100,7 +100,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, context.getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.announce_moved_folder_fail) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton(context.getString(R.string.answer_no), (dialogInterface, i) -> {

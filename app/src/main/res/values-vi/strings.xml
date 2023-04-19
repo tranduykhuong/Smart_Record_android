@@ -125,4 +125,16 @@
     <string name="rename_fail">Đổi tên thư mục thất bại!</string>
     <string name="rename_folder_title">Đổi tên thư mục</string>
     <string name="rename_folder_hint">Nhập tên thư mục mới</string>
+    
+    <string name="create_folder_success">Tạo thành công</string>
+    <string name="create_folder_exist">Tên thư mục đã tồn tại</string>
+    <string name="create_folder_warning">Bạn chưa nhập tên thư mục</string>
+
+    <string name="folder_password_warning">Bạn chưa nhập password</string>
+    <string name="folder_password_create_success">Tạo mật khẩu thành công</string>
+    <string name="folder_password_fail">Mật khẩu sai</string>
+
+    <string name="question_move_folder">Bạn có chắc chắn muốn di chuyển vào thư mục này không?</string>
+    <string name="announce_moved_folder_successfully">Chuyển vào thư mục mới thành công</string>
+    <string name="announce_moved_folder_fail">Chuyển vào thư mục mới thất bại</string>
 </resources>
