@@ -51,7 +51,7 @@ public class VariationActivity extends AppCompatActivity {
     private int currentPosition = 0;
     private ImageView btnBack;
     private long timeWhenPaused = 0;
-    private String fileName;
+    private String fileName, pathSound;
     private File destinationFile, destinationFolder;
     private Context context;
     private Handler handler = new Handler();
@@ -64,7 +64,6 @@ public class VariationActivity extends AppCompatActivity {
         this.context = context;
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +74,8 @@ public class VariationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sound_variation);
 
         Intent intent = getIntent();
-        fileName = intent.getStringExtra("file_name");
-
+        pathSound = intent.getStringExtra("PATH_KEY");
+        fileName = pathSound.substring(pathSound.lastIndexOf("/") + 1);
 
         boundView();
 

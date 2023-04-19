@@ -200,7 +200,6 @@ public class ReplayActivity  extends AppCompatActivity {
         btnSpeed =  findViewById(R.id.btn_speed_replay);
         skbarReplay =  findViewById(R.id.skbar_replay);
         hrzScrollView = findViewById(R.id.replay_horizontal);
-        btnVariation = findViewById(R.id.replay_btn_variation);
         ImageButton btnListNote = findViewById(R.id.replay_btn_list);
         ImageButton btnPrevReplay = findViewById(R.id.btn_prev_replay);
         ImageButton btnNextReplay = findViewById(R.id.btn_next_replay);
@@ -406,21 +405,6 @@ public class ReplayActivity  extends AppCompatActivity {
             handleDataAlarm.addReminder(inputFilePath.getAbsolutePath());
         });
 
-        btnVariation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Tạm dừng phát nhạc nếu đang phát
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    txtTimeCur.stop();
-//                    btnPlayReplay.setImageResource(R.drawable.ic_play_replay);
-                }
-                Intent intent = new Intent(ReplayActivity.this, VariationActivity.class);
-                intent.putExtra("file_name", nameSound);
-                startActivity(intent);
-            }
-        });
-
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
             if(flagRepeat)
@@ -596,6 +580,7 @@ public class ReplayActivity  extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        skbarReplay.setProgress(0);
         mediaPlayer.stop();
         handler.removeCallbacks(highlight);
         super.onDestroy();
