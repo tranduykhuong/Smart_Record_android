@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,10 @@ public class CombineModalAdapter extends RecyclerView.Adapter<CombineModalAdapte
         holder.linearLayout.setOnClickListener(view -> {
             flagCheck = holder.checkBox.isChecked();
             holder.checkBox.setChecked(!flagCheck);
+            if (listener != null)
+                listener.onItemClick(holder.getAbsoluteAdapterPosition());
+        });
+        holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
             if (listener != null)
                 listener.onItemClick(holder.getAbsoluteAdapterPosition());
         });

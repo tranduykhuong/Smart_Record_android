@@ -59,7 +59,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private long elapsedTime = 0;
     private long elapsedTimeSpeedUp = 0;
     private File[] files;
-    private boolean flagPlaying = true, flagSpeed = false, flagRepeat = false; //Stop
+    private boolean flagPlaying = true, flagSpeed = false, flagRepeat = false, flagBack = false;
     private TextView txtNameReplay, txtTimeTotal;
     private HorizontalScrollView hrzScrollView;
     private Chronometer txtTimeCur;
@@ -542,6 +542,7 @@ public class ReplayActivity  extends AppCompatActivity {
     public void changeLayoutFromReplay(View view){
         mediaPlayer.stop();
         txtTimeCur.stop();
+        flagBack = true;
 
         switch (view.getId()) {
             case R.id.replay_btn_adjust: {
@@ -576,6 +577,28 @@ public class ReplayActivity  extends AppCompatActivity {
     public void onBackPressed() {
         mediaPlayer.stop();
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        skbarReplay.setProgress(0);
+        SharedPreferences sharedPreferences1 = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences1.edit();
+        editor.putInt("Replay", currentSongIndex);
+        editor.apply();
+        mediaPlayer.stop();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if(flagBack)
+        {
+            SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
+            currentSongIndex = sharedPreferences.getInt("Replay", 0);
+            playCurrentSong(currentSongIndex);
+        }
+        super.onResume();
     }
 
     @Override
