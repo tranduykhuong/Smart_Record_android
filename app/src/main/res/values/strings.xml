@@ -87,6 +87,7 @@
     <string name="repeat_mode">Repeat Mode</string>
     <string name="cancel_repeat_mode">Cancel Repeat Mode</string>
     <string name="combine_YN">Do you want to combine?</string>
+    <string name="harmonic_YN">Do you want to harmonic?</string>
     <string name="combine_success">Successfully Combine</string>
     <string name="cancel_announce">Cancel</string>
     <string name="record_announce">Record...</string>

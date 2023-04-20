@@ -87,6 +87,7 @@
     <string name="repeat_mode">Chế độ lặp lại</string>
     <string name="cancel_repeat_mode">Bỏ lặp lại</string>
     <string name="combine_YN">Bạn có muốn hợp nhất?</string>
+    <string name="harmonic_YN">Bạn có muốn hòa âm?</string>
     <string name="combine_success">Hợp nhất thành công</string>
     <string name="cancel_announce">Hủy</string>
     <string name="record_announce">Ghi...</string>
