@@ -7,17 +7,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?attr/backgroundColor"
         android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/insert_fragment_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Khoảng khắc"
+            android:text="@string/file"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/textColor"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"/>
 
@@ -25,7 +25,7 @@
             android:id="@+id/insert_fragment_destroy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hủy"
+            android:text="@string/cancel_announce"
             android:textColor="@color/pink_500"
             android:textSize="16dp"
             android:layout_alignParentRight="true"
@@ -42,7 +42,6 @@
                 android:id="@+id/insert_fragment_search_edt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tìm Kiếm"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="14dp"
                 android:layout_marginLeft="10dp"
@@ -50,7 +49,7 @@
                 android:text="@drawable/curson_color_search_folder"
                 android:background="@drawable/bg_search_folder"
                 app:iconifiedByDefault="false"
-                app:queryHint="Tìm Kiếm..."
+                app:queryHint="@string/title_search"
                 />
 
 

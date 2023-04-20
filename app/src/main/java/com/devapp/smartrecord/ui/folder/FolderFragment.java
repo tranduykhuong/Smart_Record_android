@@ -11,6 +11,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentFolderBinding;
 import com.devapp.smartrecord.editmenu.adjust.AdjustActivity;
 import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
+import com.devapp.smartrecord.editmenu.insertion.InsertionListFile;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
@@ -139,7 +141,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                     FolderCLassContent folder = listFolder.get(listItemChoice[i]);
                     String folderName = folder.getTitle();
                     File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
-                    File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "Thùng rác");
+                    File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "TrashAudio");
 
                     try {
                         File destinationFile = new File(destinationFolder, folderName); // Tạo tệp đích mới
@@ -465,7 +467,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                     String password = edtCreateassword.getText().toString();
                     String hashedPassword = hashSHA256(password);
                     if (edtCreateassword.getText().length() == 0){
-                        Toast.makeText(popupView.getContext(), "Bạn chưa nhập password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(popupView.getContext(), popupView.getContext().getText(R.string.folder_password_warning), Toast.LENGTH_LONG).show();
                     }
                     else{
                         // Sau đó, lưu trạng thái đã truy cập vào SharedPreferences
@@ -474,7 +476,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         editor.putString("password", hashedPassword);
 //                        editor.apply();
                         editor.commit();
-                        Toast.makeText(popupView.getContext(), "Tạo mật khẩu thành công", Toast.LENGTH_LONG).show();
+                        Toast.makeText(popupView.getContext(), popupView.getContext().getText(R.string.folder_password_create_success), Toast.LENGTH_LONG).show();
                         popupWindow.dismiss();
                     }
                 });
@@ -508,21 +510,21 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
                 btnOkMenuInputPrivate.setOnClickListener(v110 -> {
                     if (edtInputPassword.getText().length() == 0){
-                        Toast.makeText(popupView.getContext(), "Bạn chưa nhập password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(popupView.getContext(), popupView.getContext().getText(R.string.folder_password_warning), Toast.LENGTH_LONG).show();
                     }
                     else{
                         String password = edtInputPassword.getText().toString();
                         String storedPassword = prefs.getString("password", "");
                         String hashedPassword = hashSHA256(password);
 
-                        if (Objects.equals(hashedPassword, storedPassword)) {
+                        if (Objects.equals(hashedPassword.trim(), storedPassword.trim())) {
                             Toast.makeText(popupView.getContext(), "Password đúng", Toast.LENGTH_LONG).show();
-//                            Intent intent = new Intent(getActivity(), HomeFragment.class);
-//                            startActivity(intent);
+                            Intent intent = new Intent(getActivity(), InsertionListFile.class);
+                            startActivity(intent);
 
                             popupWindow.dismiss();
                         } else {
-                            Toast.makeText(popupView.getContext(), "Password sai", Toast.LENGTH_LONG).show();
+                            Toast.makeText(popupView.getContext(), popupView.getContext().getText(R.string.folder_password_fail), Toast.LENGTH_LONG).show();
                             edtInputPassword.setText("");
                         }
                     }
@@ -553,7 +555,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
             btnOkCreateFolder.setOnClickListener(v112 -> {
                 if (edtInputNameFolder.getText().length() == 0){
-                    Toast.makeText(popupView.getContext(), "Bạn chưa nhập tên thư mục", Toast.LENGTH_LONG).show();
+                    Toast.makeText(popupView.getContext(), popupView.getContext().getText(R.string.create_folder_warning), Toast.LENGTH_LONG).show();
                 }
                 else{
                     File newFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", edtInputNameFolder.getText().toString()); // Lấy đường dẫn tới thư mục bộ nhớ trong của ứng dụng và tạo một thư mục mới tên là "privateFolder"
@@ -564,7 +566,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
                         imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
-                        Toast.makeText(getContext(), "Tạo thành công", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), popupView.getContext().getText(R.string.create_folder_success), Toast.LENGTH_LONG).show();
                         File[] files = newFolder.listFiles();
 
                         assert files != null;
@@ -589,7 +591,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         adapterFolder.notifyDataSetChanged();
                     }
                     else{
-                        Toast.makeText(popupView.getContext(), "Tên thư mục đã tồn tại", Toast.LENGTH_LONG).show();
+                        Toast.makeText(popupView.getContext(), popupView.getContext().getText(R.string.create_folder_exist), Toast.LENGTH_LONG).show();
                         edtInputNameFolder.setText("");
                     }
                 }
@@ -659,7 +661,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
             File[] folders = recordingsDirectory.listFiles();
             if (folders != null) {
                 for (File folder : folders) {
-                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("Private folder") || folder.getName().equalsIgnoreCase("Thùng rác") || folder.getName().equalsIgnoreCase("Trash")){
+                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("TrashAudio")){
                         continue;
                     }
                     int amount = 0;

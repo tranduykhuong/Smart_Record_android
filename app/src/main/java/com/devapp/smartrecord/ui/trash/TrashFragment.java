@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ReplayActivity;
 import com.devapp.smartrecord.databinding.FragmentTrashBinding;
+import com.devapp.smartrecord.ui.folder.FolderCLassContent;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -76,7 +77,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         recyclerView.setLayoutManager(new LinearLayoutManager((getContext())));
         trashAdapter = new TrashAdapter(getContext(), this);
 
-        trashAdapter.setData(getItemList());
+        trashAdapter.setDataItem(getItemList());
         recyclerView.setAdapter(trashAdapter);
 
         if (trashDirectory != null && trashDirectory.listFiles() != null)
@@ -112,7 +113,6 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
                 double tempCapacity = 0;
                 for (File file : files) {
                     if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".aac") || file.getName().endsWith(".m4a")) {
-
                         String fileName = file.getName();
                         String fileSize = decimalFormat.format(1.0 * file.length() / 1024);
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
@@ -162,10 +162,10 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
             }
         }
         if (filterList.isEmpty()) {
-            trashAdapter.setData(null);
+            trashAdapter.setDataItem(null);
             Toast.makeText(getContext(), "No Data Found", Toast.LENGTH_LONG).show();
         }else {
-            trashAdapter.setData(filterList);
+            trashAdapter.setDataItem(filterList);
         }
     }
 

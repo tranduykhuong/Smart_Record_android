@@ -92,6 +92,7 @@
     <string name="repeat_mode">Repeat Mode</string>
     <string name="cancel_repeat_mode">Cancel Repeat Mode</string>
     <string name="combine_YN">Do you want to combine?</string>
+    <string name="harmonic_YN">Do you want to harmonic?</string>
     <string name="combine_success">Successfully Combine</string>
     <string name="cancel_announce">Cancel</string>
     <string name="record_announce">Record...</string>
@@ -136,4 +137,17 @@
 
     <string name="cut_success">Cut file successfully! Saved with name </string>
     <string name="cut_fail">This audio clip has been cut before! Please try again!</string>
+
+    <string name="create_folder_success">Create successfully</string>
+    <string name="create_folder_exist">Folder name already exists</string>
+    <string name="create_folder_warning">You have not entered the folder name</string>
+
+    <string name="folder_password_warning">You have not entered the password</string>
+    <string name="folder_password_create_success">Create password successfully</string>
+    <string name="folder_password_fail">Password wrong</string>
+
+    <string name="question_move_folder">Are you sure you want to move into this folder?</string>
+    <string name="announce_moved_folder_successfully">Successfully moved to new folder</string>
+    <string name="announce_moved_folder_fail">Fail moved to new folder</string>
+
 </resources>

@@ -326,7 +326,7 @@ public class HarmonicActivity extends AppCompatActivity implements HarmonicModal
         AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
         alertDiaglog.setTitle(this.getString(R.string.harmonic_title));
         alertDiaglog.setIcon(R.mipmap.ic_launcher);
-        alertDiaglog.setMessage(this.getString(R.string.combine_YN));
+        alertDiaglog.setMessage(this.getString(R.string.harmonic_YN));
         alertDiaglog.setPositiveButton(this.getString(R.string.harmonic_title), (dialogInterface, i) -> {
             Toast.makeText(getApplicationContext(), this.getString(R.string.harmonic_success), Toast.LENGTH_LONG).show();
             flagDelete = false;

@@ -46,6 +46,7 @@ public class AdjustActivity extends AppCompatActivity {
     private long timeWhenPaused = 0;
     private String pathSound;
     private Handler mainHandler;
+    private Runnable updateSeekBarRunnable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +86,6 @@ public class AdjustActivity extends AppCompatActivity {
             adjustSeekBarSpeed.setProgress(0);
         }
         else{
-            Toast.makeText(this, "nà ní cc", Toast.LENGTH_SHORT).show();
             adjustSeekBarFoolproof.setProgress(adjustMemories.getInt("adjustFoolproof", 0));
             adjustSeekBarVolume.setProgress(adjustMemories.getInt("adjustVolume", 0));
             adjustSeekBarSpeed.setProgress(adjustMemories.getInt("adjustSpeed", 0));
@@ -222,7 +222,7 @@ public class AdjustActivity extends AppCompatActivity {
         });
 
         mainHandler = new Handler(Looper.getMainLooper());
-        Runnable updateSeekBarRunnable = new Runnable() {
+        updateSeekBarRunnable = new Runnable() {
             @Override
             public void run() {
                 if (mediaPlayer != null && mediaPlayer.isPlaying()) {
@@ -232,7 +232,7 @@ public class AdjustActivity extends AppCompatActivity {
                     seekBarTime.setProgress((int) percentage);
                     new Handler(Looper.getMainLooper()).postDelayed(this, 100);
 
-                    if ((int) percentage >= 100) {
+                    if (percentage > 99.3) {
                         currTime.stop();
                         mediaPlayer.stop();
                         btnPlay.setImageResource(R.drawable.ic_play_adjust);
@@ -245,7 +245,6 @@ public class AdjustActivity extends AppCompatActivity {
                 }
             }
         };
-        mainHandler.post(updateSeekBarRunnable);
 
         seekBarTime.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -281,6 +280,7 @@ public class AdjustActivity extends AppCompatActivity {
                     mediaPlayer.start();
                     currTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
                     currTime.start();
+                    mainHandler.post(updateSeekBarRunnable);
                 }
             }
         });
