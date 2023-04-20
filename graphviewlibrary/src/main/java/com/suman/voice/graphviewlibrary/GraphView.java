@@ -20,14 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by Anand on 25-03-2016.
- * Graph view extends Horizontal scrollview containing a surface view.
- * This view can be used for plotting values over time both in real time and post processed values
- * The graph is plotted using a list containing {@link WaveSample} values
- */
 public class GraphView extends HorizontalScrollView {
-
     private static final String TAG = "GraphViewLibrary";
     private double graphXOffset = 0.75;//X position to start plotting
     private int timeScale = 5 * 1000;//Put time marker for every 5 sec
@@ -46,11 +39,6 @@ public class GraphView extends HorizontalScrollView {
     private int graphColor = Color.rgb(0, 0, 255);
     private int timeColor = Color.rgb(0, 255, 0);
     private int needleColor = Color.rgb(250, 0, 0);
-    /*private int canvasColor = Color.rgb(0, 0, 0);
-    private int markerColor = Color.argb(160, 30, 30, 30);
-    private int graphColor = Color.rgb(255, 255, 255);
-    private int timeColor = Color.rgb(250, 250, 250);
-    private int needleColor = Color.rgb(250, 0, 0);*/
     private boolean pausePlotting = false;
     private FrameLayout frame;
     private Context context;
@@ -74,7 +62,6 @@ public class GraphView extends HorizontalScrollView {
     private void init(Context context) {
         this.context = context;
 
-        //FrameLayout config to hold SurfaceView
         frame = new FrameLayout(context);
         graphSurfaceView = new GraphSurfaceView(context);
         frame.addView(graphSurfaceView);
@@ -85,173 +72,41 @@ public class GraphView extends HorizontalScrollView {
         this.addView(frame);
     }
 
-    /**
-     * Get maximum value in y axis
-     */
-    public int getMaxAmplitude() {
-        return maxAmplitude;
-    }
-
-    /**
-     * Set maximum value in y axis
-     *
-     * @param maxAmplitude default is 35000
-     */
-    public void setMaxAmplitude(int maxAmplitude) {
-        this.maxAmplitude = maxAmplitude;
-    }
-
-    /**
-     * Get time scale for time markers y axis
-     */
-    public int getTimeScale() {
-        return timeScale;
-    }
-
-    /**
-     * Set time scale in milliseconds for time markers in y axis
-     *
-     * @param timeScale -  default time is marked every 5 sec
-     */
-    public void setTimeScale(int timeScale) {
-        this.timeScale = timeScale;
-    }
-
-    /**
-     * Get starting point from where plot starts for realtime plotting
-     */
-    public double getGraphXOffset() {
-        return graphXOffset;
-    }
-
-    /**
-     * Set starting point from where plot starts for realtime plotting
-     *
-     * @param graphXOffset - default is 0.75
-     */
-    public void setGraphXOffset(double graphXOffset) {
-        if (graphXOffset > 0 && graphXOffset < 1) {
-            this.graphXOffset = graphXOffset;
-        }
-    }
-
-    /**
-     * Set plain background canvas color
-     *
-     * @param canvasColor default is Color.rgb(101, 76, 104)
-     */
     public void setCanvasColor(int canvasColor) {
         this.canvasColor = canvasColor;
         this.setBackgroundColor(canvasColor);
         frame.setBackgroundColor(canvasColor);
     }
-
-    /**
-     * Set marker background color
-     *
-     * @param markerColor default is Color.argb(160, 30, 30, 30)
-     */
-    public void setMarkerColor(int markerColor) {
-        this.markerColor = markerColor;
-        markerPaint.setColor(markerColor);
-    }
-
-    /**
-     * Set color for waves
-     *
-     * @param graphColor default is Color.rgb(255, 255, 255)
-     */
     public void setGraphColor(int graphColor) {
         this.graphColor = graphColor;
         paint.setColor(graphColor);
     }
-
-    /**
-     * Set text color for time markers
-     *
-     * @param timeColor default is Color.rgb(250, 250, 250)
-     */
     public void setTimeColor(int timeColor) {
         this.timeColor = timeColor;
         timePaint.setColor(timeColor);
     }
-
-    /**
-     * Set color for needle that displays current amplitude
-     *
-     * @param needleColor default is Color.rgb(250, 0, 0)
-     */
-    public void setNeedleColor(int needleColor) {
-        this.needleColor = needleColor;
-        needlePaint.setColor(needleColor);
-    }
-
-    /**
-     * Returns state of plotting, use {@link #resume()} and {@link #pause()} for resume/pause
-     *
-     * @return true if paused
-     */
-    public boolean isPaused() {
-        return pausePlotting;
-    }
-
-    /**
-     * Pause the wave graph plotting, use {@link #resume()} for resume
-     */
     public void pause() {
         this.pausePlotting = true;
     }
-
-    /**
-     * Resume the wave graph plotting, use {@link #pause()} for pause
-     */
     public void resume() {
         this.pausePlotting = false;
     }
-
-    /**
-     * Show full graph of recorded wave, stopPlotting should be called if plotting in progress
-     *
-     * @param waveSamples {@link WaveSample} list
-     */
     public void showFullGraph(List<WaveSample> waveSamples) {
         graphSurfaceView.setMasterList(waveSamples);
         graphSurfaceView.showFullGraph();
     }
-
-    /**
-     * Assign list that holds samples
-     *
-     * @param list
-     */
     public void setMasterList(List<WaveSample> list) {
         graphSurfaceView.setMasterList(list);
     }
-
-
     public void startPlotting() {
         graphSurfaceView.startPlotting();
     }
-
-    /**
-     * reset the graph before each start plotting and show full graph
-     */
     public void reset() {
         graphSurfaceView.resetDimensions();
     }
-
-    /**
-     * Stop plotting the wave graph
-     */
     public void stopPlotting() {
         graphSurfaceView.stopPlotting();
     }
-
-    /**
-     * Set wave length in px
-     *
-     * @param scale can be any value from 2 to 15
-     */
     public void setWaveLengthPX(int scale) {
         if (scale < 2) {
             scale = 2;
@@ -262,9 +117,7 @@ public class GraphView extends HorizontalScrollView {
 
         graphSurfaceView.setWaveLength(scale);
     }
-
     private float x1, x2;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!drawFullGraph) {
@@ -285,16 +138,13 @@ public class GraphView extends HorizontalScrollView {
 
         return super.onTouchEvent(event);
     }
-
     private class GraphSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
         private SurfaceHolder holder;
         private Context context;
         private Thread _plottingThread;
-        //Current rendered surface view dimensions
         private int height;
         private int halfHeight;
         private int width;
-
         private volatile int waveLength;
         private volatile boolean isRunning = false;
         private volatile boolean stop = false;
@@ -588,11 +438,6 @@ public class GraphView extends HorizontalScrollView {
             widthForFullGraph = pointList.size() * waveLength + 50;
             drawFullGraph();
         }
-
-
-        /**
-         * Same as processAmplitude function
-         */
         private void drawFullGraph() {
             new Thread(new Runnable() {
                 @Override
@@ -651,10 +496,6 @@ public class GraphView extends HorizontalScrollView {
                 }
             }).start();
         }
-
-        /**
-         * Reset the flags and start drawing thread
-         */
         public void startPlotting() {
             drawFullGraph = false;
             reset();
@@ -663,10 +504,6 @@ public class GraphView extends HorizontalScrollView {
             _plottingThread = new Thread(this);
             _plottingThread.start();
         }
-
-        /**
-         * Reset the flags and stop drawing thread
-         */
         public void stopPlotting() {
             this.stop = true;
             isRunning = false;
@@ -674,7 +511,6 @@ public class GraphView extends HorizontalScrollView {
                 _plottingThread.interrupt();
             }
         }
-
         @Override
         public void run() {
             while (!this.stop) {
@@ -683,28 +519,15 @@ public class GraphView extends HorizontalScrollView {
                 }
             }
         }
-
-        /**
-         * Make surface view to fit it's width and height to the rendered horizontal scroll view
-         */
         public void resetDimensions() {
             this.setLayoutParams(new LayoutParams(GraphView.this.getWidth(), GraphView.this.getHeight()));
         }
     }
-
-    /**
-     * Convert millisecond to mm:ss string
-     *
-     * @param currentSampleTime in millisecond
-     * @return formatted mm:ss string
-     */
     private String formatTime(long currentSampleTime) {
         int seconds = (int) (currentSampleTime / 1000) % 60;
         int minutes = (int) (currentSampleTime / 60000);
 
         return (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
     }
-
-
 }
 
