@@ -3,6 +3,7 @@ package com.devapp.smartrecord.editmenu.cut;
 import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -264,6 +265,17 @@ public class CutActivity extends AppCompatActivity {
         
         btnCut.setOnClickListener(view -> {
             // CUT
+            ConfirmCut();
+        });
+    }
+
+    public void ConfirmCut()
+    {
+        AlertDialog.Builder alertDiaglog = new AlertDialog.Builder(this);
+        alertDiaglog.setTitle(this.getString(R.string.cut_title));
+        alertDiaglog.setIcon(R.mipmap.ic_launcher);
+        alertDiaglog.setMessage(this.getString(R.string.cut_YN));
+        alertDiaglog.setPositiveButton(this.getString(R.string.cut_title), (dialogInterface, ie) -> {
             int startTime =  (int) ((percentMin / 100f * duration) / 1000);
             int endTime = (int) ((percentMax / 100f * duration) / 1000);
             int durationTime = endTime - startTime;
@@ -303,6 +315,11 @@ public class CutActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.cut_fail), Toast.LENGTH_SHORT).show();
             }
         });
+        alertDiaglog.setNegativeButton(this.getString(R.string.cancel_announce), (dialogInterface, ie) -> {
+
+        });
+
+        alertDiaglog.show();
     }
 
 //    private void updateChart() {
