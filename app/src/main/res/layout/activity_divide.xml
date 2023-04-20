@@ -66,13 +66,20 @@
             android:textSize="17sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <HorizontalScrollView
+        android:id="@+id/insert_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/ic_graph_divide">
+        android:fillViewport="true"
+        android:scrollbarThumbVertical="@null"
+        android:scrollbarTrackVertical="@null">
 
-    </LinearLayout>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/insert_chart"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </HorizontalScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -101,7 +108,7 @@
                 android:background="@color/white"
                 android:gravity="center">
 
-                <Chronometer
+                <TextView
                     android:id="@+id/divide_current_time_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
