@@ -14,6 +14,9 @@
     <string name="title_trash">Thùng rác</string>
     <string name="title_variation_page">Thay đổi tiếng động</string>
     <string name="title_variation">Hiệu ứng âm thanh</string>
+    <string name="title_character_default">Mặc định</string>
+    <string name="title_character_buffalo">Con trâu</string>
+    <string name="title_character_child">Trẻ con</string>
 
     <string name="title_search">Tìm kiếm</string>
 
@@ -26,6 +29,8 @@
     <string name="announce_deleted_unsuccessfully">Xóa không thành công!</string>
     <string name="announce_restored_successfully">Khôi phục thành công!</string>
     <string name="announce_restored_unsuccessfully">Khôi phục không thành công!</string>
+    <string name="announce_data_not_found">Không có dữ liệu!</string>
+
 
     <string name="question_move">Bạn có chắc chắn muốn di chuyển vào thư mục riêng tư?</string>
     <string name="announce_moved_private_successfully">Chuyển vào thư mục riêng tư thành công!</string>
@@ -125,4 +130,7 @@
     <string name="rename_fail">Đổi tên thư mục thất bại!</string>
     <string name="rename_folder_title">Đổi tên thư mục</string>
     <string name="rename_folder_hint">Nhập tên thư mục mới</string>
+
+    <string name="cut_success">Cắt tệp thành công! Đã lưu file với tên </string>
+    <string name="cut_fail">Đoạn âm thanh này đã được cắt trước đó! Vui lòng thử lại!</string>
 </resources>

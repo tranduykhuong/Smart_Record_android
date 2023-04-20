@@ -53,7 +53,7 @@
         android:background="@color/little_gray">
 
         <TextView
-            android:id="@+id/combine_txt_name"
+            android:id="@+id/divide_name_audio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -81,13 +81,13 @@
         android:paddingBottom="25dp"
         >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:src="@drawable/image_time_divide"
-            android:background="@drawable/bg_linearlayout_border"/>
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingLeft="10dp"-->
+<!--            android:paddingRight="10dp"-->
+<!--            android:src="@drawable/image_time_divide"-->
+<!--            android:background="@drawable/bg_linearlayout_border"/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,22 +101,22 @@
                 android:background="@color/white"
                 android:gravity="center">
 
-                <Button
-                    android:id="@+id/btn_increase_speed"
-                    android:layout_width="60dp"
+                <Chronometer
+                    android:id="@+id/divide_current_time_audio"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="0dp"
-                    android:outlineProvider="none"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/x1_text"
+                    android:layout_gravity="right|center|end"
                     android:layout_weight="1"
-                    android:textSize="18sp"
-                    android:textAllCaps="false"
-                    android:textAlignment="textStart"
-                    android:layout_marginLeft="15dp"
-                    android:text="x1"/>
+                    android:maxWidth="60dp"
+                    android:text="00:01:39"
+                    android:layout_marginRight="15dp"
+                    android:paddingRight="12dp"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/x1_text"
+                    android:textSize="17sp" />
 
                 <ImageButton
+                    android:id="@+id/divide_btn_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
@@ -128,6 +128,7 @@
                     android:src="@drawable/ic_play_harmonic" />
 
                 <TextView
+                    android:id="@+id/divide_time_of_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center|end"
@@ -164,6 +165,7 @@
                     android:text="Hủy"/>
 
                 <ImageButton
+                    android:id="@+id/divide_btn_action"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
@@ -174,6 +176,7 @@
                     android:src="@drawable/ic_divide_divide" />
 
                 <Button
+                    android:id="@+id/divide_btn_confirm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="30dp"

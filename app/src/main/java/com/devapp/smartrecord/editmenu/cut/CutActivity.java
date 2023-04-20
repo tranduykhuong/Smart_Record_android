@@ -14,10 +14,19 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.ExecuteCallback;
+import com.arthenica.mobileffmpeg.FFmpeg;
+import com.arthenica.mobileffmpeg.FFmpegExecution;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -40,6 +49,7 @@ public class CutActivity extends AppCompatActivity {
     private TextView twMax;
     private TextView twTimeCutAudio;
     private ImageView btnPlay;
+    private ImageButton btnCut;
     private MediaPlayer mediaPlayer;
     private LineChart chart;
     private Runnable highlight;
@@ -66,6 +76,8 @@ public class CutActivity extends AppCompatActivity {
             actionBar.hide();
         }
         setContentView(R.layout.activity_cut);
+        
+        btnCut = findViewById(R.id.btn_cut);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -195,8 +207,8 @@ public class CutActivity extends AppCompatActivity {
             // Handle the range seek bar values changed event
             percentMin = minValue;
             percentMax = maxValue;
-            int minSecond = (int) (minValue / 100f * (duration / 1000));
-            int maxSecond = (int) (maxValue / 100f * (duration / 1000));
+            int minSecond = (int) ((minValue / 100f * duration) / 1000);
+            int maxSecond = (int) ((maxValue / 100f * duration) / 1000);
             twMin.setText(String.format(Locale.getDefault(), "%02d:%02d", minSecond / 60, minSecond % 60));
             twMax.setText(String.format(Locale.getDefault(), "%02d:%02d", maxSecond / 60, maxSecond % 60));
 
@@ -205,8 +217,8 @@ public class CutActivity extends AppCompatActivity {
             int currentPosition = (int) (minValue / 100f * duration);
             mediaPlayer.seekTo(currentPosition);
 
-            int delta = (int) ((percentMax - percentMin) / 100f * duration);
-            twTimeCutAudio.setText(String.format(Locale.getDefault(), "%02d:%02d", (delta / 1000) / 60, (delta/1000) % 60));
+            int durationTime = maxSecond - minSecond;
+            twTimeCutAudio.setText(String.format(Locale.getDefault(), "%02d:%02d", durationTime / 60, durationTime % 60));
         });
 
         mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
@@ -249,46 +261,48 @@ public class CutActivity extends AppCompatActivity {
                 handler.post(highlight);
             }
         });
+        
+        btnCut.setOnClickListener(view -> {
+            // CUT
+            int startTime =  (int) ((percentMin / 100f * duration) / 1000);
+            int endTime = (int) ((percentMax / 100f * duration) / 1000);
+            int durationTime = endTime - startTime;
 
-//        CUT
-//        String inputFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
-//        String outputFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon_cut.mp3";
-//        String startTime = "00:00:30";
-//        String duration = "00:00:10";
-//
-//        String[] cmd = {"-ss", startTime, "-t", duration, "-i", inputFilePath, outputFilePath};
-//
-//        FFmpeg fFmpeg = FFmpeg.getInstance(getBaseContext());
-//        try {
-//            fFmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
-//                @Override
-//                public void onStart() {
-//                    Log.e(TAG, "onStart");
-//                }
-//
-//                @Override
-//                public void onProgress(String message) {
-//                    Log.e(TAG, "onProgress: " + message);
-//                }
-//
-//                @Override
-//                public void onFailure(String message) {
-//                    Log.e(TAG, "onFailure: " + message);
-//                }
-//
-//                @Override
-//                public void onSuccess(String message) {
-//                    Log.e(TAG, "onSuccess: " + message);
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    Log.e(TAG, "onFinish");
-//                }
-//            });
-//        } catch (FFmpegCommandAlreadyRunningException e) {
-//            throw new RuntimeException(e);
-//        }
+            String inputFilePath = audioFilePath;
+            String nameTmp[] = audioFilePath.split("\\.");
+            String outputFilePath = "";
+            for (int i = 0; i < nameTmp.length; i++) {
+                if (i == nameTmp.length - 1) {
+                    outputFilePath += "_cut_" + startTime + "-" + durationTime + ".";
+                }
+                outputFilePath += nameTmp[i];
+                if (i < nameTmp.length - 2) {
+                    outputFilePath += ".";
+                }
+            }
+            Log.e(TAG, "outFile: " + outputFilePath);
+
+            // Xây dựng đoạn lệnh cắt âm thanh
+            String[] cmd = new String[]{
+                    "-i", inputFilePath,
+                    "-ss", String.valueOf(startTime),
+                    "-t", String.valueOf(durationTime),
+                    "-c:a", nameTmp[nameTmp.length-1],
+                    outputFilePath
+            };
+            nameTmp = outputFilePath.split("/");
+
+            // Gọi lệnh cắt âm thanh bằng FFmpeg
+            int responseCode = FFmpeg.execute(cmd);
+            Log.e(TAG, "Response FFmpge: " + responseCode);
+            if (responseCode == 0) {
+                Toast.makeText(this, getString(R.string.cut_success) + " " + nameTmp[nameTmp.length - 1], Toast.LENGTH_SHORT).show();
+                Intent intentBackHome = new Intent(this, HomeActivity.class);
+                startActivity(intentBackHome);
+            } else {
+                Toast.makeText(this, getString(R.string.cut_fail), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 //    private void updateChart() {

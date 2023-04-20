@@ -241,7 +241,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         }
         if (filterList.isEmpty()) {
             homeAudioAdapter.setData(null);
-            Toast.makeText(getContext(), "No data found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getContext().getString(R.string.announce_data_not_found), Toast.LENGTH_SHORT).show();
         }else {
             homeAudioAdapter.setData(filterList);
         }

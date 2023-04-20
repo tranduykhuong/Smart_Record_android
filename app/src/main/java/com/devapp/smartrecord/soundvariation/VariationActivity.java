@@ -42,7 +42,7 @@ public class VariationActivity extends AppCompatActivity {
     private PlaybackParams params;
     private int cntBtn = 0;
     private Chronometer currTime;
-    private ImageView btnPlay;
+    private ImageView   btnPlay;
     private TextView timeMax;
     private ImageView variationAvatarViewNone, variationAvatarImageRobot, variationAvatarImageChild;
     private ImageButton variationBtnSave;

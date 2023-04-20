@@ -13,6 +13,10 @@
     <string name="title_trash">Trash</string>
     <string name="title_variation_page">Change the sound</string>
     <string name="title_variation">Sound variation</string>
+    <string name="title_character_default">Default</string>
+    <string name="title_character_buffalo">Buffalo</string>
+    <string name="title_character_child">Child</string>
+
 
     <string name="title_search">Search</string>
     <string name="question_delete">Are you sure you want to move it to the trash?</string>
@@ -24,6 +28,7 @@
     <string name="announce_deleted_unsuccessfully">Deleted unsuccessfully!</string>
     <string name="announce_restored_successfully">Restored successfully!</string>
     <string name="announce_restored_unsuccessfully">Restored unsuccessfully!</string>
+    <string name="announce_data_not_found">Data not found!</string>
 
     <string name="question_move">Are you sure you want to move it to the private folder?</string>
     <string name="announce_moved_private_successfully">Successfully moved to private folder!</string>
@@ -128,4 +133,7 @@
     <string name="rename_fail">Rename fail!</string>
     <string name="rename_folder_title">Rename folder</string>
     <string name="rename_folder_hint">Input new name folder</string>
+
+    <string name="cut_success">Cut file successfully! Saved with name </string>
+    <string name="cut_fail">This audio clip has been cut before! Please try again!</string>
 </resources>
