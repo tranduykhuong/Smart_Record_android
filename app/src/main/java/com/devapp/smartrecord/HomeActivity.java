@@ -62,7 +62,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class HomeActivity extends AppCompatActivity implements FolderFragment.OnDataPass {
+public class HomeActivity extends AppCompatActivity implements FolderFragment.OnDataPass, HomeFragment.OnDataPass {
     private final int MICRO_PERM_CODE = 101; // MICRO PERMISSION CODE
     private final int SETTING_CODE = 10; // SETTING CODE
     private final int RECORDING_CODE = 11; // SETTING CODE
@@ -165,6 +165,16 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
                             btn_edit.setImageResource(R.drawable.ic_edit);
                         }
 
+                    } else if (currentFragmentId == R.id.navigation_home) {
+                        Bundle args = new Bundle();
+                        args.putBoolean("isEditHome", currEdit);
+                        navController.navigate(R.id.navigation_home, args);
+                        if (currEdit){
+                            btn_edit.setImageResource(R.drawable.ic_close);
+                        }
+                        else{
+                            btn_edit.setImageResource(R.drawable.ic_edit);
+                        }
                     }
                     // Xử lý ở các fragment còn lại
                     else{
@@ -183,6 +193,15 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
         Bundle args = new Bundle();
         args.putBoolean("isEdit", data);
         navController.navigate(R.id.navigation_folder, args);
+        btn_edit.setImageResource(R.drawable.ic_edit);
+    }
+
+    public void onDataPassHome(boolean data) {
+        // Xử lý dữ liệu được truyền từ fragment vào đây
+        NavController navController = Navigation.findNavController(HomeActivity.this, R.id.nav_host_fragment_activity_main);
+        Bundle args = new Bundle();
+        args.putBoolean("isEdit", data);
+        navController.navigate(R.id.navigation_home, args);
         btn_edit.setImageResource(R.drawable.ic_edit);
     }
 

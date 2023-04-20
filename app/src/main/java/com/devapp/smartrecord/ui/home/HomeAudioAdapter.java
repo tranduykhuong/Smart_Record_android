@@ -68,7 +68,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
     public interface OnItemClickListener {
         void onItemClick(int position);
-        void playSound(String name);
+        void playSound(String name, int position);
         void onItemClickConvert(int position);
     }
 
@@ -457,7 +457,6 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
         });
         holder.homeTrashBtn.setOnClickListener(view -> {
-
             Audio audio1 = audioList.get(holder.getAbsoluteAdapterPosition());
             String fileNameTrash = audio1.getName();
             Log.e("TAG", "onClick: " + fileNameTrash);
@@ -501,12 +500,12 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
         });
 
         holder.icAudioHome.setImageResource(audio.getImage());
-        holder.icAudioHome.setOnClickListener(view -> listener.playSound(audioList.get(holder.getAbsoluteAdapterPosition()).getName()));
+        holder.icAudioHome.setOnClickListener(view -> listener.playSound(audioList.get(holder.getAbsoluteAdapterPosition()).getName(), holder.getAbsoluteAdapterPosition()));
         holder.nameAudio.setText(audio.getName());
         holder.timeOfAudio.setText(audio.getTimeOfAudio());
         holder.sizeAudio.setText(audio.getSize());
         holder.createDateAudio.setText(audio.getCreateDate());
-        holder.relativeLayout.setOnClickListener(view -> listener.playSound(audioList.get(holder.getAbsoluteAdapterPosition()).getName()));
+        holder.relativeLayout.setOnClickListener(view -> listener.playSound(audioList.get(holder.getAbsoluteAdapterPosition()).getName(), holder.getAbsoluteAdapterPosition()));
 
     }
     @Override

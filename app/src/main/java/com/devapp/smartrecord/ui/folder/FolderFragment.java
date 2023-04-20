@@ -103,11 +103,6 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                 listFolder.get(position).setImage(R.drawable.ic_circle_checked_folder);
                 adapterFolder.notifyDataSetChanged();
                 selectedItems[position] = true;
-//                if (isTotalChecked){
-//                    imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
-//                    adapterFolder.notifyDataSetChanged();
-//                    isTotalChecked = false;
-//                }
             }
         }
         else{
@@ -301,7 +296,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                             listFolder.get(i).setImage(R.drawable.ic_circle_folder);
                         }
                         adapterFolder.notifyDataSetChanged();
-//                        Arrays.fill(selectedItems, false);
+                        Arrays.fill(selectedItems, false);
                         isTotalChecked = false;
                     }
                 }
