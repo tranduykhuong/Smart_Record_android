@@ -27,6 +27,7 @@ import com.devapp.smartrecord.ui.folder.FolderClassContentAdapter;
 import com.devapp.smartrecord.ui.home.Audio;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
     private double sumCapacity = 0;
     private int sumAmountFile = 0;
     private File[] files;
+    private List<String> pathFiles;
     private int size;
     private java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat("#.##");
 
@@ -63,6 +65,13 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
         btnDestroy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent returnIntent = getIntent();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Inserted", false);
+                returnIntent.putExtra("result", bundle);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+                pathFiles.clear();
                 onBackPressed();
             }
         });
@@ -125,21 +134,35 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
     }
 
     @Override
-    public void onItemClick(int position){
+    protected void onDestroy() {
         Intent returnIntent = getIntent();
         Bundle bundle = new Bundle();
-        bundle.putString("name", audioList.get(position).getName());
-        bundle.putString("size", audioList.get(position).getSize());
-        bundle.putString("maxTime", audioList.get(position).getTimeOfAudio());
-        bundle.putString("day", audioList.get(position).getCreateDate());
+        bundle.putBoolean("Inserted", true);
         returnIntent.putExtra("result", bundle);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+        pathFiles.clear();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onItemClick(int position){
+        Toast.makeText(this, pathFiles.get(position), Toast.LENGTH_SHORT).show();
+        Intent returnIntent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("file", audioList.get(position));
+        bundle.putString("path", pathFiles.get(position));
+        bundle.putBoolean("Inserted", true);
+        returnIntent.putExtra("result", bundle);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+        pathFiles.clear();
     }
 
     private List<Audio> getAudioList() {
         java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat("#.##");
         audioList = new ArrayList<>();
+        pathFiles = new ArrayList<>();
         recordingsDirectory = new File(Environment.getExternalStorageDirectory().toString()+ "/Recordings/");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             size = recordingsDirectory.listFiles().length;
@@ -149,16 +172,18 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
                 for (File file : files) {
                     if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".wav") || file.getName().endsWith(".m4a")) {
                         getFile(file);
+                        pathFiles.add(file.getAbsolutePath());
                         sumAmountFile += 1;
                     }
                     else if (file.isDirectory()){
-                        if (file.getName().equals("Thư mục riêng tư")){
+                        if (file.getName().equals("Thư mục riêng tư") || file.getName().equals("TrashAudio")){
                             continue;
                         }
                         File[] listNewFile = file.listFiles();
                         for (File newFile : listNewFile){
                             if (newFile.isFile() && newFile.getName().endsWith(".mp3") || newFile.getName().endsWith(".wav") || newFile.getName().endsWith(".m4a")) {
                                 getFile(newFile);
+                                pathFiles.add(newFile.getAbsolutePath());
                                 sumAmountFile += 1;
                             }
                         }

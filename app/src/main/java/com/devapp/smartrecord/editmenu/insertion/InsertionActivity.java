@@ -2,9 +2,10 @@ package com.devapp.smartrecord.editmenu.insertion;
 
 import static android.content.ContentValues.TAG;
 
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
@@ -14,29 +15,21 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.arthenica.mobileffmpeg.FFmpeg;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ui.home.Audio;
-import com.devapp.smartrecord.ui.home.HomeAudioAdapter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -48,23 +41,13 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class InsertionActivity extends AppCompatActivity {
     private ImageButton btnBack, btnInsert;
 
-//    private TextView twMin;
-//    private TextView twMax;
-    private TextView timeMax;
+    private TextView timeMax, btnExport;
     private ImageView btnPlay;
     private MediaPlayer mediaPlayer;
     private LineChart chart;
@@ -79,10 +62,16 @@ public class InsertionActivity extends AppCompatActivity {
     private byte[] waveform;
     ArrayList<Float> wf;
     private HorizontalScrollView hrzScrollView;
-    private String name, maxTime, size, day;
+    private TextView nameInsertFile,maxTimeInsertFile, sizeInsertFile, dayInsertFile;
+    private RelativeLayout itemInsert;
+    private Audio file;
+    private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
+    private File outputFileInsert;
+    private boolean inserted = false, exported = false;
     private List<Entry> entries;
-    //    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
-    String audioFilePath = "/storage/emulated/0/Recordings/139-40 Đ. Trần Hưng Đạo (2).mp3";
+    private String audioFilePath, fileNameRoot, finalNameFile;
+    private String[] nameFile;
+    private int currPosition = 0;
 
     @Override
     protected void onDestroy() {
@@ -95,6 +84,20 @@ public class InsertionActivity extends AppCompatActivity {
             mediaPlayer = null;
         }
         handler.removeCallbacks(highlight);
+
+        if(inserted)
+        {
+            if (!exported){
+                File fileDl = new File(tempPath + finalNameFile);
+                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+                if (fileDel.exists()) {
+                    fileDel.delete();
+                }
+            }
+            else{
+                Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,7 +106,17 @@ public class InsertionActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         btnBack = findViewById(R.id.edt_insert_btn_back);
-        btnBack.setOnClickListener(view -> onBackPressed());
+        btnBack.setOnClickListener(view -> {
+            if(inserted)
+            {
+                File fileDl = new File(tempPath + finalNameFile);
+                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+                if (fileDel.exists()) {
+                    fileDel.delete();
+                }
+            }
+            onBackPressed();
+        });
 
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -116,10 +129,23 @@ public class InsertionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         audioFilePath = intent.getStringExtra("PATH_KEY");
 
-//        twMin = findViewById(R.id.tw_min);
-//        twMax = findViewById(R.id.tw_max);
         hrzScrollView = findViewById(R.id.insert_horizontal);
         timeMax = findViewById(R.id.insert_time_max);
+        btnExport = findViewById(R.id.insert_export);
+//        if (!inserted){
+//            btnExport.setTextColor(R.attr.textColor);
+//        }
+        btnExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (inserted){
+                    Toast.makeText(InsertionActivity.this, getApplicationContext().getText(R.string.announce_save_successfully), Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                    exported = true;
+                }
+                exported = false;
+            }
+        });
 
         btnPlay = findViewById(R.id.insert_play_btn);
 
@@ -127,21 +153,35 @@ public class InsertionActivity extends AppCompatActivity {
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InsertionActivity.this, InsertionListFile.class);
-                startActivityForResult(intent, 1);
+                if (!inserted){
+                    mediaPlayer.pause();
+                    btnPlay.setImageResource(R.drawable.ic_play);
+                    currPosition = mediaPlayer.getCurrentPosition();
+                    Intent intent = new Intent(InsertionActivity.this, InsertionListFile.class);
+                    startActivityForResult(intent, 1);
+                }
+                else{
+                    btnInsert.setEnabled(true);
+                }
             }
         });
 
         TextView titleFile = findViewById(R.id.insert_name_file);
-        String[] nameFile = audioFilePath.split("/");
-        titleFile.setText(nameFile[nameFile.length - 1]);
+        nameFile = audioFilePath.split("/");
+        fileNameRoot = nameFile[nameFile.length - 1];
+        titleFile.setText(fileNameRoot);
 
         SeekBar seekBar = findViewById(R.id.insert_seekbar);
         TextView txtCurTime = findViewById(R.id.insert_time_current);
-        RelativeLayout itemInsert = findViewById(R.id.insert_item_view);
-        TextView maxTimeInsertFile = findViewById(R.id.insert_item_amount);
-        TextView sizeInsertFile = findViewById(R.id.insert_item_size);
-        TextView dayInsertFile = findViewById(R.id.insert_item_hours);
+        itemInsert = findViewById(R.id.insert_item_view);
+        maxTimeInsertFile = findViewById(R.id.insert_item_amount);
+        sizeInsertFile = findViewById(R.id.insert_item_size);
+        dayInsertFile = findViewById(R.id.insert_item_hours);
+        nameInsertFile = findViewById(R.id.insert_item_title);
+
+        if (!inserted){
+            itemInsert.setVisibility(View.GONE);
+        }
 
         seekBar.setProgress(0);
         txtCurTime.setText("00:00:00");
@@ -157,6 +197,7 @@ public class InsertionActivity extends AppCompatActivity {
             } else {
                 imageView.setImageResource(R.drawable.ic_play);
                 imageView.setTag("ic_play");
+                currPosition = mediaPlayer.getCurrentPosition();
 
                 mediaPlayer.pause();
             }
@@ -166,21 +207,19 @@ public class InsertionActivity extends AppCompatActivity {
         btnDestroyInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(inserted)
+                {
+                    File fileDl = new File(tempPath + finalNameFile);
+                    File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+                    if (fileDel.exists()) {
+                        fileDel.delete();
+                    }
+                }
                 onBackPressed();
             }
         });
 
-        // Khởi tạo MediaPlayer và Visualizer
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(audioFilePath);
-            mediaPlayer.prepare();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        duration = mediaPlayer.getDuration();
-        timeMax.setText(formatTime(duration));
-
+        initMedia(audioFilePath);
 
         // Khởi tạo biểu đồ tần số âm thanh
         chart = findViewById(R.id.insert_chart);
@@ -217,6 +256,7 @@ public class InsertionActivity extends AppCompatActivity {
 
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer intBuffer = buffer.asIntBuffer();
 
         wf = new ArrayList<>();
@@ -247,30 +287,6 @@ public class InsertionActivity extends AppCompatActivity {
 
         // Cập nhật vẽ chart
         updateChart();
-
-//        // RANGE SEEKBAR
-//        RangeSeekBar<Integer> rangeSeekBar = findViewById(R.id.rangeSeekBar);
-//        rangeSeekBar.setRangeValues(0, 100);
-//        twMin.setText(String.format(Locale.getDefault(), "%02d:%02d", 0, 0));
-//        twMax.setText(String.format(Locale.getDefault(), "%02d:%02d", (duration / 1000) / 60, (duration / 1000) % 60));
-//
-//        rangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
-//            // Handle the range seek bar values changed event
-//            percentMin = minValue;
-//            percentMax = maxValue;
-//            int minSecond = (int) (minValue / 100f * (duration / 1000));
-//            int maxSecond = (int) (maxValue / 100f * (duration / 1000));
-//            twMin.setText(String.format(Locale.getDefault(), "%02d:%02d", minSecond / 60, minSecond % 60));
-//            twMax.setText(String.format(Locale.getDefault(), "%02d:%02d", maxSecond / 60, maxSecond % 60));
-//
-//            updateChart();
-//
-//            int currentPosition = (int) (minValue / 100f * duration);
-//            mediaPlayer.seekTo(currentPosition);
-//
-//            int delta = (int) ((percentMax - percentMin) / 100f * duration);
-//            timeMax.setText(String.format(Locale.getDefault(), "%02d:%02d", (delta / 1000) / 60, (delta / 1000) % 60));
-//        });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -337,6 +353,19 @@ public class InsertionActivity extends AppCompatActivity {
         });
     }
 
+    private void initMedia(String path){
+        // Khởi tạo MediaPlayer và Visualizer
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        duration = mediaPlayer.getDuration();
+        timeMax.setText(formatTime(duration));
+    }
+
     @SuppressLint("DefaultLocale")
     private String formatTime(int duration) {
         int hours = duration / 3600000;
@@ -385,17 +414,62 @@ public class InsertionActivity extends AppCompatActivity {
         chart.highlightValue(0, 0);
     }
 
+    private void insertAudio(String baseAudioFilePath, String insertAudioFilePath, int startTime, int duration) {
+        // Tạo lệnh FFmpeg để chèn file audio vào vị trí bất kì của file audio sẵn có
+//        final String[] command = new String[]{"-i", baseAudioFilePath, "-i", insertAudioFilePath, "-filter_complex",
+//                "[0:a]atrim=end=" + startTime + "[a0];[1:a]atrim=duration=" + duration + "[a1];" +
+//                        "[a0][a1]concat=n=2:v=0:a=1[aout]", "-map", "0:v?", "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
+        String[] command = new String[]{"-i", baseAudioFilePath, "-i", insertAudioFilePath, "-filter_complex",
+                "[0:a]atrim=end=" + startTime + "[a0];[1:a]adelay=" + duration + "|0[a1];[a0][a1]amix=inputs=2[aout]", "-map", "0:v?", "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
+
+
+        Log.e("HU", startTime+"");
+        Log.e("HU", duration+"");
+
+        int rc;
+        rc = FFmpeg.execute(command);
+        if (rc == RETURN_CODE_SUCCESS) {
+//            Toast.makeText(this, outputFileInsert.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            initMedia(outputFileInsert.getAbsolutePath());
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == 1) {
             Bundle bundle = data.getBundleExtra("result");
-            name = bundle.getString("name", "");
-            size = bundle.getString("size", "");
-            maxTime = bundle.getString("maxTime", "");
-            day = bundle.getString("day", "");
-            Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+            file = (Audio) bundle.getSerializable("file");
+            String pathFile = bundle.getString("path");
+            inserted = bundle.getBoolean("Inserted");
+
+
+            if (inserted){
+                itemInsert.setVisibility(View.VISIBLE);
+                nameInsertFile.setText(file.getName());
+                sizeInsertFile.setText(file.getSize() + " KB");
+                maxTimeInsertFile.setText(file.getTimeOfAudio() + "     ");
+                dayInsertFile.setText(file.getCreateDate());
+//                btnExport.setTextColor(R.color.pink_500);
+
+                // Khởi tạo MediaPlayer và Visualizer
+                MediaPlayer mediaPlayer1 = new MediaPlayer();
+                try {
+                    mediaPlayer1.setDataSource(pathFile);
+                    mediaPlayer1.prepare();
+//                    mediaPlayer1.start();
+//                    mediaPlayer1.pause();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                int duration1 = mediaPlayer1.getDuration();
+
+                finalNameFile = "Insert_" + nameFile[nameFile.length - 1] + "_" + file.getName();
+                outputFileInsert = new File(tempPath, finalNameFile);
+                Toast.makeText(this, getApplicationContext().getText(R.string.add_successfull), Toast.LENGTH_SHORT).show();
+                insertAudio(audioFilePath, pathFile, currPosition, duration1);
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.devapp.smartrecord.ui.home;
 
-public class Audio {
+import java.io.Serializable;
+
+public class Audio implements Serializable {
 
     private String name;
     private String timeOfAudio;
