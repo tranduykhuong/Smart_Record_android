@@ -2,30 +2,30 @@ package com.devapp.smartrecord.ui.home;
 
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.widget.ImageButton;
 import android.widget.ImageView;
+=======
+>>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,9 +33,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ReplayActivity;
 import com.devapp.smartrecord.databinding.FragmentHomeBinding;
-import com.devapp.smartrecord.ui.folder.FolderCLassContent;
-import com.devapp.smartrecord.ui.folder.FolderChildFragment;
-import com.devapp.smartrecord.ui.folder.FolderFragment;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -44,16 +41,14 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
-public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemClickListener, HomeChildFragment.DataPassListener{
+public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemClickListener{
 
     private static final int SORT_BY_NAME = 0;
     private static final int SORT_BY_DATE = 1;
@@ -73,6 +68,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     private TextView capacityUnit, homeTitle;
     private FragmentHomeBinding binding;
     private Context context;
+<<<<<<< HEAD
     private boolean isEdit, isTotalChecked = false;
     private TextView totalAudio, totalSizeAudio, textAudio, textCatholic, textTotalChoice;
     private LinearLayout recordLayout;
@@ -91,133 +87,13 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     public void passData(boolean isEdit) {
         dataPasser.onDataPassHome(isEdit);
     }
+=======
+>>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-
-        try {
-            dataPasser = (OnDataPass) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnDataPass");
-        }
-    }
-
-    @Override
-    public void handleRemoveMultiFolder() {
-        handleValueSelected();
-        if (listItemChoice.length == 0){
-            Toast.makeText(getActivity(), getView().getContext().getText(R.string.announce_notify_warning_len_null), Toast.LENGTH_SHORT).show();
-
-            return;
-        }
-        //Tạo ra dialog để xác nhận xóa hay không
-        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
-        builder.setMessage(getView().getContext().getString(R.string.question_delete));
-        builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int j) {
-                int count = 0;
-                for (int i = 0; i < listItemChoice.length; i++) {
-                    if (i != 0){
-                        listItemChoice[i] -= count;
-                    }
-                    Audio folder = audioList.get(listItemChoice[i]);
-                    String folderName = folder.getName();
-                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
-                    File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "TrashAudio");
-
-                    try {
-                        File destinationFile = new File(destinationFolder, folderName); // Tạo tệp đích mới
-                        boolean success = sourceFile.renameTo(destinationFile);
-                        if (success) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
-                            audioList.remove(listItemChoice[i]);
-                            homeAudioAdapter.notifyItemRemoved(listItemChoice[i]);
-                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    count++;
-                }
-
-
-                listItemChoice = null;
-                selectedItems = new boolean[audioList.size()];
-                Arrays.fill(selectedItems, false);
-                homeAudioAdapter.notifyDataSetChanged();
-                passData(false);
-            }
-        });
-        builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.show();
-    }
-    public void handleMoveMultiFolder(View view){
-        handleValueSelected();
-        if (listItemChoice.length == 0){
-            Toast.makeText(getActivity(), getView().getContext().getText(R.string.announce_notify_warning_len_null), Toast.LENGTH_SHORT).show();
-
-            return;
-        }
-        //Tạo ra dialog để xác nhận xóa hay không
-        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
-        builder.setMessage(getView().getContext().getString(R.string.question_move));
-        builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int j) {
-                int count = 0;
-                for (int i = 0; i < listItemChoice.length; i++) {
-                    if (i != 0){
-                        listItemChoice[i] -= count;
-                    }
-                    Audio folder = audioList.get(listItemChoice[i]);
-                    String folderName = folder.getName();
-                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
-                    File destinationFolder = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/", "Thư mục riêng tư");
-
-                    try {
-                        File destinationFile = new File(destinationFolder, folderName); // Tạo tệp đích mới
-                        boolean success = sourceFile.renameTo(destinationFile);
-                        if (success) { // Di chuyển tệp đến thư mục đích và kiểm tra kết quả
-                            audioList.remove(listItemChoice[i]);
-                            homeAudioAdapter.notifyItemRemoved(listItemChoice[i]);
-                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_private_successfully), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_private_unsuccessfully), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_private_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    count++;
-                }
-
-
-                listItemChoice = null;
-                selectedItems = new boolean[audioList.size()];
-                Arrays.fill(selectedItems, false);
-                homeAudioAdapter.notifyDataSetChanged();
-                passData(false);
-            }
-        });
-        builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.show();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -228,10 +104,11 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         final LinearLayout linearLayoutSortType = binding.homeWrapSortType;
-//        totalAmountAudio = binding.homeAmountAudio;
+        totalAmountAudio = binding.homeAmountAudio;
         totalCapacityAudio = binding.homeCapacityAudio;
         capacityUnit = binding.capacityAudioUnit;
 
+<<<<<<< HEAD
         totalAudio = binding.homeAmountAudio;
         totalSizeAudio = binding.homeCapacityAudio;
         textAudio = binding.homeTitleAudio;
@@ -260,6 +137,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
 
         showMultiFolder();
 
+=======
+>>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
         searchViewAudio = binding.searchViewAudioHome;
         searchViewAudio.clearFocus();
         searchViewAudio.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -306,7 +185,6 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
             TextView cancelSort = popupView.findViewById(R.id.home_sort_item_by_destroy);
 
             sortTitle.setOnClickListener(view1 -> popupWindow.update());
-
             sortByDate.setOnClickListener(view12 -> {
                 homeDateSort.setText(sortByDate.getText());
                 popupWindow.dismiss();
@@ -336,7 +214,6 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 homeAudioAdapter.setData(audioList);
                 homeAudioAdapter.notifyDataSetChanged();
             });
-
             sortByName.setOnClickListener(view13 -> {
                 homeDateSort.setText(sortByName.getText());
                 popupWindow.dismiss();
@@ -350,7 +227,6 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 homeAudioAdapter.setData(audioList);
                 homeAudioAdapter.notifyDataSetChanged();
             });
-
             sortBySize.setOnClickListener(view14 -> {
                 homeDateSort.setText(sortBySize.getText());
                 popupWindow.dismiss();
@@ -386,13 +262,22 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 homeAudioAdapter.setData(audioList);
                 homeAudioAdapter.notifyDataSetChanged();
             });
-
-
             cancelSort.setOnClickListener(view15 -> popupWindow.dismiss());
-
 
         });
 
+<<<<<<< HEAD
+=======
+        rcvHomeAudio = binding.homeRcvAudioList;
+        rcvHomeAudio.setLayoutManager(new LinearLayoutManager(getContext()));
+        homeAudioAdapter = new HomeAudioAdapter(getActivity(), this);
+
+        homeAudioAdapter.setData(getAudioList());
+
+        rcvHomeAudio.setAdapter(homeAudioAdapter);
+
+
+>>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null) {
             File[] files = recordingsDirectory.listFiles(new FileFilter() {
                 @Override
@@ -402,7 +287,11 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
             });
 
             if (files != null) {
+<<<<<<< HEAD
                 totalAudio.setText(String.valueOf(files.length));
+=======
+                totalAmountAudio.setText(String.valueOf(files.length));
+>>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
             }
         }
         if(sumCapacity >= 1024) {
@@ -415,6 +304,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         return root;
     }
 
+<<<<<<< HEAD
     private void showMultiFolder(){
         if (isEdit) {
             totalSizeAudio.setVisibility(View.GONE);
@@ -484,6 +374,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 .toArray();
     }
 
+=======
+>>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
     private void filterList(String text) {
         List<Audio> filterList = new ArrayList<>();
         for (Audio itemAudio : audioList) {
@@ -493,16 +385,15 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         }
         if (filterList.isEmpty()) {
             homeAudioAdapter.setData(null);
-            Toast.makeText(getContext(), getContext().getString(R.string.announce_data_not_found), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No data found", Toast.LENGTH_SHORT).show();
         }else {
             homeAudioAdapter.setData(filterList);
         }
     }
 
-
-
     @Override
     public void onItemClick(int position) {
+
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
@@ -516,25 +407,11 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     }
 
     @Override
-    public void playSound(String name, int position) {
-        if (isEdit){
-            if (selectedItems[position]){
-                audioList.get(position).setImage(R.drawable.ic_circle_folder);
-                homeAudioAdapter.notifyDataSetChanged();
-                selectedItems[position] = false;
-            }
-            else {
-                audioList.get(position).setImage(R.drawable.ic_circle_checked_folder);
-                homeAudioAdapter.notifyDataSetChanged();
-                selectedItems[position] = true;
-            }
-        }
-        else{
-            Intent intent = new Intent(getActivity(), ReplayActivity.class);
-            intent.putExtra("Name", name);
-            intent.setAction("FromHome");
-            startActivity(intent);
-        }
+    public void playSound(String name) {
+        Intent intent = new Intent(getActivity(), ReplayActivity.class);
+        intent.putExtra("Name", name);
+        intent.setAction("FromHome");
+        startActivity(intent);
     }
 
     @Override
@@ -562,7 +439,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 double tempCapacity = 0;
                 for (File file : files) {
                     if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".m4a") || file.getName().endsWith(".aac")) {
-
+                        Log.e("file", file.getName());
                         String fileName = file.getName();
                         String fileSize = decimalFormat.format(1.0 * file.length() / 1024);
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
