@@ -46,7 +46,6 @@ import java.util.List;
 
 public class InsertionActivity extends AppCompatActivity {
     private ImageButton btnBack, btnInsert;
-
     private TextView timeMax, btnExport;
     private ImageView btnPlay;
     private MediaPlayer mediaPlayer;
