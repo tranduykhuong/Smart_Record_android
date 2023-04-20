@@ -100,7 +100,7 @@
                     android:layout_alignBottom="@id/insert_item_amount"
                     android:layout_alignTop="@id/insert_item_title"
                     android:layout_marginHorizontal="10dp"
-                    android:src="@drawable/ic_play_audio_item" />
+                    android:src="@drawable/ic_play_outline" />
 
                 <TextView
                     android:id="@+id/insert_item_title"

@@ -27,6 +27,7 @@
             android:text="@drawable/curson_color_search_folder"
             android:background="@drawable/bg_search_folder"
             app:iconifiedByDefault="false"
+            app:queryBackground="@android:color/transparent"
             app:queryHint="@string/title_search"
             />
 

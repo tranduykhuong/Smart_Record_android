@@ -190,24 +190,6 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
                     }
                 }
             }
-            Collections.sort(audioList, new Comparator<Audio>() {
-                @Override
-                public int compare(Audio audio1, Audio audio2) {
-                    Date date1 = null;
-                    Date date2 = null;
-                    try {
-                        date1 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio1.getCreateDate());
-                        date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(audio2.getCreateDate());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if (date1 != null && date2 != null) {
-                        return date2.compareTo(date1);
-                    } else {
-                        return 0;
-                    }
-                }
-            });
         }
         return audioList;
     }
@@ -218,7 +200,7 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
         sumCapacity += (1.0 * file.length() / (1024 * 1.0));
         Date lastModifiedDate = new Date(file.lastModified());
         String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-        audioList.add(new Audio(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_play_audio_item));
+        audioList.add(new Audio(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_play_outline));
     }
 
     @NonNull

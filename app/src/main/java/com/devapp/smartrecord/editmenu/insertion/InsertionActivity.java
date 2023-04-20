@@ -255,7 +255,6 @@ public class InsertionActivity extends AppCompatActivity {
 
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer intBuffer = buffer.asIntBuffer();
 
         wf = new ArrayList<>();
@@ -354,6 +353,10 @@ public class InsertionActivity extends AppCompatActivity {
 
     private void initMedia(String path){
         // Khởi tạo MediaPlayer và Visualizer
+        if (mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(path);
@@ -418,15 +421,35 @@ public class InsertionActivity extends AppCompatActivity {
 //        final String[] command = new String[]{"-i", baseAudioFilePath, "-i", insertAudioFilePath, "-filter_complex",
 //                "[0:a]atrim=end=" + startTime + "[a0];[1:a]atrim=duration=" + duration + "[a1];" +
 //                        "[a0][a1]concat=n=2:v=0:a=1[aout]", "-map", "0:v?", "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
-        String[] command = new String[]{"-i", baseAudioFilePath, "-i", insertAudioFilePath, "-filter_complex",
-                "[0:a]atrim=end=" + startTime + "[a0];[1:a]adelay=" + duration + "|0[a1];[a0][a1]amix=inputs=2[aout]", "-map", "0:v?", "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
+//        String[] command = new String[]{
+//                "-i", baseAudioFilePath,
+//                "-i", insertAudioFilePath,
+//                "-filter_complex",
+//                "[0:a]atrim=end=" + startTime + "[a0];[1:a]adelay=" + duration + "|0[a1];[a0][a1]amix=inputs=2[aout]",
+//                "-map",
+//                "0:v?",
+//                "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
 
 
+
+        String[] command = new String[]{
+                "-i", baseAudioFilePath,
+                "-i", insertAudioFilePath,
+                "-filter_complex",
+                "[0:a]atrim=end=" + startTime + "[a0];[1:a]atrim=start=0:end=" + duration + ",asetpts=PTS-STARTPTS[a1];[0:a]atrim=start=" + startTime + "[a2];[a0][a1][a2]concat=n=3:v=0:a=1[aout]",
+                "-map",
+                "[aout]",
+                "-c:a",
+                "mp3",
+                outputFileInsert.getAbsolutePath()};
+
+        Log.e(TAG, "outputFileInsert: "+outputFileInsert.getAbsolutePath());
         Log.e("HU", startTime+"");
         Log.e("HU", duration+"");
 
         int rc;
         rc = FFmpeg.execute(command);
+        Log.e(TAG, "insertAudio: " + rc);
         if (rc == RETURN_CODE_SUCCESS) {
 //            Toast.makeText(this, outputFileInsert.getAbsolutePath(), Toast.LENGTH_SHORT).show();
             initMedia(outputFileInsert.getAbsolutePath());
@@ -443,6 +466,7 @@ public class InsertionActivity extends AppCompatActivity {
             String pathFile = bundle.getString("path");
             inserted = bundle.getBoolean("Inserted");
 
+            Log.e(TAG, "onActivityResult: "  + pathFile);
 
             if (inserted){
                 itemInsert.setVisibility(View.VISIBLE);

@@ -118,7 +118,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
                         Date lastModifiedDate = new Date(file.lastModified());
                         @SuppressLint("SimpleDateFormat") String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        itemList.add(new Item(fileName, getFileDuration(file), fileSize, formattedDate, R.drawable.ic_play_audio_item));
+                        itemList.add(new Item(fileName, getFileDuration(file), fileSize, formattedDate, R.drawable.ic_play_outline));
                     }
                 }
                 if(sumCapacity == 0) {

@@ -137,6 +137,7 @@ public class RecordService extends Service {
             fileName = "Record";
             finalName = fileName + fileExt;
         }
+        finalName = fileName + fileExt;
 
         file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/" + fileName + fileExt);
         if(file.exists()) {
@@ -148,6 +149,7 @@ public class RecordService extends Service {
                 i++;
             }
         }
+        Log.e(TAG, "startRecording: " +file.getAbsolutePath() );
 
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

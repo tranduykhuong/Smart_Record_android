@@ -19,6 +19,7 @@
 
         <item name="textColor">#423E3E</item>
         <item name="textColorPrimary">@color/pink_500</item>
+        <item name="textColorPink">@color/pink_500</item>
         <item name="actionBarColor">@color/pink_500</item>
 
         <item name="backgroundState">#EFEFEF</item>

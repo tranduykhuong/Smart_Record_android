@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -202,7 +201,7 @@ public class ReplayActivity  extends AppCompatActivity {
         hrzScrollView = findViewById(R.id.replay_horizontal);
         ImageButton btnListNote = findViewById(R.id.replay_btn_list);
         ImageButton btnPrevReplay = findViewById(R.id.btn_prev_replay);
-        ImageButton btnNextReplay = findViewById(R.id.btn_next_replay);
+        ImageView btnNextReplay = findViewById(R.id.btn_next_replay);
         ImageButton btnBackWard = findViewById(R.id.btn_pr5_replay);
         ImageButton btnForward = findViewById(R.id.btn_next5_replay);
         ImageButton btnRepeat = findViewById(R.id.btn_repeat_replay);
@@ -267,14 +266,14 @@ public class ReplayActivity  extends AppCompatActivity {
         btnPlayReplay.setOnClickListener(view -> {
             flagPlaying = !flagPlaying;
             if (!flagPlaying) {
-                btnPlayReplay.setImageResource(R.drawable.ic_play_replay);
+                btnPlayReplay.setImageResource(R.drawable.ic_play_pink);
                 currentPosition = mediaPlayer.getCurrentPosition();
                 mediaPlayer.pause();
 
                 timeWhenPaused = SystemClock.elapsedRealtime() - txtTimeCur.getBase();
                 txtTimeCur.stop();
             } else {
-                btnPlayReplay.setImageResource(R.drawable.ic_pause_replay);
+                btnPlayReplay.setImageResource(R.drawable.ic_pause_pink);
                 mediaPlayer.seekTo(currentPosition);
                 mediaPlayer.start();
 
@@ -512,7 +511,7 @@ public class ReplayActivity  extends AppCompatActivity {
             txtNameReplay.setText(files[currentSongIndex].getName());
             skbarReplay.setProgress(0);
             skbarReplay.setMax(duration);
-            btnPlayReplay.setImageResource(R.drawable.ic_pause_replay);
+            btnPlayReplay.setImageResource(R.drawable.ic_pause_pink);
             txtTimeCur.setBase(SystemClock.elapsedRealtime());
             txtTimeCur.start();
             txtTimeTotal.setText(getTotalTime());

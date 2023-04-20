@@ -66,7 +66,7 @@ public class CutActivity extends AppCompatActivity {
     private HorizontalScrollView hrzScrollView;
     private List<Entry> entries;
 //    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
-    String audioFilePath = "/storage/emulated/0/Recordings/139-40 Đ. Trần Hưng Đạo (2).mp3";
+    String audioFilePath;
 
     @SuppressLint("MissingInflatedId")
     @Override

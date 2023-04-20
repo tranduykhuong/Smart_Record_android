@@ -76,7 +76,9 @@ public class AlarmService extends Service {
         }
         pendingIntent = PendingIntent.getBroadcast(this, (int) milliseconds, alarmIntent, PendingIntent.FLAG_MUTABLE);
 
-        long timeInMillis = System.currentTimeMillis() + 7000 + (int) (Math.random()*10);
+//        long timeInMillis = System.currentTimeMillis() + 7000 + (int) (Math.random()*10);
+        long timeInMillis = milliseconds;
+        Log.e(TAG, "onStartCommand: " + timeInMillis);
         // Đặt lịch nhắc nhở bằng AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);

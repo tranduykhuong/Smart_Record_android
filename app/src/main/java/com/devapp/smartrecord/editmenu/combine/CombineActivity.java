@@ -71,7 +71,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         String tmpName = tmpFile.getName();
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String fileSize = decimalFormat.format(1.0 * tmpFile.length() / (1024 * 1024));
-        audioList.add(new Audio(tmpName, formatTime(tmpFile), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_audio_item));
+        audioList.add(new Audio(tmpName, formatTime(tmpFile), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_outline));
     }
 
     @SuppressLint({"WrongConstant", "DefaultLocale", "SetTextI18n", "NotifyDataSetChanged"})
@@ -93,7 +93,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
         fileExit = name.substring(name.lastIndexOf("."));
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String fileSize = decimalFormat.format(1.0 * file.length() / (1024 * 1024));
-        audioList.add(new Audio(name, formatTime(file), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_audio_item));
+        audioList.add(new Audio(name, formatTime(file), fileSize + " MB", "26/02/2023 10:11", R.drawable.ic_play_outline));
 
         //ADD SOUND
         finalName = "CB_" + fileName;
@@ -176,7 +176,7 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                         if (file1.isFile() && file1.getName().endsWith(fileExit)) {
                             String fileName = file1.getName();
                             String fileSize1 = decimalFormat.format(1.0 * file1.length() / (1024 * 1024));
-                            listAddFile.add(new Audio(fileName, formatTime(file1), fileSize1 + " MB", "", R.drawable.ic_play_audio_item));
+                            listAddFile.add(new Audio(fileName, formatTime(file1), fileSize1 + " MB", "", R.drawable.ic_play_outline));
                         }
                     }
                 }

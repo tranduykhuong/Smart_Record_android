@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ import com.devapp.smartrecord.ui.folder.FolderChildFragment;
 import com.devapp.smartrecord.ui.folder.FolderFragment;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -61,19 +63,20 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     private  HomeAudioAdapter homeAudioAdapter;
     private List<Audio> audioList;
     private TextView totalAmountAudio;
+    private TextView homeSelectAll;
     private int size;
     private File[] files;
     private File recordingsDirectory;
     private SearchView searchViewAudio;
     private double sumCapacity = 0;
     private TextView totalCapacityAudio;
-    private TextView capacityUnit;
+    private TextView capacityUnit, homeTitle;
     private FragmentHomeBinding binding;
     private Context context;
     private boolean isEdit, isTotalChecked = false;
     private TextView totalAudio, totalSizeAudio, textAudio, textCatholic, textTotalChoice;
     private LinearLayout recordLayout;
-    private ImageButton imageTotalChoice;
+    private ImageView imageTotalChoice;
     private RelativeLayout infoLayout;
     private boolean[] selectedItems;
     private HomeChildFragment audioChild;
@@ -235,6 +238,8 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         textCatholic = binding.capacityAudioUnit;
         infoLayout = binding.homeWrapInfoAudio;
         recordLayout = binding.homeWrapRecordFeature;
+        homeTitle = binding.homeTitleAudio;
+        homeSelectAll = binding.homeSelectAll;
 
         rcvHomeAudio = binding.homeRcvAudioList;
         rcvHomeAudio.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -388,8 +393,18 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
 
         });
 
-        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
-            totalAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
+        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null) {
+            File[] files = recordingsDirectory.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.isFile(); // Chỉ chấp nhận các tệp (file) và không chấp nhận thư mục (folder)
+                }
+            });
+
+            if (files != null) {
+                totalAudio.setText(String.valueOf(files.length));
+            }
+        }
         if(sumCapacity >= 1024) {
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -397,22 +412,20 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         else {
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity));
         }
-
         return root;
     }
 
     private void showMultiFolder(){
         if (isEdit) {
             totalSizeAudio.setVisibility(View.GONE);
-            textAudio.setVisibility(View.GONE);
             textCatholic.setVisibility(View.GONE);
             recordLayout.setVisibility(View.GONE);
             totalAudio.setVisibility(View.GONE);
+            textAudio.setVisibility(View.GONE);
 
             imageTotalChoice = binding.homeTotalChoice;
             imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
-            totalAudio.setText("Chọn tất cả");
-            totalAudio.setTextSize(16);
+            homeSelectAll.setText("Chọn tất cả");
 
 //            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) infoLayout.getLayoutParams();
             RelativeLayout.LayoutParams paramsText = (RelativeLayout.LayoutParams) totalAudio.getLayoutParams();
@@ -555,7 +568,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
                         Date lastModifiedDate = new Date(file.lastModified());
                         String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        audioList.add(new Audio(fileName, getFileDuration(file), fileSize, formattedDate, R.drawable.ic_play_audio_item));
+                        audioList.add(new Audio(fileName, getFileDuration(file), fileSize, formattedDate, R.drawable.ic_play_outline));
                     }
                 }
                 if(sumCapacity == 0) {

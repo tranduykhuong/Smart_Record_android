@@ -49,9 +49,9 @@ public class ItemClassContentAdapter extends RecyclerView.Adapter<ItemClassConte
         }
         holder.itemTitle.setText(folder.getTitle());
         holder.itemTime.setText(folder.getTime() + "");
-        if (folder.getChecked()) {
-            holder.cbItem.setChecked(true);
-        }
+//        if (folder.getChecked()) {
+//            holder.cbItem.setChecked(true);
+//        }
 
         holder.bind(listData.get(position), listener);
     }
@@ -79,13 +79,13 @@ public class ItemClassContentAdapter extends RecyclerView.Adapter<ItemClassConte
 
     public class ItemHolder extends RecyclerView.ViewHolder {
         private TextView itemTitle, itemTime;
-        private CheckBox cbItem;
+//        private CheckBox cbItem;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
             itemTitle = itemView.findViewById(R.id.item_rcv_title);
             itemTime = itemView.findViewById(R.id.item_rcv_time);
-            cbItem = itemView.findViewById(R.id.item_rcv_cbox);
+//            cbItem = itemView.findViewById(R.id.item_rcv_cbox);
         }
 
         public void bind(ItemClassContent item, final OnItemClickListener listener) {

@@ -19,6 +19,7 @@
 
         <item name="textColor">@color/white</item>
         <item name="textColorPrimary">@color/white</item>
+        <item name="textColorPink">@color/pink_400</item>
         <item name="actionBarColor">#24272C</item>
 
         <item name="backgroundState">@color/black</item>

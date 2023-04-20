@@ -51,7 +51,7 @@
             android:layout_alignBottom="@id/trash_item_time_of_audio"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/ic_play_audio_item"
+            android:src="@drawable/ic_play_outline"
             android:layout_width="30dp"/>
 
         <TextView

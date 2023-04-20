@@ -94,7 +94,6 @@ public class RecordActivity1 extends AppCompatActivity {
         }
 
         btnNote.setOnClickListener(view -> {
-            PauseRecord();
 
             LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View popupView = inflater.inflate(R.layout.record_modal_note, null);
@@ -135,7 +134,6 @@ public class RecordActivity1 extends AppCompatActivity {
             });
 
             popupWindow.setOnDismissListener(() -> {
-             ResumeRecord();
              flagRecording = true;
             });
         });
