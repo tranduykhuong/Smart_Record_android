@@ -155,6 +155,8 @@ public class RecordService extends Service {
         mediaRecorder.setOutputFile(file.getAbsolutePath());
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         mediaRecorder.setAudioChannels(1);
+        mediaRecorder.setAudioEncodingBitRate(192000);
+        mediaRecorder.setAudioSamplingRate(48000);
 
         try {
             mediaRecorder.prepare();
