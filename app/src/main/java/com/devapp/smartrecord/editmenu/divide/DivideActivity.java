@@ -1,6 +1,9 @@
 package com.devapp.smartrecord.editmenu.divide;
 
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
@@ -23,12 +26,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.arthenica.mobileffmpeg.FFmpeg;
 import com.devapp.smartrecord.EditMenuActivity;
+import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
+
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -46,8 +53,10 @@ public class DivideActivity extends AppCompatActivity {
     private TextView divideNameAudio;
     private ImageButton divideBtnPlay, divideBtn;
     private Button divideBtnConfirm;
-    private File outputDirectory;
-    String outputDirectoryPath, inputFilePath, outputFilePath;
+    private File inputFile, outputFile1, outputFile2;
+    private String divideTime, randomString;
+    private int flagCnt = 0;
+    String inputFilePath, outputFilePath;
 
     // Một ArrayList để lưu trữ các giá trị thời gian
     ArrayList<String> timeList = new ArrayList<>();
@@ -117,11 +126,12 @@ public class DivideActivity extends AppCompatActivity {
         outputFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordings/";
         Log.e("sdfjnsdjfnskdfmksdjnfksd", inputFilePath);
         Log.e("sdfjnsdjfnskdfmksdjnfksd", outputFilePath);
-        // Đường dẫn thư mục đầu ra
-        outputDirectoryPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/TmpAudioDivide/";
-        outputDirectory = new File(Environment.getExternalStorageDirectory() + "/Recordings/TmpAudioDivide/");
-        divideNameAudio.setText(fileName);
+        randomString = generateRandomString(3);
+        inputFile = new File(inputFilePath);
+        outputFile1 = new File(outputFilePath, "divide1 " + FilenameUtils.removeExtension(fileName) + "_" + randomString + ".mp3");
+        outputFile2 = new File(outputFilePath, "divide2 " + FilenameUtils.removeExtension(fileName) + "_" + randomString + ".mp3");
 
+        divideNameAudio.setText(fileName);
         //Mở file chuẩn bị
         try {
             mediaPlayer.setDataSource(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + fileName);
@@ -178,23 +188,27 @@ public class DivideActivity extends AppCompatActivity {
             cntBtn = 0;
             divideBtnPlay.setImageResource(R.drawable.ic_play_combine_main);
         });
-
         divideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                    int currentPosition = mediaPlayer.getCurrentPosition();
-                    // Lấy thời gian hiện tại của bản ghi âm thanh đang phát
-                    String currentTime = formatTime(currentPosition);
-                    timeList.add(currentTime);
-
-                    // Sử dụng thời gian hiện tại trong công việc cần thực hiện
-
-                    Toast.makeText(getApplicationContext(), "Thời gian hiện tại: " + currentTime, Toast.LENGTH_SHORT).show();
-                    Log.d("TAG", "timeList: " + timeList.toString());
-                } else {
-                    // Hiển thị thông báo cho người dùng rằng không có âm thanh đang phát
-                    Toast.makeText(getApplicationContext(), "Không có âm thanh đang phát", Toast.LENGTH_SHORT).show();
+                if (flagCnt == 0) {
+                    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        int currentPosition = mediaPlayer.getCurrentPosition();
+                        // Lấy thời gian hiện tại của bản ghi âm thanh đang phát
+                        String currentTime = formatTime(currentPosition);
+                        timeList.add(currentTime);
+                        divideTime = currentTime;
+                        flagCnt = 1;
+                        // Sử dụng thời gian hiện tại trong công việc cần thực hiện
+                        Toast.makeText(getApplicationContext(), "Thời gian hiện tại: " + currentTime, Toast.LENGTH_SHORT).show();
+                        Log.d("TAG", "timeList: " + timeList.toString());
+                    } else {
+                        // Hiển thị thông báo cho người dùng rằng không có âm thanh đang phát
+                        Toast.makeText(getApplicationContext(), "Không có âm thanh đang phát", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Chỉ được phép chia một lần!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -203,57 +217,86 @@ public class DivideActivity extends AppCompatActivity {
         divideBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cutMp3ByTimeList(inputFilePath, timeList, outputFilePath);
+                // Kiểm tra xem các tệp con đã tồn tại chưa, nếu có thì tạo tên mới để tránh ghi đè lên tệp cũ
+                if (outputFile1.exists()) {
+                    // Nếu outputFile1 đã tồn tại, tạo tên khác ngẫu nhiên
+                    String newOutputFileName1 = "divide1 " + FilenameUtils.removeExtension(fileName) + "_" + generateRandomString(3) + ".mp3";
+                    outputFile1 = new File(outputFilePath, newOutputFileName1);
+                }
+
+                if (outputFile2.exists()) {
+                    // Nếu outputFile2 đã tồn tại, tạo tên khác ngẫu nhiên
+                    String newOutputFileName2 = "divide2 " + FilenameUtils.removeExtension(fileName) + "_" + generateRandomString(3) + ".mp3";
+                    outputFile2 = new File(outputFilePath, newOutputFileName2);
+                }
+
+                String[] commandPart1 = {
+                        "-i", String.valueOf(inputFile),
+                        "-c:a", "mp3", // Mã codec âm thanh là mp3
+                        "-t", divideTime, // Thời gian của phần 1 (đơn vị: giây)
+                        outputFile1.getAbsolutePath()
+                };
+
+                String[] commandPart2 = {
+                        "-i", String.valueOf(inputFile),
+                        "-c:a", "mp3", // Mã codec âm thanh là mp3
+                        "-ss", divideTime, // Thời gian bắt đầu của phần 2 (đơn vị: giây)
+                        outputFile2.getAbsolutePath()
+                };
+
+                //Tạo ra dialog để xác nhận xóa hay không
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage(view.getContext().getString(R.string.question_divide));
+                builder.setPositiveButton(view.getContext().getString(R.string.answer_yes), (dialogInterface, j) -> {
+                    try {
+                        // Thực thi lệnh FFmpeg
+                        int rc3 = FFmpeg.execute(commandPart1);
+                        if (rc3 == RETURN_CODE_SUCCESS) {
+                            // Quá trình chuyển đổi tần số thành công
+                            Toast.makeText(getApplicationContext(), view.getContext().getString(R.string.announce_divide_successfully), Toast.LENGTH_SHORT).show();
+                            Log.e("Src", "ok");
+                        } else {
+                            // Quá trình chuyển đổi tần số không thành công
+                            Log.e("Src", "!ok");
+                        }
+                        int rc4 = FFmpeg.execute(commandPart2);
+                        if (rc4 == RETURN_CODE_SUCCESS) {
+                            // Quá trình chuyển đổi tần số thành công
+                            Log.e("Src", "ok");
+                        } else {
+                            // Quá trình chuyển đổi tần số không thành công
+                            Log.e("Src", "!ok");
+                        }
+                        mediaPlayer.stop();
+                        Intent intentBackHome = new Intent(getApplicationContext(), HomeActivity.class);
+                        startActivity(intentBackHome);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                builder.setNegativeButton(view.getContext().getString(R.string.answer_no), (dialogInterface, i) -> {
+                });
+                builder.show();
             }
         });
 
     }//end bound view
 
-
-    // Hàm cắt tệp mp3
-    private void cutMp3(String inputFilePath, List<Long> cutPoints, String outputDirPath) {
-        for (int i = 0; i < cutPoints.size(); i++) {
-            long startMillis = cutPoints.get(i);
-            long endMillis = cutPoints.get(i + 1);
-            String outputFilePath = outputDirPath + "/output_" + i + ".mp3";
-            String[] cmd = {"-ss", String.valueOf(startMillis), "-to", String.valueOf(endMillis), "-i", inputFilePath, "-c", "copy", outputFilePath};
-            FFmpeg.execute(cmd);
-        }
-    }
-    private void cutMp3ByTimeList(String inputFilePath, List<String> timeList, String outputDirPath) {
-        List<Long> cutPoints = new ArrayList<>();
-        for (String time : timeList) {
-            long cutPoint = convertTimeToMillis(time);
-            cutPoints.add(cutPoint);
-        }
-        Log.d("dfsdf", String.valueOf(cutPoints));
-
-        // Kiểm tra kích thước của danh sách cutPoints
-        if (cutPoints.size() >= 2) {
-            // Gọi phương thức cắt MP3 với danh sách điểm cắt
-            cutMp3(inputFilePath, cutPoints, outputDirPath);
-        } else {
-            // Xử lý khi danh sách điểm cắt không đủ phần tử
-            Toast.makeText(getApplicationContext(), "Danh sách điểm cắt không đúng", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private long convertTimeToMillis(String time) {
-        String[] parts = time.split(":");
-        int hours = Integer.parseInt(parts[0]);
-        int minutes = Integer.parseInt(parts[1]);
-        int seconds = Integer.parseInt(parts[2]);
-        long totalMillis = (hours * 3600 + minutes * 60 + seconds) * 1000;
-        return totalMillis;
+    //Lấy kí tự ngẫu nhiên
+    public static String generateRandomString(int length) {
+        String randomUUID = UUID.randomUUID().toString();
+        return randomUUID.substring(0, length);
     }
 
     public void changeLayoutFromDivide(View view) {
-        switch (view.getId()) {
-            case R.id.divide_btn_back: {
-                Intent intent = new Intent(this, EditMenuActivity.class);
-                startActivity(intent);
-                break;
-            }
+        if(view.getId() == R.id.divide_btn_back) {
+            mediaPlayer.stop();
+            onBackPressed();
+        }
+        else if(view.getId() == R.id.divide_btn_destroy) {
+            mediaPlayer.stop();
+            Intent intentBackHome = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intentBackHome);
         }
     }
 }

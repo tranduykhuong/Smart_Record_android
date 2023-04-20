@@ -20,6 +20,7 @@
 
     <string name="title_search">Search</string>
     <string name="question_delete">Are you sure you want to move it to the trash?</string>
+    <string name="question_divide">Are you sure you want to divide it?</string>
     <string name="question_save">Are you sure you want to save?</string>
     <string name="announce_moved_successfully">Successfully moved to trash!</string>
     <string name="announce_save_successfully">Successfully save!</string>
@@ -33,6 +34,7 @@
     <string name="question_move">Are you sure you want to move it to the private folder?</string>
     <string name="announce_moved_private_successfully">Successfully moved to private folder!</string>
     <string name="announce_moved_private_unsuccessfully">Move to private folder failed!</string>
+    <string name="announce_divide_successfully">Divide successfully!</string>
 
     <string name="announce_notify_warning_len_null">You are not select any directory!</string>
 

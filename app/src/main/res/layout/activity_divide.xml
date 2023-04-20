@@ -152,6 +152,7 @@
                 android:gravity="center">
 
                 <Button
+                    android:id="@+id/divide_btn_destroy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:elevation="0dp"
@@ -162,6 +163,7 @@
                     android:layout_weight="1"
                     android:textSize="18sp"
                     android:textAllCaps="false"
+                    android:onClick="changeLayoutFromDivide"
                     android:text="Hủy"/>
 
                 <ImageButton

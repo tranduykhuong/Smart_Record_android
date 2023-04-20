@@ -21,6 +21,7 @@
     <string name="title_search">Tìm kiếm</string>
 
     <string name="question_delete">Bạn có chắc chắn muốn chuyển vào thùng rác?</string>
+    <string name="question_divide">Bạn có chắc chắn muốn chia tệp thành hai phần?</string>
     <string name="question_save">Bạn có chắc chắn muốn lưu?</string>
     <string name="announce_moved_successfully">Chuyển vào thùng rác thành công!</string>
     <string name="announce_moved_unsuccessfully">Chuyển vào thùng rác không thành công!</string>
@@ -35,6 +36,7 @@
     <string name="question_move">Bạn có chắc chắn muốn di chuyển vào thư mục riêng tư?</string>
     <string name="announce_moved_private_successfully">Chuyển vào thư mục riêng tư thành công!</string>
     <string name="announce_moved_private_unsuccessfully">Chuyển vào thư mục riêng tư không thành công!</string>
+    <string name="announce_divide_successfully">Chia thành công!</string>
 
     <string name="announce_notify_warning_len_null">Bạn chưa chọn thư mục nào!</string>
 
