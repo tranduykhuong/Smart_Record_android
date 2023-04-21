@@ -71,6 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="?attr/textColor"
             android:layout_toRightOf="@id/home_item_icon_audio"
             android:text="Đại học Khoa học tự nhiên"

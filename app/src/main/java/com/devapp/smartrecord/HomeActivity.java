@@ -234,7 +234,6 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
         for (int i=0; i<permissionStore.length; i++) {
             grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissionStore[i]);
         }
-        Toast.makeText(this, SDK_INT + ":" + Build.VERSION_CODES.R, Toast.LENGTH_SHORT).show();
         if (SDK_INT > Build.VERSION_CODES.R) {
             if (grants < -3)
                 askForPermission(permissionStore);
