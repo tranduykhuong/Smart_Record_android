@@ -81,7 +81,7 @@
     <string name="replay_title">Replay</string>
     <string name="combine_title">Combine</string>
     <string name="combine_cancel">Clear</string>
-    <string name="menu_title">Edit Menu</string>
+    <string name="menu_title">Recording Studio</string>
     <string name="add_successfull">Successful Add</string>
     <string name="remove_file">File is deleted</string>
     <string name="save_file">Saved_</string>
@@ -155,5 +155,6 @@
     <string name="announce_moved_folder_fail">Fail moved to new folder</string>
 
     <string name="announce_no_file_add">No file chosen</string>
+    <string name="divide_title">Divide</string>
 
 </resources>

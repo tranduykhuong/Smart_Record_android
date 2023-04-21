@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/bg_adjust"
+    android:background="?attr/backgroundColor"
     >
 
     <LinearLayout
@@ -54,44 +55,123 @@
         android:paddingVertical="10dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:background="@color/bg_adjust">
+        android:background="?attr/backgroundColor">
 
-        <Button
+        <LinearLayout
             android:id="@+id/adjust_btn_cut"
             android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:padding="10dp"
-            android:drawableTop="@drawable/ic_cut"
-            android:text="Cắt xén"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:drawablePadding="10dp"
-            android:elevation="4dp"
-            android:textAllCaps="false"
-            android:drawableBottom="@drawable/ic_line"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="0dp"
             android:layout_weight="1"
-            android:layout_marginRight="15dp"
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:layout_marginEnd="15dp"
             android:background="@drawable/btn_custom_adjust"
+            tools:ignore="ExtraText">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/ic_cut"
+                />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_line_border"
+                android:background="?attr/foregroundColor"
             />
 
-        <Button
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/cut_title"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:background="?attr/foregroundColor"
+                tools:ignore="NestedWeights" />
+
+            <ImageView
+                android:onClick="changeLayoutFromAdjust"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/ic_line"
+                android:background="?attr/foregroundColor"
+                />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/adjust_btn_adjust"
             android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:layout_marginLeft="15dp"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="0dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_custom_adjust"
-            android:drawableTop="@drawable/ic_adjust_1"
-            android:drawableBottom="@drawable/ic_line"
-            android:drawablePadding="10dp"
+            android:orientation="vertical"
             android:elevation="4dp"
-            android:padding="10dp"
-            android:text="Điều chỉnh"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:layout_marginStart="15dp"
+            android:background="@drawable/btn_custom_adjust"
+            tools:ignore="ExtraText">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/ic_adjust_1"
+                />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_line_border"
+                android:background="?attr/foregroundColor"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/adjust_title"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:background="?attr/foregroundColor"
+                tools:ignore="NestedWeights" />
+
+            <ImageView
+                android:onClick="changeLayoutFromAdjust"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/ic_line"
+                android:background="?attr/foregroundColor"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -102,45 +182,123 @@
         android:paddingVertical="10dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:background="@color/bg_adjust">
+        android:background="?attr/backgroundColor">
 
-        <Button
+        <LinearLayout
             android:id="@+id/adjust_btn_insertion"
-            android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:background="@drawable/btn_custom_adjust"
-            android:padding="10dp"
             android:onClick="changeLayoutFromAdjust"
-            android:drawableTop="@drawable/ic_insert"
-            android:text="Chèn"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:drawablePadding="10dp"
-            android:elevation="4dp"
-            android:textAllCaps="false"
-            android:drawableBottom="@drawable/ic_line"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="0dp"
             android:layout_weight="1"
-            android:layout_marginRight="15dp"
-            />
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/btn_custom_adjust"
+            tools:ignore="ExtraText">
 
-        <Button
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/ic_insert"
+                />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_line_border"
+                android:background="?attr/foregroundColor"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/insertion"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:background="?attr/foregroundColor"
+                tools:ignore="NestedWeights" />
+
+            <ImageView
+                android:onClick="changeLayoutFromAdjust"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/ic_line"
+                android:background="?attr/foregroundColor"
+                />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/adjust_btn_harmonic"
             android:onClick="changeLayoutFromAdjust"
             android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:background="@drawable/btn_custom_adjust"
-            android:padding="10dp"
-            android:drawableTop="@drawable/ic_low_sound"
-            android:text="Hòa âm"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:drawablePadding="10dp"
-            android:elevation="4dp"
-            android:textAllCaps="false"
-            android:drawableBottom="@drawable/ic_line"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="0dp"
             android:layout_weight="1"
-            android:layout_marginLeft="15dp"
-            />
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/btn_custom_adjust"
+            tools:ignore="ExtraText">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/ic_low_sound"
+                />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_line_border"
+                android:background="?attr/foregroundColor"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/harmonic_title"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:background="?attr/foregroundColor"
+                tools:ignore="NestedWeights" />
+
+            <ImageView
+                android:onClick="changeLayoutFromAdjust"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/ic_line"
+                android:background="?attr/foregroundColor"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -151,45 +309,123 @@
         android:paddingVertical="10dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:background="@color/bg_adjust">
+        android:background="?attr/backgroundColor">
 
-        <Button
+        <LinearLayout
             android:id="@+id/adjust_btn_divide"
-            android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:background="@drawable/btn_custom_adjust"
-            android:padding="10dp"
             android:onClick="changeLayoutFromAdjust"
-            android:drawableTop="@drawable/ic_divide"
-            android:text="Chia"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:drawablePadding="10dp"
-            android:elevation="4dp"
-            android:textAllCaps="false"
-            android:drawableBottom="@drawable/ic_line"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="0dp"
             android:layout_weight="1"
-            android:layout_marginRight="15dp"
-            />
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/btn_custom_adjust"
+            tools:ignore="ExtraText">
 
-        <Button
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/ic_divide"
+                />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_line_border"
+                android:background="?attr/foregroundColor"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/divide_title"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:background="?attr/foregroundColor"
+                tools:ignore="NestedWeights" />
+
+            <ImageView
+                android:onClick="changeLayoutFromAdjust"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/ic_line"
+                android:background="?attr/foregroundColor"
+                />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/adjust_btn_combine"
-            android:layout_width="wrap_content"
-            android:layout_height="180dp"
             android:onClick="changeLayoutFromAdjust"
-            android:background="@drawable/btn_custom_adjust"
-            android:padding="10dp"
-            android:drawableTop="@drawable/ic_mixture"
-            android:text="@string/combine_title"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:drawablePadding="10dp"
-            android:elevation="4dp"
-            android:textAllCaps="false"
-            android:drawableBottom="@drawable/ic_line"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="0dp"
             android:layout_weight="1"
-            android:layout_marginLeft="15dp"
-            />
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/btn_custom_adjust"
+            tools:ignore="ExtraText">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/ic_mixture"
+                />
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_line_border"
+                android:background="?attr/foregroundColor"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/combine_title"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:background="?attr/foregroundColor"
+                tools:ignore="NestedWeights" />
+
+            <ImageView
+                android:onClick="changeLayoutFromAdjust"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/ic_line"
+                android:background="?attr/foregroundColor"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 
