@@ -195,42 +195,49 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             btnDestroyNote.setOnClickListener(v -> popupWindow.dismiss());
 
             btnOkRecordNote.setOnClickListener(view1 -> {
-                if(fileExit.equals(".mp3"))
+                if(!checkAllFalse(checkedArray))
                 {
-                    for(int i = 0; i < checkedArray.length; i++)
+                    if(fileExit.equals(".mp3"))
                     {
-                        if(checkedArray[i])
+                        for(int i = 0; i < checkedArray.length; i++)
                         {
-                            addFileSound(listAddFile.get(i).getName());
+                            if(checkedArray[i])
+                            {
+                                addFileSound(listAddFile.get(i).getName());
+                            }
                         }
+
+                        ResetAdapter();
+
+                        //COMBINE
+                        ConcatAudio();
+
+                        //XÉT LẠI MEDIA PLAYER
+                        try {
+                            mediaPlayer.reset();
+                            //mediaPlayer.setDataSource(tempPath + finalName);
+                            mediaPlayer.setDataSource(outputFile.getAbsolutePath());
+                            mediaPlayer.prepare();
+                            txtDurationTime.setText(formatTime(outputFile));
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        CheckOnceAdd();
+                    }
+                    else {
+                        popupView.getContext().getString(R.string.only_mp3);
                     }
 
-                    ResetAdapter();
+                    popupWindow.setOnDismissListener(() -> Toast.makeText(view1.getContext(), popupView.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show());
 
-                    //COMBINE
-                    ConcatAudio();
-
-                    //XÉT LẠI MEDIA PLAYER
-                    try {
-                        mediaPlayer.reset();
-                        //mediaPlayer.setDataSource(tempPath + finalName);
-                        mediaPlayer.setDataSource(outputFile.getAbsolutePath());
-                        mediaPlayer.prepare();
-                        txtDurationTime.setText(formatTime(outputFile));
-
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    CheckOnceAdd();
+                    popupWindow.dismiss();
                 }
                 else {
-                    popupView.getContext().getString(R.string.only_mp3);
+                    Toast.makeText(popupView.getContext(), popupView.getContext().getString(R.string.announce_no_file_add), Toast.LENGTH_SHORT).show();
                 }
 
-                popupWindow.setOnDismissListener(() -> Toast.makeText(view1.getContext(), popupView.getContext().getString(R.string.add_successfull), Toast.LENGTH_SHORT).show());
-
-                popupWindow.dismiss();
             });
 
         });
@@ -293,8 +300,10 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
             CheckColor();
 
             try {
-                mediaPlayer.stop();
+                cntBtn = 0;
+                mediaPlayer.reset();
                 mediaPlayer.setDataSource(tempPath + fileName);
+                mediaPlayer.prepare();
                 txtDurationTime.setText(formatTime(file));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -509,6 +518,18 @@ public class CombineActivity extends AppCompatActivity implements CombineModalAd
                 Toast.makeText(this, this.getString(R.string.add_file_announce), Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+    public boolean checkAllFalse(boolean[] checkedArray){
+        boolean all_false = true;
+        for(int i = 0; i< checkedArray.length; i++)
+        {
+            if(checkedArray[i] == true){
+                all_false = false;
+                break;
+            }
+        }
+        return all_false;
     }
 
 }

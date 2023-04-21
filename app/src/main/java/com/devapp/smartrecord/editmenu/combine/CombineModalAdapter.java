@@ -52,11 +52,12 @@ public class CombineModalAdapter extends RecyclerView.Adapter<CombineModalAdapte
         holder.linearLayout.setOnClickListener(view -> {
             flagCheck = holder.checkBox.isChecked();
             holder.checkBox.setChecked(!flagCheck);
-            if (listener != null)
+            if (listener != null && flagCheck)
                 listener.onItemClick(holder.getAbsoluteAdapterPosition());
         });
+
         holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (listener != null)
+            if (listener != null && b)
                 listener.onItemClick(holder.getAbsoluteAdapterPosition());
         });
     }

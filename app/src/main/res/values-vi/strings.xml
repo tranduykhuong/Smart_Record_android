@@ -150,4 +150,6 @@
     <string name="question_move_folder">Bạn có chắc chắn muốn di chuyển vào thư mục này không?</string>
     <string name="announce_moved_folder_successfully">Chuyển vào thư mục mới thành công</string>
     <string name="announce_moved_folder_fail">Chuyển vào thư mục mới thất bại</string>
+
+    <string name="announce_no_file_add">Bạn chưa thêm File</string>
 </resources>

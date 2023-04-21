@@ -154,4 +154,6 @@
     <string name="announce_moved_folder_successfully">Successfully moved to new folder</string>
     <string name="announce_moved_folder_fail">Fail moved to new folder</string>
 
+    <string name="announce_no_file_add">No file chosen</string>
+
 </resources>
