@@ -100,11 +100,11 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
             }
         }
         else{
-            HomeFragment a = new HomeFragment();
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.navigation_folder, a);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            Intent intent = new Intent(getActivity(), FileInFolder.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("nameFolder", listFolder.get(position).getTitle());
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 
@@ -508,7 +508,10 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
                         if (Objects.equals(hashedPassword.trim(), storedPassword.trim())) {
                             Toast.makeText(popupView.getContext(), "Password đúng", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getActivity(), InsertionListFile.class);
+                            Intent intent = new Intent(getActivity(), FileInFolder.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("nameFolder", "Thư mục riêng tư");
+                            intent.putExtras(bundle);
                             startActivity(intent);
 
                             popupWindow.dismiss();

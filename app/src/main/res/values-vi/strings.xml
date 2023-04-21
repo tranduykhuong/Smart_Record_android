@@ -110,7 +110,7 @@
     <string name="folder_name">Tên</string>
     <string name="folder_size">Kích thước</string>
     <string name="folder_filter_title">Sắp xếp theo</string>
-    <string name="folder_file">bản ghi -</string>
+    <string name="folder_file">\ bản ghi -\ </string>
     <string name="folder_create_folder">Tạo thư mục</string>
     <string name="folder_create_folder_hint">Nhập tên thư mục</string>
     <string name="folder_create_password">Tạo mật khẩu</string>
