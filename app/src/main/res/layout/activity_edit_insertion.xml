@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
                 android:background="@null"
+                android:layout_marginStart="12dp"
                 android:elevation="0dp"
                 android:outlineProvider="none"
                 android:src="@drawable/ic_back" />
@@ -33,6 +34,7 @@
                 android:text="@string/insertion"
                 android:textColor="@color/white"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
                 android:paddingRight="30dp"
@@ -44,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/insert_side_bar"
+            android:background="?attr/name_rc_ctn"
             >
             <TextView
                 android:id="@+id/insert_name_file"
@@ -52,9 +55,9 @@
                 android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
                 android:textSize="16sp"
                 android:padding="16dp"
-                android:background="#EFEFEF"
+                android:background="?attr/name_rc_ctn"
                 android:textAlignment="center"
-                android:textColor="#616060"/>
+                android:textColor="?attr/textColor"/>
         </LinearLayout>
 
         <LinearLayout
@@ -159,7 +162,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:background="?attr/foregroundColor"
+            android:background="?attr/backgroundItemMenu"
             android:padding="16dp"
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
@@ -213,7 +216,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:layout_weight="1"
-                        android:textColor="?attr/textColor"
+                        android:textColor="?attr/text_time"
                         android:gravity="left"
                         android:layout_marginLeft="12dp"
                         android:text="00:00:50" />
@@ -223,7 +226,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:textColor="?attr/textColor"
+                        android:textColor="?attr/text_time"
                         android:layout_weight="1"
                         android:gravity="right"
                         android:layout_marginRight="12dp"

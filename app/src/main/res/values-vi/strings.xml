@@ -78,7 +78,7 @@
     <string name="replay_title">Phát lại</string>
     <string name="combine_title">Hợp nhất</string>
     <string name="combine_cancel">Xóa</string>
-    <string name="menu_title">Chỉnh sửa Audio</string>
+    <string name="menu_title">Chỉnh sửa ghi âm</string>
     <string name="add_successfull">Thêm thành công</string>
     <string name="remove_file">File đã xóa</string>
     <string name="save_file">Đã lưu_</string>
@@ -152,4 +152,5 @@
     <string name="announce_moved_folder_fail">Chuyển vào thư mục mới thất bại</string>
 
     <string name="announce_no_file_add">Bạn chưa thêm File</string>
+    <string name="divide_title">Chia</string>
 </resources>

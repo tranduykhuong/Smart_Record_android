@@ -27,6 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ui.home.Audio;
@@ -34,6 +35,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,16 +89,16 @@ public class InsertionActivity extends AppCompatActivity {
 
         if(inserted)
         {
-            if (!exported){
-                File fileDl = new File(tempPath + finalNameFile);
-                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-                if (fileDel.exists()) {
-                    fileDel.delete();
-                }
-            }
-            else{
-                Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
-            }
+//            if (!exported){
+//                File fileDl = new File(tempPath + finalNameFile);
+//                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+//                if (fileDel.exists()) {
+//                    fileDel.delete();
+//                }
+//            }
+//            else{
+//                Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 
@@ -417,43 +420,59 @@ public class InsertionActivity extends AppCompatActivity {
     }
 
     private void insertAudio(String baseAudioFilePath, String insertAudioFilePath, int startTime, int duration) {
-        // Tạo lệnh FFmpeg để chèn file audio vào vị trí bất kì của file audio sẵn có
-//        final String[] command = new String[]{"-i", baseAudioFilePath, "-i", insertAudioFilePath, "-filter_complex",
-//                "[0:a]atrim=end=" + startTime + "[a0];[1:a]atrim=duration=" + duration + "[a1];" +
-//                        "[a0][a1]concat=n=2:v=0:a=1[aout]", "-map", "0:v?", "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
-//        String[] command = new String[]{
-//                "-i", baseAudioFilePath,
-//                "-i", insertAudioFilePath,
-//                "-filter_complex",
-//                "[0:a]atrim=end=" + startTime + "[a0];[1:a]adelay=" + duration + "|0[a1];[a0][a1]amix=inputs=2[aout]",
-//                "-map",
-//                "0:v?",
-//                "-map", "[aout]", "-c:v", "copy", "-y", outputFileInsert.getAbsolutePath()};
+        File tmp1 = new File(tempPath + "file1_1.mp3");
+        File tmp2 = new File(tempPath + "file1_2.mp3");
 
+        String currentTime = formatTime(startTime);
 
+        String divideTime = currentTime;
 
-        String[] command = new String[]{
-                "-i", baseAudioFilePath,
+        File ipfile = new File(baseAudioFilePath);
+        // Lệnh để chia file
+        String[] commandPart1 = {
+                "-i", String.valueOf(ipfile),
+                "-c:a", "mp3", // Mã codec âm thanh là mp3
+                "-t", divideTime, // Thời gian của phần 1 (đơn vị: giây)
+                tmp1.getAbsolutePath()
+        };
+
+        String[] commandPart2 = {
+                "-i", String.valueOf(ipfile),
+                "-c:a", "mp3", // Mã codec âm thanh là mp3
+                "-ss", divideTime, // Thời gian bắt đầu của phần 2 (đơn vị: giây)
+                tmp2.getAbsolutePath()
+        };
+
+        int rc3 = FFmpeg.execute(commandPart1);
+        int rc4 = FFmpeg.execute(commandPart2);
+
+        String[] command = {
+                "-i", tmp1.getAbsolutePath(),
                 "-i", insertAudioFilePath,
-                "-filter_complex",
-                "[0:a]atrim=end=" + startTime + "[a0];[1:a]atrim=start=0:end=" + duration + ",asetpts=PTS-STARTPTS[a1];[0:a]atrim=start=" + startTime + "[a2];[a0][a1][a2]concat=n=3:v=0:a=1[aout]",
-                "-map",
-                "[aout]",
-                "-c:a",
-                "mp3",
-                outputFileInsert.getAbsolutePath()};
+                "-i", tmp2.getAbsolutePath(),
+                "-filter_complex", "[0:a][1:a][2:a]concat=n=3:v=0:a=1[out]",
+                "-map", "[out]",
+                "-y", outputFileInsert.getAbsolutePath()
+        };
 
-        Log.e(TAG, "outputFileInsert: "+outputFileInsert.getAbsolutePath());
-        Log.e("HU", startTime+"");
-        Log.e("HU", duration+"");
+        int rcConcat = FFmpeg.execute(command);
 
-        int rc;
-        rc = FFmpeg.execute(command);
-        Log.e(TAG, "insertAudio: " + rc);
-        if (rc == RETURN_CODE_SUCCESS) {
-//            Toast.makeText(this, outputFileInsert.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-            initMedia(outputFileInsert.getAbsolutePath());
+        if (rcConcat == RETURN_CODE_SUCCESS) {
+            File fileDl = new File(tempPath + "file1_1.mp3");
+            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+            if (fileDel.exists()) {
+                fileDel.delete();
+            }
+            File fileDl1 = new File(tempPath + "file1_2.mp3");
+            File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
+            if (fileDel1.exists()) {
+                fileDel1.delete();
+            }
+        } else {
+            Log.i(TAG, "Error: " + Config.getLastCommandOutput());
         }
+
+        initMedia(outputFileInsert.getAbsolutePath());
     }
 
     @Override
@@ -481,14 +500,12 @@ public class InsertionActivity extends AppCompatActivity {
                 try {
                     mediaPlayer1.setDataSource(pathFile);
                     mediaPlayer1.prepare();
-//                    mediaPlayer1.start();
-//                    mediaPlayer1.pause();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 int duration1 = mediaPlayer1.getDuration();
 
-                finalNameFile = "Insert_" + nameFile[nameFile.length - 1] + "_" + file.getName();
+                finalNameFile = "Insert_" + nameFile[nameFile.length - 1].substring(nameFile.length -4) + "_" + file.getName();
                 outputFileInsert = new File(tempPath, finalNameFile);
                 Toast.makeText(this, getApplicationContext().getText(R.string.add_successfull), Toast.LENGTH_SHORT).show();
                 insertAudio(audioFilePath, pathFile, currPosition, duration1);
