@@ -131,7 +131,7 @@ public class FolderModalList extends AppCompatActivity implements FolderModalAda
         sumCapacity += (1.0 * file.length() / (1024 * 1.0));
         Date lastModifiedDate = new Date(file.lastModified());
         String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-        folderList.add(new FolderCLassContent(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_pink500_folder));
+        folderList.add(new FolderCLassContent(fileName, getFileDuration(file), String.valueOf(fileSize), formattedDate, R.drawable.ic_folder_pink500));
     }
 
     @NonNull

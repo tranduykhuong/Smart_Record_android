@@ -17,9 +17,10 @@
             android:id="@+id/adjust_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_left_adjust"
+            android:src="@drawable/ic_back"
             android:background="@null"
             android:layout_alignParentLeft="true"
+            android:paddingLeft="18dp"
             />
 
         <LinearLayout
@@ -74,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="18dp">
 
             <TextView
@@ -423,12 +425,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:layout_gravity="center"
                 >
 
                 <TextView
@@ -443,8 +444,7 @@
                     android:id="@+id/adiust_btn_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="73dp"
-                    android:layout_marginRight="67dp"
+                    android:layout_marginHorizontal="65dp"
                     android:background="@drawable/bg_record_btn_folder"
                     android:src="@drawable/ic_play_adjust" />
 
@@ -453,8 +453,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/pink_500"
-                    android:text="@string/adjust_title"
-                    android:textSize="16dp"/>
+                    android:text="@string/save_announce"
+                    android:textSize="16dp"
+                    android:gravity="center"/>
             </LinearLayout>
 
         </LinearLayout>

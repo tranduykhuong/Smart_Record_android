@@ -149,7 +149,7 @@
                 android:background="@drawable/bg_record_btn_home"
                 android:onClick="navigate_onclick"
                 android:layout_marginVertical="10dp"
-                android:src="@drawable/ic_micro" />
+                android:src="@drawable/ic_microphone" />
 
         </LinearLayout>
 
