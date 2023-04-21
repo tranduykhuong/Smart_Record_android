@@ -24,5 +24,18 @@
 
         <item name="backgroundState">#EFEFEF</item>
         <item name="android:backgroundTint">@null</item>
+
+        <item name="backgroundItemMenu">@color/white</item>
+        <item name="borderMenu">@color/gray_300</item>
+        <item name="text_time">@color/x1_text</item>
+
+        <item name="line_bottom">@drawable/ic_line_border</item>
+        <item name="item_cut">@drawable/ic_cut</item>
+        <item name="item_adjust">@drawable/ic_adjust_1</item>
+        <item name="item_insert">@drawable/ic_insert</item>
+        <item name="item_harmonic">@drawable/ic_low_sound</item>
+        <item name="item_divide">@drawable/ic_divide</item>
+        <item name="item_combine">@drawable/ic_mixture</item>
+        <item name="name_rc_ctn">@drawable/border_name_record_light</item>
     </style>
 </resources>

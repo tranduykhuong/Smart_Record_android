@@ -50,14 +50,14 @@
         android:gravity="center"
         android:paddingVertical="12dp"
         android:layout_below="@+id/adjust_header"
-        android:background="@color/little_gray"
+        android:background="?attr/name_rc_ctn"
         >
 
         <TextView
             android:id="@+id/adjust_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="?attr/textColor"
             android:text="135 Trần Hưng Đạo 2, ngày 17/02/2023"/>
     </LinearLayout>
 
@@ -359,7 +359,7 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="40dp"
         android:paddingTop="32dp"
-        android:background="?attr/foregroundColor"
+        android:background="?attr/backgroundItemMenu"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -406,7 +406,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:layout_weight="1"
-                    android:textColor="@color/text_time"
+                    android:textColor="?attr/text_time"
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
                     />
@@ -416,7 +416,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="@color/text_time"
+                    android:textColor="?attr/text_time"
                     android:layout_weight="1"
                     android:gravity="right"
                     android:layout_marginRight="24dp"

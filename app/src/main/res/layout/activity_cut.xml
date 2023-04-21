@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:gravity="center"
-            android:background="@color/pink_500"
+            android:background="?attr/actionBarColor"
             android:weightSum="5"
             android:orientation="horizontal">
 
@@ -28,7 +28,7 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="12dp"
                 android:layout_gravity="start|center_vertical"
-                android:background="@color/pink_500"
+                android:background="?attr/actionBarColor"
                 android:elevation="0dp"
                 android:outlineProvider="none"
                 android:layout_weight="1"
@@ -42,7 +42,7 @@
                 android:gravity="center_horizontal"
                 android:paddingHorizontal="40dp"
                 android:paddingRight="40dp"
-                android:text="Cut"
+                android:text="@string/cut_title"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
             android:id="@+id/task_bar_cut"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/little_gray"
+            android:background="?attr/name_rc_ctn"
             android:layout_below="@+id/nav_cut"
             tools:ignore="MissingConstraints">
 
@@ -73,7 +73,7 @@
                 android:paddingHorizontal="40dp"
                 android:paddingRight="40dp"
                 android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="17sp" />
 
         </LinearLayout>
@@ -114,14 +114,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="min"/>
+                    android:text="min"
+                    android:textColor="?attr/text_time"/>
                 <TextView
                     android:id="@+id/tw_max"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
-                    android:text="max"/>
+                    android:text="max"
+                    android:textColor="?attr/text_time"/>
             </LinearLayout>
 
             <org.florescu.android.rangeseekbar.RangeSeekBar
@@ -139,7 +141,7 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/backgroundColor"
+            android:background="?attr/backgroundItemMenu"
             android:orientation="vertical"
             android:paddingBottom="16dp"
             >
@@ -196,7 +198,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:background="?attr/backgroundItemMenu">
 
                 <TextView
                     android:layout_width="50dp"

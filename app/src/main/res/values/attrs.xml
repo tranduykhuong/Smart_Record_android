@@ -7,7 +7,19 @@
         <attr name="textColorPrimary" format="color"/>
         <attr name="textColorPink" format="color"/>
         <attr name="actionBarColor" format="color"/>
+        <attr name="text_time" format="color"/>
 
         <attr name="backgroundState" format="color"/>
+        <attr name="backgroundItemMenu" format="color"/>
+        <attr name="borderMenu" format="color"/>
+        <attr name="line_bottom" format="reference"/>
+        <attr name="item_cut" format="reference"/>
+        <attr name="item_adjust" format="reference"/>
+        <attr name="item_insert" format="reference"/>
+        <attr name="item_harmonic" format="reference"/>
+        <attr name="item_divide" format="reference"/>
+        <attr name="item_combine" format="reference"/>
+        <attr name="name_rc_ctn" format="reference"/>
+
     </declare-styleable>
 </resources>

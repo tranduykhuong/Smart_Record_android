@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:background="?attr/actionBarColor"
+            android:layout_marginStart="12dp"
             android:elevation="0dp"
             android:outlineProvider="none"
             android:src="@drawable/ic_back" />
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/ic_cut"
+                android:src="?attr/item_cut"
                 />
 
             <ImageView
@@ -86,7 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_line_border"
+                android:src="?attr/line_bottom"
                 android:background="?attr/foregroundColor"
             />
 
@@ -96,7 +97,7 @@
                 android:text="@string/cut_title"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
@@ -109,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:src="@drawable/ic_line"
                 android:background="?attr/foregroundColor"
                 />
@@ -136,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/ic_adjust_1"
+                android:src="?attr/item_adjust"
                 />
 
             <ImageView
@@ -144,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_line_border"
+                android:src="?attr/line_bottom"
                 android:background="?attr/foregroundColor"
                 />
 
@@ -154,7 +155,7 @@
                 android:text="@string/adjust_title"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
@@ -167,7 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:src="@drawable/ic_line"
                 android:background="?attr/foregroundColor"
                 />
@@ -205,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/ic_insert"
+                android:src="?attr/item_insert"
                 />
 
             <ImageView
@@ -213,7 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_line_border"
+                android:src="?attr/line_bottom"
                 android:background="?attr/foregroundColor"
                 />
 
@@ -223,7 +224,7 @@
                 android:text="@string/insertion"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
@@ -236,7 +237,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:src="@drawable/ic_line"
                 android:background="?attr/foregroundColor"
                 />
@@ -263,7 +264,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/ic_low_sound"
+                android:src="?attr/item_harmonic"
                 />
 
             <ImageView
@@ -271,7 +272,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_line_border"
+                android:src="?attr/line_bottom"
                 android:background="?attr/foregroundColor"
                 />
 
@@ -281,7 +282,7 @@
                 android:text="@string/harmonic_title"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
@@ -294,7 +295,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:src="@drawable/ic_line"
                 android:background="?attr/foregroundColor"
                 />
@@ -332,7 +333,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/ic_divide"
+                android:src="?attr/item_divide"
                 />
 
             <ImageView
@@ -340,7 +341,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_line_border"
+                android:src="?attr/line_bottom"
                 android:background="?attr/foregroundColor"
                 />
 
@@ -350,7 +351,7 @@
                 android:text="@string/divide_title"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
@@ -363,7 +364,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:src="@drawable/ic_line"
                 android:background="?attr/foregroundColor"
                 />
@@ -385,20 +386,19 @@
             tools:ignore="ExtraText">
 
             <ImageView
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/ic_mixture"
-                />
+                android:src="?attr/item_combine" />
 
             <ImageView
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/ic_line_border"
+                android:src="?attr/line_bottom"
                 android:background="?attr/foregroundColor"
                 />
 
@@ -408,7 +408,7 @@
                 android:text="@string/combine_title"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor"
                 android:textSize="18sp"
                 android:textStyle="normal"
                 android:textAllCaps="false"
@@ -421,7 +421,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:src="@drawable/ic_line"
                 android:background="?attr/foregroundColor"
                 />
