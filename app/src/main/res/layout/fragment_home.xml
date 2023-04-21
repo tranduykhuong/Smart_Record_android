@@ -9,6 +9,7 @@
     android:layout_marginTop="120dp">
 
     <RelativeLayout
+        android:id="@+id/home_wrap_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
@@ -40,15 +41,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 >
-<<<<<<< HEAD
                 <ImageView
                     android:id="@+id/home_total_choice"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@null"
                     />
-=======
->>>>>>> a0bc3779a3f394dc3b1b0dd0c4a0a8381907bc78
                 <TextView
                     android:id="@+id/home_select_all"
                     android:layout_width="wrap_content"

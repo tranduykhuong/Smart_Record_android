@@ -89,7 +89,7 @@
                 android:layout_weight="1"
                 >
 
-                <ImageButton
+                <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_messenger_folder"
@@ -111,7 +111,7 @@
                 android:layout_weight="1"
                 >
 
-                <ImageButton
+                <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_zalo_folder"
@@ -133,7 +133,7 @@
                 android:layout_weight="1"
                 >
 
-                <ImageButton
+                <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_outlook_folder"
@@ -155,7 +155,7 @@
                 android:layout_weight="1"
                 >
 
-                <ImageButton
+                <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_gmail_folder"
@@ -178,7 +178,7 @@
                 android:layout_weight="1"
                 >
 
-                <ImageButton
+                <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_chatmessage_folder"
