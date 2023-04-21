@@ -23,6 +23,7 @@
             android:layout_gravity="start|center_vertical"
             android:background="?attr/actionBarColor"
             android:elevation="0dp"
+            android:layout_marginRight="10dp"
             android:outlineProvider="none"
             android:src="@drawable/ic_back" />
 
@@ -50,7 +51,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="?attr/backgroundState">
+        android:background="?attr/name_rc_ctn">
 
         <TextView
             android:id="@+id/harmonic_txt_name"
@@ -77,7 +78,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/backgroundColor"
+        android:background="?attr/backgroundItemMenu"
         android:orientation="vertical"
         android:paddingBottom="25dp"
         >
@@ -85,7 +86,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="?attr/backgroundColor"
+            android:background="?attr/backgroundItemMenu"
             android:gravity="center">
 
             <ImageButton
@@ -94,7 +95,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="?attr/backgroundColor"
+                android:background="?attr/backgroundItemMenu"
                 android:outlineProvider="none"
                 android:src="@drawable/ic_play_combine_main" />
 
@@ -104,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="?attr/backgroundColor">
+            android:background="?attr/backgroundItemMenu">
 
             <SeekBar
                 android:id="@+id/harmonic_seekbar"
@@ -135,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_weight="1"
-                    android:textColor="?attr/textColor"
+                    android:textColor="?attr/text_time"
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
                     android:textStyle="bold"
@@ -146,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:textColor="?attr/textColor"
+                    android:textColor="?attr/text_time"
                     android:layout_weight="1"
                     android:gravity="right"
                     android:textStyle="bold"
@@ -161,7 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal"
-            android:background="?attr/backgroundColor"
+            android:background="?attr/backgroundItemMenu"
             android:gravity="center">
 
             <Button
@@ -184,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
                 android:elevation="0dp"
-                android:background="?attr/backgroundColor"
+                android:background="?attr/backgroundItemMenu"
                 android:outlineProvider="none"
                 android:layout_weight="1"
                 android:src="@drawable/ic_divide_divide" />
