@@ -362,6 +362,7 @@ public class InsertionActivity extends AppCompatActivity {
         }
         mediaPlayer = new MediaPlayer();
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepare();
         } catch (IOException e) {
