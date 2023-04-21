@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
+import android.os.Environment;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -102,12 +103,16 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
                     @Override
                     public void onActivityResult(Map<String, Boolean> permissions) {
                         // Xử lý kết quả trả về từ việc yêu cầu cấp quyền
+                        int cnt = 0;
                         for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
                             System.out.println(entry.getKey() + ": " + entry.getValue());
+                            if (entry.getValue() == true) {
+                                cnt++;
+                            }
                         }
+                        Log.e(TAG, "onActivityResult: " + cnt);
                         if (permissions.containsKey("android.permission.MANAGE_EXTERNAL_STORAGE")) {
-                            if (permissions.get("android.permission.READ_MEDIA_AUDIO") == false
-                                    || permissions.get("android.permission.POST_NOTIFICATIONS") == false) {
+                            if (cnt < 3) {
                                 askForPermission(permissionStore);
                             } else {
                                 permissionRequestCount = 0;
@@ -212,17 +217,32 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
             }
         });
 
-//        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-//        Uri uri = Uri.fromParts("package", getPackageName(), null);
-//        intent.setData(uri);
-//        startActivityForResult(intent, 1);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO)
-                != PackageManager.PERMISSION_GRANTED
-        || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
-            askForPermission(permissionStore);
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            boolean isPermissionGranted = Environment.isExternalStorageManager();
+            if (isPermissionGranted) {
+                // Quyền đã được cấp
+            } else {
+                // Quyền chưa được cấp
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, 1);
+            }
         }
+
+        int grants = 0;
+        for (int i=0; i<permissionStore.length; i++) {
+            grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissionStore[i]);
+        }
+        Toast.makeText(this, SDK_INT + ":" + Build.VERSION_CODES.R, Toast.LENGTH_SHORT).show();
+        if (SDK_INT > Build.VERSION_CODES.R) {
+            if (grants < -3)
+                askForPermission(permissionStore);
+        } else if (SDK_INT <= Build.VERSION_CODES.R) {
+            if (grants < -2)
+                askForPermission(permissionStore);
+        }
+
     }
 
     @Override
