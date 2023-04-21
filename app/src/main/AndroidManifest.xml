@@ -130,6 +130,9 @@
         <activity
             android:name=".services.RecordingService"
             android:exported="true"/>
+
+        <activity android:name=".ui.folder.FileInFolder"
+            android:exported="true"/>
         <service
             android:name=".services.RecordingService"
             android:exported="true"/>

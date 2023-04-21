@@ -17,9 +17,9 @@
             android:text="@string/file"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="?attr/textColor"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            />
 
         <TextView
             android:id="@+id/insert_fragment_destroy"
@@ -46,6 +46,7 @@
                 android:layout_marginBottom="14dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                app:queryBackground="@android:color/transparent"
                 android:text="@drawable/curson_color_search_folder"
                 android:background="@drawable/bg_search_folder"
                 app:iconifiedByDefault="false"
@@ -69,10 +70,10 @@
                     android:text="2"
                     />
                 <TextView
-                    android:id="@+id/folder"
+                    android:id="@+id/file_activity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Thư mục - "
+                    android:text="@string/folder_file"
                     android:textSize="15sp"
                     android:layout_toRightOf="@id/insert_fragment_amount"
                     />
@@ -82,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:text="11"
                     android:textSize="15sp"
-                    android:layout_toRightOf="@id/folder"
+                    android:layout_toRightOf="@id/file_activity"
                     />
                 <TextView
                     android:layout_width="wrap_content"
