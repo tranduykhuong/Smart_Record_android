@@ -232,19 +232,19 @@ public class DivideActivity extends AppCompatActivity {
             isPlay = !isPlay;
             if(cntBtn == 0 && isPlay)
             {
-                divideBtnPlay.setImageResource(R.drawable.ic_pause_combine_main);
+                divideBtnPlay.setImageResource(R.drawable.ic_pause_pink);
                 mediaPlayer.start();
                 cntBtn = 1;
             }
             else if(cntBtn == 1 && !isPlay)
             {
-                divideBtnPlay.setImageResource(R.drawable.ic_play_combine_main);
+                divideBtnPlay.setImageResource(R.drawable.ic_play_pink);
                 currentPosition = mediaPlayer.getCurrentPosition();
                 mediaPlayer.pause();
             }
             else if(cntBtn == 1)
             {
-                divideBtnPlay.setImageResource(R.drawable.ic_pause_combine_main);
+                divideBtnPlay.setImageResource(R.drawable.ic_pause_pink);
                 mediaPlayer.seekTo(currentPosition);
                 mediaPlayer.start();
             }
@@ -276,7 +276,7 @@ public class DivideActivity extends AppCompatActivity {
                                 mediaPlayer.pause();
                                 mediaPlayer.seekTo((int) (percentMin / 100f * duration));
 
-                                divideBtnPlay.setImageResource(R.drawable.ic_play_combine_main);
+                                divideBtnPlay.setImageResource(R.drawable.ic_play_pink);
                             }
                         }
                     }
@@ -289,7 +289,7 @@ public class DivideActivity extends AppCompatActivity {
             currTime.setText("00:00:00");
             isPlay = false;
             cntBtn = 0;
-            divideBtnPlay.setImageResource(R.drawable.ic_play_combine_main);
+            divideBtnPlay.setImageResource(R.drawable.ic_play_pink);
         });
         divideBtn.setOnClickListener(view -> {
             if (flagCnt == 0) {

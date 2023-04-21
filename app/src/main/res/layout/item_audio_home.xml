@@ -130,5 +130,12 @@
             android:layout_below="@id/home_item_time_of_audio"
             android:layout_marginTop="10dp"
             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_solid_bottom_filter_folder"
+            android:layout_below="@id/home_item_time_of_audio"
+            android:layout_marginTop="6dp"
+            />
     </RelativeLayout>
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

@@ -11,8 +11,6 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,17 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.databinding.FragmentFolderBinding;
-import com.devapp.smartrecord.editmenu.adjust.AdjustActivity;
-import com.devapp.smartrecord.editmenu.insertion.InsertionActivity;
 import com.devapp.smartrecord.editmenu.insertion.InsertionListFile;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 
@@ -257,7 +251,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
         binding = null;
         isEdit = false;
         for (int i = 0; i < listFolder.size(); i++){
-            listFolder.get(i).setImage(R.drawable.ic_pink500_folder);
+            listFolder.get(i).setImage(R.drawable.ic_folder_pink500);
         }
         adapterFolder.notifyDataSetChanged();
     }
@@ -573,7 +567,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         Date lastModifiedDate = new Date(lastModifiedTime);
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         String formattedDate = dateFormat.format(lastModifiedDate);
-                        listFolder.add(new FolderCLassContent(edtInputNameFolder.getText().toString(), 0 + " " +  v.getContext().getText(R.string.folder_file).toString() + " ", 0 + " MB", formattedDate ,R.drawable.ic_pink500_folder));
+                        listFolder.add(new FolderCLassContent(edtInputNameFolder.getText().toString(), 0 + " " +  v.getContext().getText(R.string.folder_file).toString() + " ", 0 + " MB", formattedDate ,R.drawable.ic_folder_pink500));
                         if (folderFilterTitle.getText().toString().equals("Ngày") || folderFilterTitle.getText().toString().equals("Day")){
                             sortList(listFolder, "day", mSortByNameAscending);
                         }
@@ -678,7 +672,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         sizeFolder = sizeFolder + 1.0 * size / (1024*1024);
                         Date lastModifiedDate = new Date(folder.lastModified());
                         @SuppressLint("SimpleDateFormat") String formattedDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(lastModifiedDate);
-                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " " + getContext().getString(R.string.folder_file) + " ",fileSize+" MB", formattedDate, R.drawable.ic_pink500_folder));
+                        folderList.add(new FolderCLassContent(fileName, amountFileOfFolder + " " + getContext().getString(R.string.folder_file) + " ",fileSize+" MB", formattedDate, R.drawable.ic_folder_pink500));
                     }
                 }
             }

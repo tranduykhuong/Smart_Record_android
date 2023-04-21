@@ -132,7 +132,7 @@
                     android:outlineProvider="none"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="20dp"
-                    android:src="@drawable/ic_play_harmonic" />
+                    android:src="@drawable/ic_play_pink" />
 
                 <TextView
                     android:id="@+id/divide_time_of_audio"

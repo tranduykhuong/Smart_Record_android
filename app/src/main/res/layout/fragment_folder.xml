@@ -223,7 +223,7 @@
                     android:layout_marginHorizontal="65dp"
                     android:background="@drawable/bg_record_btn_folder"
                     android:onClick="navigate_onclick"
-                    android:src="@drawable/ic_micro" />
+                    android:src="@drawable/ic_microphone" />
 
 <!--                <ImageButton-->
 <!--                    android:id="@+id/folder_voice"-->

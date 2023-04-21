@@ -48,7 +48,7 @@
                 android:layout_alignBottom="@id/folder_item_amount"
                 android:layout_alignTop="@id/folder_item_title"
                 android:layout_marginHorizontal="10dp"
-                android:src="@drawable/ic_pink500_folder" />
+                android:src="@drawable/ic_folder_pink500" />
 
             <TextView
                 android:id="@+id/folder_item_title"
@@ -94,7 +94,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:textColor="?attr/textColor"
+                android:textColor="?attr/backgroundColor"
                 android:background="@drawable/bg_solid_bottom_filter_folder"
                 android:layout_below="@id/folder_item_amount"
                 android:layout_marginTop="10dp"
