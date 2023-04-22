@@ -156,5 +156,7 @@
 
     <string name="announce_no_file_add">No file chosen</string>
     <string name="divide_title">Divide</string>
+    <string name="add_label">Add</string>
+    <string name="add_file">Add File</string>
 
 </resources>

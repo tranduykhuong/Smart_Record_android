@@ -30,13 +30,12 @@
             >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text="@string/adjust_title"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                />
+                android:textStyle="bold" />
 
         </LinearLayout>
     </RelativeLayout>
@@ -55,7 +54,8 @@
 
         <TextView
             android:id="@+id/adjust_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center"
             android:layout_height="wrap_content"
             android:textColor="?attr/textColor"
             android:text="135 Trần Hưng Đạo 2, ngày 17/02/2023"/>

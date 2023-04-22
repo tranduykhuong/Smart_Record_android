@@ -153,4 +153,6 @@
 
     <string name="announce_no_file_add">Bạn chưa thêm File</string>
     <string name="divide_title">Chia</string>
+    <string name="add_label">Thêm</string>
+    <string name="add_file">Thêm File</string>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -9,7 +10,8 @@
     <LinearLayout
         android:id="@+id/nav_adjust"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="20dp"
         android:gravity="center"
         android:background="?attr/actionBarColor"
         android:weightSum="5"
@@ -31,11 +33,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="40dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:layout_gravity="center"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:layout_weight="3"
             android:text="@string/divide_title"
             android:paddingRight="40dp"/>
@@ -50,7 +52,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp"
         android:background="?attr/name_rc_ctn">
 
         <TextView
@@ -59,12 +62,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="3"
-            android:gravity="center_horizontal"
-            android:paddingHorizontal="40dp"
-            android:paddingRight="40dp"
+            android:gravity="center"
+            android:paddingHorizontal="20dp"
             android:text="08_08_56, ngày 18 tháng 3, 2023"
-            android:textColor="?attr/textColor"
-            android:textSize="17sp" />
+            android:textColor="?attr/textColor" />
     </LinearLayout>
 
     <HorizontalScrollView
@@ -115,7 +116,7 @@
                     android:paddingRight="12dp"
                     android:textAlignment="textEnd"
                     android:textColor="?attr/text_time"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
 
                 <ImageButton
                     android:id="@+id/divide_btn_play"
@@ -137,11 +138,12 @@
                     android:layout_weight="1"
                     android:maxWidth="60dp"
                     android:text="00:01:39"
-                    android:layout_marginRight="15dp"
-                    android:paddingRight="12dp"
-                    android:textAlignment="textEnd"
+                    android:layout_marginLeft= "15dp"
+                    android:paddingLeft="12dp"
+                    android:textAlignment="textStart"
                     android:textColor="?attr/text_time"
-                    android:textSize="17sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlCompat" />
 
 
             </LinearLayout>
@@ -163,10 +165,10 @@
                     android:background="@android:color/transparent"
                     android:textColor="?attr/textColor"
                     android:layout_weight="1"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textAllCaps="false"
                     android:onClick="changeLayoutFromDivide"
-                    android:text="Hủy"/>
+                    android:text="@string/cancel_announce"/>
 
                 <ImageButton
                     android:id="@+id/divide_btn_action"
@@ -189,9 +191,9 @@
                     android:background="@android:color/transparent"
                     android:textColor="@color/pink_500"
                     android:layout_weight="1"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textAllCaps="false"
-                    android:text="Chia"/>
+                    android:text="@string/divide_title"/>
 
 
             </LinearLayout>
