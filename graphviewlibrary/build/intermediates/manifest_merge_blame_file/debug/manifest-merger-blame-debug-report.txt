@@ -1,0 +1,18 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="suman.brose.graphviewlibrary" >
+4
+5    <uses-sdk android:minSdkVersion="15" />
+5-->C:\Users\ASUS\AndroidStudioProjects\Smart_Record_android\graphviewlibrary\src\main\AndroidManifest.xml
+6
+7    <application
+7-->C:\Users\ASUS\AndroidStudioProjects\Smart_Record_android\graphviewlibrary\src\main\AndroidManifest.xml:4:5-9:19
+8        android:allowBackup="true"
+8-->C:\Users\ASUS\AndroidStudioProjects\Smart_Record_android\graphviewlibrary\src\main\AndroidManifest.xml:5:9-35
+9        android:label="@string/app_name"
+9-->C:\Users\ASUS\AndroidStudioProjects\Smart_Record_android\graphviewlibrary\src\main\AndroidManifest.xml:6:9-41
+10        android:supportsRtl="true" >
+10-->C:\Users\ASUS\AndroidStudioProjects\Smart_Record_android\graphviewlibrary\src\main\AndroidManifest.xml:7:9-35
+11    </application>
+12
+13</manifest>
