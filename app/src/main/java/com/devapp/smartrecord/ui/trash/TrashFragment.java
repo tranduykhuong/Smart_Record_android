@@ -105,6 +105,8 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         trashAdapter.setDataItem(getItemList());
         recyclerView.setAdapter(trashAdapter);
 
+        showMultiFolder();
+
         if (trashDirectory != null && trashDirectory.listFiles() != null)
             totalAmountAudio.setText(String.valueOf(Objects.requireNonNull(trashDirectory.listFiles()).length));
         if(sumCapacity >= 1024) {
@@ -214,10 +216,27 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
 
     @Override
     public void playSound(String name, int position) {
-        Intent intent = new Intent(getActivity(), ReplayActivity.class);
-        intent.putExtra("NameTrash", name);
-        intent.setAction("FromTrash");
-        startActivity(intent);
+
+        if(isEdit){
+            if (isEdit){
+                if (selectedItems[position]){
+                    itemList.get(position).setImage(R.drawable.ic_circle_folder);
+                    trashAdapter.notifyDataSetChanged();
+                    selectedItems[position] = false;
+                }
+                else {
+                    itemList.get(position).setImage(R.drawable.ic_circle_checked_folder);
+                    trashAdapter.notifyDataSetChanged();
+                    selectedItems[position] = true;
+                }
+            }
+        }
+        else{
+            Intent intent = new Intent(getActivity(), ReplayActivity.class);
+            intent.putExtra("NameTrash", name);
+            intent.setAction("FromTrash");
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -289,7 +308,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         // Replace this fragment with the child fragment
         audioChild = new TrashChildFragment(this);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.home_wrap_fragment, audioChild);
+        transaction.replace(R.id.trash_wrap_fragment, audioChild);
         transaction.addToBackStack(null);
         transaction.commit();
     }
