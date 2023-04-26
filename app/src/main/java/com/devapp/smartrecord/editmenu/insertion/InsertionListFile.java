@@ -111,7 +111,7 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
                 }
                 if (filteredList.isEmpty()) {
                     // Hiển thị message thông báo không tìm thấy kết quả tương ứng
-                    Toast.makeText(getApplicationContext(), "Không tìm thấy kết quả phù hợp", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.search_not_found), Toast.LENGTH_SHORT).show();
                 }
 
                 // Đặt danh sách đã lọc vào adapter và cập nhật adapter
@@ -147,7 +147,6 @@ public class InsertionListFile extends AppCompatActivity implements InsertionAud
 
     @Override
     public void onItemClick(int position){
-        Toast.makeText(this, pathFiles.get(position), Toast.LENGTH_SHORT).show();
         Intent returnIntent = getIntent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("file", audioList.get(position));

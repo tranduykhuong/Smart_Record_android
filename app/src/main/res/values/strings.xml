@@ -161,4 +161,5 @@
     <string name="add_file">Add File</string>
 
     <string name="insert_not_file">The file to be inserted has not been selected</string>
+    <string name="search_not_found">No matching results were found</string>
 </resources>
