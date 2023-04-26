@@ -340,7 +340,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         }
         //Tạo ra dialog để xác nhận xóa hay không
         AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
-        builder.setMessage(getView().getContext().getString(R.string.question_delete));
+        builder.setMessage(getView().getContext().getString(R.string.question_delete_permanently));
         builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int j) {
