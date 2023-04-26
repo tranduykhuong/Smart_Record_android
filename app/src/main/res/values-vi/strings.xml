@@ -157,4 +157,6 @@
     <string name="divide_title">Chia</string>
     <string name="add_label">Thêm</string>
     <string name="add_file">Thêm File</string>
+    
+    <string name="insert_not_file">Chưa chọn file cần chèn</string>
 </resources>
