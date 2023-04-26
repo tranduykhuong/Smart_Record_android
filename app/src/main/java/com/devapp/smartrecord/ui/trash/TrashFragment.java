@@ -2,6 +2,8 @@ package com.devapp.smartrecord.ui.trash;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -24,26 +26,33 @@ import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ReplayActivity;
 import com.devapp.smartrecord.databinding.FragmentTrashBinding;
 import com.devapp.smartrecord.ui.folder.FolderCLassContent;
+import com.devapp.smartrecord.ui.home.Audio;
+import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
-public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickListenerTrash{
+public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickListenerTrash, TrashChildFragment.DataPassListener{
     private TrashAdapter trashAdapter;
     private List<Item> itemList;
     private File trashDirectory;
     private TextView totalCapacityItem;
     private TextView totalAmountAudio;
+    private int[] listItemChoice;
+    private boolean[] selectedItems;
     private TextView capacityUnit;
     private double sumCapacity = 0;
     private FragmentTrashBinding binding;
     private int size;
+    private OnDataPass dataPasser;
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +102,9 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         return root;
     }
 
+    public interface OnDataPass {
+        void onDataPassHome(boolean data);
+    }
     @NonNull
     private List<Item> getItemList() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -197,4 +209,67 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         super.onDestroyView();
         binding = null;
     }
+
+    // Method để gửi dữ liệu về Activity
+    public void passData(boolean isEdit) {
+        if (dataPasser != null)
+            dataPasser.onDataPassHome(isEdit);
+    }
+
+    private void handleValueSelected(){
+        listItemChoice = IntStream.range(0, selectedItems.length)
+                .filter(i -> selectedItems[i])
+                .toArray();
+    }
+
+    @Override
+    public void handleRemoveMultiFolder() {
+        handleValueSelected();
+        if (listItemChoice.length == 0){
+            Toast.makeText(getActivity(), getView().getContext().getText(R.string.announce_notify_warning_len_null), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+        //Tạo ra dialog để xác nhận xóa hay không
+        AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+        builder.setMessage(getView().getContext().getString(R.string.question_delete));
+        builder.setPositiveButton(getView().getContext().getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int j) {
+                int count = 0;
+                for (int i = 0; i < listItemChoice.length; i++) {
+                    if (i != 0){
+                        listItemChoice[i] -= count;
+                    }
+                    Item folder = itemList.get(listItemChoice[i]);
+                    String folderName = folder.getName();
+                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
+
+                    try {
+                        itemList.remove(listItemChoice[i]);
+                        trashAdapter.notifyItemRemoved(listItemChoice[i]);
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    count++;
+                }
+                listItemChoice = null;
+                selectedItems = new boolean[itemList.size()];
+                Arrays.fill(selectedItems, false);
+                trashAdapter.notifyDataSetChanged();
+                passData(false);
+            }
+        });
+        builder.setNegativeButton(getView().getContext().getString(R.string.answer_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+
 }

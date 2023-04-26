@@ -19,7 +19,6 @@ public class TrashChildFragment extends Fragment {
 
     public interface DataPassListener {
         void handleRemoveMultiFolder();
-        void handleMoveMultiFolder(View view);
     }
 
     public TrashChildFragment(){
@@ -37,21 +36,12 @@ public class TrashChildFragment extends Fragment {
         binding = TrashMenuMultiChoiceBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         LinearLayout btnRemove = binding.trashDeleteMultiChoice;
-        LinearLayout btnMove = binding.trashMoveMultiChoice;
-
 
         // Add code to configure the child fragment view
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallback.handleRemoveMultiFolder();
-            }
-        });
-
-        btnMove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.handleMoveMultiFolder(v);
             }
         });
 
