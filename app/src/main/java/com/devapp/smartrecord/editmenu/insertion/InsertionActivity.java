@@ -69,7 +69,7 @@ public class InsertionActivity extends AppCompatActivity {
     private Audio file;
     private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
     private File outputFileInsert;
-    private boolean inserted = false, exported = false;
+    private boolean inserted = false, exported = false, isPlay = false;
     private List<Entry> entries;
     private String audioFilePath, fileNameRoot, finalNameFile;
     private String[] nameFile;
@@ -95,9 +95,6 @@ public class InsertionActivity extends AppCompatActivity {
                 if (fileDel.exists()) {
                     fileDel.delete();
                 }
-            }
-            else{
-                Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -134,13 +131,18 @@ public class InsertionActivity extends AppCompatActivity {
         hrzScrollView = findViewById(R.id.insert_horizontal);
         timeMax = findViewById(R.id.insert_time_max);
         btnExport = findViewById(R.id.insert_export);
-//        if (!inserted){
-//            btnExport.setTextColor(R.attr.textColor);
-//        }
         btnExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (inserted){
+                    // Dừng phát âm thanh và giải phóng tài nguyên
+                    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                    handler.removeCallbacks(highlight);
+
                     Toast.makeText(InsertionActivity.this, getApplicationContext().getText(R.string.announce_save_successfully), Toast.LENGTH_SHORT).show();
                     onBackPressed();
                     exported = true;
@@ -159,15 +161,18 @@ public class InsertionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!inserted){
-                    mediaPlayer.pause();
-                    btnPlay.setImageResource(R.drawable.ic_play);
-                    currPosition = mediaPlayer.getCurrentPosition();
-                    Intent intent = new Intent(InsertionActivity.this, InsertionListFile.class);
-                    startActivityForResult(intent, 1);
+                    if (isPlay){
+                        Toast.makeText(InsertionActivity.this, getApplicationContext().getText(R.string.insert_warning_insertfile), Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Intent intent = new Intent(InsertionActivity.this, InsertionListFile.class);
+                        startActivityForResult(intent, 1);
+                    }
                 }
-//                else{
-//                    btnInsert.setEnabled(true);
-//                }
+                else{
+                    btnInsert.setEnabled(true);
+                    Toast.makeText(InsertionActivity.this, R.string.inserted, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -199,12 +204,14 @@ public class InsertionActivity extends AppCompatActivity {
 
                 mediaPlayer.start();
                 seekBar.setMax(mediaPlayer.getDuration());
+                isPlay = true;
             } else {
                 imageView.setImageResource(R.drawable.ic_play);
                 imageView.setTag("ic_play");
                 currPosition = mediaPlayer.getCurrentPosition();
 
                 mediaPlayer.pause();
+                isPlay = false;
             }
         });
 
@@ -316,7 +323,7 @@ public class InsertionActivity extends AppCompatActivity {
             btnPlay.setTag("ic_play");
             seekBar.setProgress(0);
             txtCurTime.setText("00:00:00");
-//            flagPlaying = false;
+            isPlay = false;
         });
 
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -423,60 +430,85 @@ public class InsertionActivity extends AppCompatActivity {
         chart.highlightValue(0, 0);
     }
 
-    private void insertAudio(String baseAudioFilePath, String insertAudioFilePath, int startTime, int duration) {
-        File tmp1 = new File(tempPath + "file1_1.mp3");
-        File tmp2 = new File(tempPath + "file1_2.mp3");
+    private void insertAudio(String baseAudioFilePath, String insertAudioFilePath, int startTime) {
+        if (startTime != 0){
+            File tmp1 = new File(tempPath + "file1_1.mp3");
+            File tmp2 = new File(tempPath + "file1_2.mp3");
 
-        String currentTime = formatTime(startTime);
+            String currentTime = formatTime(startTime);
 
-        String divideTime = currentTime;
+            String divideTime = currentTime;
 
-        File ipfile = new File(baseAudioFilePath);
-        // Lệnh để chia file
-        String[] commandPart1 = {
-                "-i", String.valueOf(ipfile),
-                "-c:a", "mp3", // Mã codec âm thanh là mp3
-                "-t", divideTime, // Thời gian của phần 1 (đơn vị: giây)
-                tmp1.getAbsolutePath()
-        };
+            File ipfile = new File(baseAudioFilePath);
+            // Lệnh để chia file
+            String[] commandPart1 = {
+                    "-i", String.valueOf(ipfile),
+                    "-c:a", "mp3", // Mã codec âm thanh là mp3
+                    "-t", divideTime, // Thời gian của phần 1 (đơn vị: giây)
+                    tmp1.getAbsolutePath()
+            };
 
-        String[] commandPart2 = {
-                "-i", String.valueOf(ipfile),
-                "-c:a", "mp3", // Mã codec âm thanh là mp3
-                "-ss", divideTime, // Thời gian bắt đầu của phần 2 (đơn vị: giây)
-                tmp2.getAbsolutePath()
-        };
+            String[] commandPart2 = {
+                    "-i", String.valueOf(ipfile),
+                    "-c:a", "mp3", // Mã codec âm thanh là mp3
+                    "-ss", divideTime, // Thời gian bắt đầu của phần 2 (đơn vị: giây)
+                    tmp2.getAbsolutePath()
+            };
 
-        int rc3 = FFmpeg.execute(commandPart1);
-        int rc4 = FFmpeg.execute(commandPart2);
+            int rc3 = FFmpeg.execute(commandPart1);
+            int rc4 = FFmpeg.execute(commandPart2);
 
-        String[] command = {
-                "-i", tmp1.getAbsolutePath(),
-                "-i", insertAudioFilePath,
-                "-i", tmp2.getAbsolutePath(),
-                "-filter_complex", "[0:a][1:a][2:a]concat=n=3:v=0:a=1[out]",
-                "-map", "[out]",
-                "-y", outputFileInsert.getAbsolutePath()
-        };
+            String[] command = {
+                    "-i", tmp1.getAbsolutePath(),
+                    "-i", insertAudioFilePath,
+                    "-i", tmp2.getAbsolutePath(),
+                    "-filter_complex", "[0:a][1:a][2:a]concat=n=3:v=0:a=1[out]",
+                    "-map", "[out]",
+                    "-y", outputFileInsert.getAbsolutePath()
+            };
 
-        int rcConcat = FFmpeg.execute(command);
+            int rcConcat = FFmpeg.execute(command);
 
-        if (rcConcat == RETURN_CODE_SUCCESS) {
-            File fileDl = new File(tempPath + "file1_1.mp3");
-            File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-            if (fileDel.exists()) {
-                fileDel.delete();
+            if (rcConcat == RETURN_CODE_SUCCESS) {
+                File fileDl = new File(tempPath + "file1_1.mp3");
+                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+                if (fileDel.exists()) {
+                    fileDel.delete();
+                }
+                File fileDl1 = new File(tempPath + "file1_2.mp3");
+                File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
+                if (fileDel1.exists()) {
+                    fileDel1.delete();
+                }
+            } else {
+                Log.i(TAG, "Error: " + Config.getLastCommandOutput());
             }
-            File fileDl1 = new File(tempPath + "file1_2.mp3");
-            File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
-            if (fileDel1.exists()) {
-                fileDel1.delete();
-            }
-        } else {
-            Log.i(TAG, "Error: " + Config.getLastCommandOutput());
+
+            initMedia(outputFileInsert.getAbsolutePath());
         }
+        else{
+            String[] command = {
+                    "-i", insertAudioFilePath,
+                    "-i", baseAudioFilePath,
+                    "-filter_complex", "[0:a][1:a]concat=n=2:v=0:a=1[out]",
+                    "-map", "[out]",
+                    "-y", outputFileInsert.getAbsolutePath()
+            };
 
-        initMedia(outputFileInsert.getAbsolutePath());
+            int rcConcat = FFmpeg.execute(command);
+
+            if (rcConcat == RETURN_CODE_SUCCESS) {
+                File fileDl1 = new File(tempPath + "file1_2.mp3");
+                File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
+                if (fileDel1.exists()) {
+                    fileDel1.delete();
+                }
+            } else {
+                Log.i(TAG, "Error: " + Config.getLastCommandOutput());
+            }
+
+            initMedia(outputFileInsert.getAbsolutePath());
+        }
     }
 
     @Override
@@ -499,21 +531,11 @@ public class InsertionActivity extends AppCompatActivity {
                 dayInsertFile.setText(file.getCreateDate());
 //                btnExport.setTextColor(R.color.pink_500);
 
-                // Khởi tạo MediaPlayer và Visualizer
-                MediaPlayer mediaPlayer1 = new MediaPlayer();
-                try {
-                    mediaPlayer1.setDataSource(pathFile);
-                    mediaPlayer1.prepare();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                int duration1 = mediaPlayer1.getDuration();
-
                 String convertFileRoot = fileNameRoot.split("\\.")[0];
                 finalNameFile = "Insert_" + convertFileRoot + "_" + file.getName();
                 outputFileInsert = new File(tempPath, finalNameFile);
                 Toast.makeText(this, getApplicationContext().getText(R.string.add_successfull), Toast.LENGTH_SHORT).show();
-                insertAudio(audioFilePath, pathFile, currPosition, duration1);
+                insertAudio(audioFilePath, pathFile, currPosition);
             }
         }
     }

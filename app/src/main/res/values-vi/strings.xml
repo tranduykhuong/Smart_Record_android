@@ -160,4 +160,7 @@
     
     <string name="insert_not_file">Chưa chọn file cần chèn</string>
     <string name="search_not_found">Không tìm thấy kết quả phù hợp</string>
+
+    <string name="insert_warning_insertfile">Bạn chưa đánh dấu thời gian bắt đầu chia, Vui lòng dừng đoạn ghi âm để đánh dấu</string>
+    <string name="inserted">Đã chèn!</string>
 </resources>

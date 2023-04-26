@@ -163,4 +163,7 @@
 
     <string name="insert_not_file">The file to be inserted has not been selected</string>
     <string name="search_not_found">No matching results were found</string>
+
+    <string name="insert_warning_insertfile">You have not marked the split start time, Please stop the recording to mark</string>
+    <string name="inserted">Inserted!</string>
 </resources>
