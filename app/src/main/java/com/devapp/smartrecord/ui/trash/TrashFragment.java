@@ -12,12 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +30,7 @@ import com.devapp.smartrecord.ReplayActivity;
 import com.devapp.smartrecord.databinding.FragmentTrashBinding;
 import com.devapp.smartrecord.ui.folder.FolderCLassContent;
 import com.devapp.smartrecord.ui.home.Audio;
+import com.devapp.smartrecord.ui.home.HomeChildFragment;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
@@ -48,10 +52,14 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     private TextView totalAmountAudio;
     private int[] listItemChoice;
     private boolean[] selectedItems;
-    private TextView capacityUnit;
+    private ImageView imageTotalChoice;
+    private TextView capacityUnit, textAudio;
     private double sumCapacity = 0;
+    private TextView trashSelectAll;
     private FragmentTrashBinding binding;
+    private boolean isEdit, isTotalChecked = false;
     private int size;
+    private TrashChildFragment audioChild;
     private OnDataPass dataPasser;
 
     @SuppressLint("SetTextI18n")
@@ -65,6 +73,8 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         totalCapacityItem = binding.trashCapacityAudio;
         totalAmountAudio = binding.trashAmountAudio;
         capacityUnit = binding.capacityAudioUnit;
+        textAudio = binding.trashTitleAudio;
+        trashSelectAll = binding.trashSelectAll;
 
         SearchView searchView = binding.searchViewAudioTrash;
         searchView.clearFocus();
@@ -81,6 +91,12 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
                 return true;
             }
         });
+
+        // Lấy dữ liệu được truyền vào từ activity
+        Bundle args = getArguments();
+        if (args != null){
+            isEdit = args.getBoolean("isEditTrash");
+        }
 
         RecyclerView recyclerView = binding.trashRcvAudioList;
         recyclerView.setLayoutManager(new LinearLayoutManager((getContext())));
@@ -214,6 +230,68 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     public void passData(boolean isEdit) {
         if (dataPasser != null)
             dataPasser.onDataPassHome(isEdit);
+    }
+
+    private void showMultiFolder(){
+        if (isEdit) {
+            totalCapacityItem.setVisibility(View.GONE);
+            capacityUnit.setVisibility(View.GONE);
+            totalAmountAudio.setVisibility(View.GONE);
+            textAudio.setVisibility(View.GONE);
+
+            imageTotalChoice = binding.trashTotalChoice;
+            imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
+            trashSelectAll.setText("Chọn tất cả");
+
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) infoLayout.getLayoutParams();
+            RelativeLayout.LayoutParams paramsText = (RelativeLayout.LayoutParams) totalAmountAudio.getLayoutParams();
+//            params.leftMargin = 30;
+            paramsText.leftMargin = 14;
+
+            imageTotalChoice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isTotalChecked) {
+                        imageTotalChoice.setImageResource(R.drawable.ic_circle_checked_folder);
+                        for (int i = 0; i < itemList.size(); i++) {
+                            itemList.get(i).setImage(R.drawable.ic_circle_checked_folder);
+                        }
+                        trashAdapter.notifyDataSetChanged();
+                        Arrays.fill(selectedItems, true);
+                        isTotalChecked = true;
+                    } else {
+                        imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
+                        for (int i = 0; i < itemList.size(); i++) {
+                            itemList.get(i).setImage(R.drawable.ic_circle_folder);
+                        }
+                        trashAdapter.notifyDataSetChanged();
+                        Arrays.fill(selectedItems, false);
+                        isTotalChecked = false;
+                    }
+                }
+            });
+
+            choiceMultiFolder();
+            showChildFragment();
+        }
+    }
+
+    private void choiceMultiFolder(){
+        if (itemList != null){
+            for (int i = 0; i < itemList.size(); i++){
+                itemList.get(i).setImage(R.drawable.ic_circle_folder);
+            }
+            trashAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void showChildFragment() {
+        // Replace this fragment with the child fragment
+        audioChild = new TrashChildFragment(this);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.home_wrap_fragment, audioChild);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void handleValueSelected(){
