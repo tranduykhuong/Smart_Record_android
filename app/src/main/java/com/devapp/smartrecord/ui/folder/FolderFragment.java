@@ -350,7 +350,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                 }
                 if (filteredList.isEmpty()) {
                     // Hiển thị message thông báo không tìm thấy kết quả tương ứng
-                    Toast.makeText(getActivity(), "Không tìm thấy kết quả phù hợp", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getView().getContext().getText(R.string.search_not_found), Toast.LENGTH_SHORT).show();
                 }
                 // Đặt danh sách đã lọc vào adapter và cập nhật adapter
                 adapterFolder.filterList(filteredList);
@@ -558,7 +558,6 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
                         imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
-                        Toast.makeText(getContext(), popupView.getContext().getText(R.string.create_folder_success), Toast.LENGTH_LONG).show();
                         File[] files = newFolder.listFiles();
 
                         assert files != null;
@@ -570,7 +569,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         Date lastModifiedDate = new Date(lastModifiedTime);
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         String formattedDate = dateFormat.format(lastModifiedDate);
-                        listFolder.add(new FolderCLassContent(edtInputNameFolder.getText().toString(), 0 + " " +  v.getContext().getText(R.string.folder_file).toString() + " ", 0 + " MB", formattedDate ,R.drawable.ic_folder_pink500));
+                        listFolder.add(new FolderCLassContent(edtInputNameFolder.getText().toString(), 0 + " " +  v.getContext().getText(R.string.folder_file) + " ", 0 + " MB", formattedDate ,R.drawable.ic_folder_pink500));
                         if (folderFilterTitle.getText().toString().equals("Ngày") || folderFilterTitle.getText().toString().equals("Day")){
                             sortList(listFolder, "day", mSortByNameAscending);
                         }
@@ -580,6 +579,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
                         else if(folderFilterTitle.getText().toString().equals("Kích Thước") || folderFilterTitle.getText().toString().equals("Size")){
                             sortList(listFolder, "size", mSortByNameAscending);
                         }
+                        Toast.makeText(getContext(), popupView.getContext().getText(R.string.create_folder_success), Toast.LENGTH_LONG).show();
                         adapterFolder.notifyDataSetChanged();
                     }
                     else{

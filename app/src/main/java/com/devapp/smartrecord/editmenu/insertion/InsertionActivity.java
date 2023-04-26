@@ -509,7 +509,8 @@ public class InsertionActivity extends AppCompatActivity {
                 }
                 int duration1 = mediaPlayer1.getDuration();
 
-                finalNameFile = "Insert_" + nameFile[nameFile.length - 1].substring(nameFile.length -4) + "_" + file.getName();
+                String convertFileRoot = fileNameRoot.split("\\.")[0];
+                finalNameFile = "Insert_" + convertFileRoot + "_" + file.getName();
                 outputFileInsert = new File(tempPath, finalNameFile);
                 Toast.makeText(this, getApplicationContext().getText(R.string.add_successfull), Toast.LENGTH_SHORT).show();
                 insertAudio(audioFilePath, pathFile, currPosition, duration1);
