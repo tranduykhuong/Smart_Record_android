@@ -52,6 +52,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     private TextView totalAmountAudio;
     private int[] listItemChoice;
     private boolean[] selectedItems;
+    private RecyclerView recyclerView;
     private ImageView imageTotalChoice;
     private TextView capacityUnit, textAudio;
     private double sumCapacity = 0;
@@ -92,13 +93,23 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
             }
         });
 
+        recyclerView = binding.trashRcvAudioList;
+        recyclerView.setLayoutManager(new LinearLayoutManager((getContext())));
+        trashAdapter = new TrashAdapter(getContext(), this);
+
+        trashAdapter.setDataItem(getItemList());
+        recyclerView.setAdapter(trashAdapter);
+
+        selectedItems = new boolean[itemList.size()];
+        Arrays.fill(selectedItems, false);
+
         // Lấy dữ liệu được truyền vào từ activity
         Bundle args = getArguments();
         if (args != null){
             isEdit = args.getBoolean("isEditTrash");
         }
 
-        RecyclerView recyclerView = binding.trashRcvAudioList;
+        recyclerView = binding.trashRcvAudioList;
         recyclerView.setLayoutManager(new LinearLayoutManager((getContext())));
         trashAdapter = new TrashAdapter(getContext(), this);
 

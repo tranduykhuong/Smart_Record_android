@@ -103,6 +103,7 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
         handleValueSelected();
         if (listItemChoice.length == 0){
             Toast.makeText(getActivity(), getView().getContext().getText(R.string.announce_notify_warning_len_null), Toast.LENGTH_SHORT).show();
+
             return;
         }
         //Tạo ra dialog để xác nhận xóa hay không
