@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
+import android.os.Environment;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -75,16 +76,19 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
     private boolean isEdit = true;
 
     ActivityResultLauncher<String[]> requestPermissionLauncher;
-    private String[] permissions = new String[]{
-            Manifest.permission.RECORD_AUDIO,
+    private String[] permissionStore = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.INTERNET,
             Manifest.permission.MANAGE_EXTERNAL_STORAGE,
             Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.POST_NOTIFICATIONS
+    };
+
+    private String[] permissionRecord = new String[]{
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_PHONE_STATE
     };
 
@@ -99,14 +103,42 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
                     @Override
                     public void onActivityResult(Map<String, Boolean> permissions) {
                         // Xử lý kết quả trả về từ việc yêu cầu cấp quyền
-                        if (permissions.containsValue(false)) {
-                            // Xử lý khi không được cấp quyền
-                        } else {
-                            // Xử lý khi được cấp quyền
-                            onResume();
-                            onStop();
-                            onRestart();
-                            recreate();
+                        int cnt = 0;
+                        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+                            System.out.println(entry.getKey() + ": " + entry.getValue());
+                            if (entry.getValue() == true) {
+                                cnt++;
+                            }
+                        }
+                        Log.e(TAG, "onActivityResult: " + cnt);
+                        if (permissions.containsKey("android.permission.MANAGE_EXTERNAL_STORAGE")) {
+                            if (cnt < 3) {
+                                askForPermission(permissionStore);
+                            } else {
+                                permissionRequestCount = 0;
+                                onResume();
+                                onStop();
+                                onRestart();
+                                recreate();
+                            }
+                        } else if (permissions.containsKey("android.permission.RECORD_AUDIO")) {
+                            if (permissions.containsValue(false)) {
+                                askForPermission(permissionRecord);
+                            } else {
+                                permissionRequestCount = 0;
+                                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+                                startActivityForResult(intent, RECORDING_CODE);
+                                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
+
+                                if (isMarried == false) {
+                                    Intent serviceIntent = new Intent(getApplicationContext(), RecordService.class);
+                                    startForegroundService(serviceIntent);
+                                }
+
+                                Intent intentRecord = new Intent(HomeActivity.this, RecordActivity1.class);
+                                startActivityForResult(intentRecord, RECORDING_CODE);
+                            }
                         }
                     }
                 });
@@ -196,7 +228,31 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
             }
         });
 
-        askForPermission();
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            boolean isPermissionGranted = Environment.isExternalStorageManager();
+            if (isPermissionGranted) {
+                // Quyền đã được cấp
+            } else {
+                // Quyền chưa được cấp
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivityForResult(intent, 1);
+            }
+        }
+
+        int grants = 0;
+        for (int i=0; i<permissionStore.length; i++) {
+            grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissionStore[i]);
+        }
+        if (SDK_INT > Build.VERSION_CODES.R) {
+            if (grants < -3)
+                askForPermission(permissionStore);
+        } else if (SDK_INT <= Build.VERSION_CODES.R) {
+            if (grants < -2)
+                askForPermission(permissionStore);
+        }
+
     }
 
     @Override
@@ -223,53 +279,116 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
         switch (view.getId()) {
             case R.id.home_btn_record:
             case R.id.folder_btn_record: {
-//                Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
-//                startActivityForResult(intent, RECORDING_CODE);
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
+                if (askForPermission(permissionRecord)) {
+                    Intent intent = new Intent(HomeActivity.this, RecordActivity.class);
+                    startActivityForResult(intent, RECORDING_CODE);
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    boolean isMarried = sharedPreferences.getBoolean("isRecording", false);
 
-                if (isMarried == false) {
-                    Intent serviceIntent = new Intent(getApplicationContext(), RecordService.class);
-                    startForegroundService(serviceIntent);
+                    if (isMarried == false) {
+                        Intent serviceIntent = new Intent(getApplicationContext(), RecordService.class);
+                        startForegroundService(serviceIntent);
+                    }
+
+                    Intent intentRecord = new Intent(HomeActivity.this, RecordActivity1.class);
+                    startActivityForResult(intentRecord, RECORDING_CODE);
                 }
-
-                Intent intent = new Intent(HomeActivity.this, RecordActivity1.class);
-                startActivityForResult(intent, RECORDING_CODE);
                 break;
             }
         }
     }
 
-    private void askForPermission() {
+//    private boolean askForPermission(String[] permissions) {
+//        int grants = 0;
+//        for (int i=0; i<permissions.length; i++) {
+//            grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissions[i]);
+//        }
+//        Log.e(TAG, "askForPermission: " + PackageManager.PERMISSION_GRANTED);
+//        Log.e(TAG, "askForPermission: "+ grants);
+//
+//        if (grants != PackageManager.PERMISSION_GRANTED) {
+//            boolean rationables = false;
+//            for (int i=0; i<permissions.length; i++) {
+//                rationables = rationables || ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, permissions[i]);
+//            }
+//            if (rationables) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+//                builder.setTitle(R.string.grant_permission);
+//                builder.setMessage(R.string.list_type);
+//                builder.setPositiveButton(R.string.ok, (dialog, which) ->
+//                        requestPermissions(permissions)
+//                );
+//                builder.setNegativeButton(R.string.no, (dialog, which) ->
+//                        askForPermission(permissions)
+//                );
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+//            } else {
+//                requestPermissions(permissions);
+//            }
+//            return false;
+//        }
+//        return true;
+//    }
+
+    private int permissionRequestCount = 0;
+
+    private boolean askForPermission(String[] permissions) {
+        // Kiểm tra quyền đã được cấp chưa
         int grants = 0;
         for (int i=0; i<permissions.length; i++) {
             grants += ContextCompat.checkSelfPermission(HomeActivity.this, permissions[i]);
         }
 
+        // Nếu quyền chưa được cấp
         if (grants != PackageManager.PERMISSION_GRANTED) {
+            permissionRequestCount++;
+
+            // Nếu đây là lần thứ 3 yêu cầu cấp quyền và người dùng vẫn từ chối
+            if (permissionRequestCount >= 3) {
+                // Gửi thông báo cho người dùng biết rằng ứng dụng cần quyền để hoạt động
+                // và hướng dẫn người dùng cấp quyền bằng cách vào mục cài đặt ứng dụng
+                Toast.makeText(this, getString(R.string.grant_permission), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                return false;
+            }
+
+            // Kiểm tra xem người dùng đã từ chối cấp quyền trước đó hay chưa
             boolean rationables = false;
             for (int i=0; i<permissions.length; i++) {
                 rationables = rationables || ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, permissions[i]);
             }
+
+            // Nếu người dùng đã từ chối cấp quyền trước đó
             if (rationables) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 builder.setTitle(R.string.grant_permission);
                 builder.setMessage(R.string.list_type);
                 builder.setPositiveButton(R.string.ok, (dialog, which) ->
-                        requestPermissions()
+                        requestPermissions(permissions)
                 );
                 builder.setNegativeButton(R.string.no, (dialog, which) ->
-                        askForPermission()
+                        askForPermission(permissions)
                 );
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
-                requestPermissions();
+                // Yêu cầu cấp quyền
+                requestPermissions(permissions);
             }
+            return false;
         }
+
+        // Nếu quyền đã được cấp
+        permissionRequestCount = 0;
+        return true;
     }
 
-    private void requestPermissions() {
+
+    private void requestPermissions(String[] permissions) {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             requestPermissionLauncher.launch(permissions);
         } else {

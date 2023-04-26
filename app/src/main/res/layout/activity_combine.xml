@@ -9,35 +9,36 @@
     <LinearLayout
         android:id="@+id/nav_adjust"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:background="?attr/actionBarColor"
-        android:weightSum="5"
-        android:orientation="horizontal">
+        android:paddingVertical="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="5">
 
         <ImageButton
             android:id="@+id/combine_btn_back"
-            android:onClick="changeLayoutFromCombine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:background="?attr/actionBarColor"
             android:elevation="0dp"
+            android:onClick="changeLayoutFromCombine"
             android:outlineProvider="none"
             android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="40dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
             android:layout_gravity="center"
-            android:gravity="center_horizontal"
             android:layout_weight="3"
+            android:gravity="center"
+            android:paddingHorizontal="40dp"
+            android:layout_marginStart="5dp"
             android:text="@string/combine_title"
-            android:paddingRight="40dp"/>
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +50,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp"
         android:background="?attr/name_rc_ctn">
 
         <TextView
@@ -58,12 +60,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="3"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:paddingHorizontal="40dp"
             android:paddingEnd="40dp"
             android:text=""
-            android:textColor="?attr/textColor"
-            android:textSize="17sp" />
+            android:textColor="?attr/textColor" />
 
     </LinearLayout>
 
@@ -133,23 +134,21 @@
                     android:id="@+id/combine_time_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:layout_weight="1"
                     android:textColor="?attr/text_time"
                     android:gravity="left"
                     android:layout_marginLeft="24dp"
-                    android:textStyle="bold"
                     android:text="00:00:50" />
 
                 <TextView
                     android:id="@+id/combine_time_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="?attr/text_time"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:textStyle="bold"
                     android:layout_marginRight="24dp"
                     android:text="00:01:39" />
 
@@ -174,7 +173,7 @@
                 android:background="@android:color/transparent"
                 android:textColor="?attr/textColor"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textAllCaps="false"
                 android:text="@string/combine_cancel"/>
 
@@ -193,15 +192,15 @@
                 android:id="@+id/combine_btn_combine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="30dp"
-                android:elevation="0dp"
-                android:outlineProvider="none"
-                android:background="@android:color/transparent"
-                android:textColor="@color/pink_500"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:background="@android:color/transparent"
+                android:elevation="0dp"
+                android:maxWidth="30dp"
+                android:outlineProvider="none"
+                android:text="@string/combine_title"
                 android:textAllCaps="false"
-                android:text="@string/combine_title"/>
+                android:textColor="@color/pink_500"
+                android:textSize="16sp" />
 
 
         </LinearLayout>

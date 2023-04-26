@@ -113,7 +113,7 @@
     <string name="folder_name">Name</string>
     <string name="folder_size">Size</string>
     <string name="folder_filter_title">Sort by</string>
-    <string name="folder_file">files -</string>
+    <string name="folder_file">\ files -\ </string>
     <string name="folder_create_folder">Create folder</string>
     <string name="folder_create_folder_hint">Input name folder</string>
     <string name="folder_create_password">Create password</string>
@@ -157,5 +157,7 @@
 
     <string name="announce_no_file_add">No file chosen</string>
     <string name="divide_title">Divide</string>
+    <string name="add_label">Add</string>
+    <string name="add_file">Add File</string>
 
 </resources>

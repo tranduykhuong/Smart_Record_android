@@ -27,24 +27,25 @@
                 android:elevation="0dp"
                 android:outlineProvider="none"
                 android:src="@drawable/ic_back" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingRight="30dp"
+                android:paddingBottom="16dp"
                 android:text="@string/insertion"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:paddingRight="30dp"
-                />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/insert_file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingVertical="12dp"
             android:layout_below="@+id/insert_side_bar"
             android:background="?attr/name_rc_ctn"
             >
@@ -53,9 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
-                android:textSize="16sp"
-                android:padding="16dp"
-                android:background="?attr/name_rc_ctn"
+                android:paddingHorizontal="20dp"
+                android:gravity="center"
                 android:textAlignment="center"
                 android:textColor="?attr/textColor"/>
         </LinearLayout>

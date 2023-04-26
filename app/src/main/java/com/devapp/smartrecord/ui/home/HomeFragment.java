@@ -499,7 +499,6 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
 
     @Override
     public void onItemClick(int position) {
-
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
             totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));

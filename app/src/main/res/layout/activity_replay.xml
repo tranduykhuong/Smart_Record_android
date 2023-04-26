@@ -98,21 +98,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="?attr/backgroundState">
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp"
+        android:background="?attr/name_rc_ctn">
 
         <TextView
             android:id="@+id/txt_name_replay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="40dp"
-            android:textSize="17sp"
+            android:paddingHorizontal="30dp"
+            android:textSize="16sp"
             android:textColor="?attr/textColor"
             android:layout_gravity="center"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:layout_weight="3"
-            android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023"
-            android:paddingRight="40dp"/>
+            android:text="135 Trần Hưng Đạo 2, ngày 27/02/2023" />
 
     </LinearLayout>
 
@@ -144,7 +144,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="65dp"
             android:orientation="horizontal"
             android:background="?attr/backgroundColor"
             android:gravity="center">
@@ -206,7 +206,7 @@
             <SeekBar
                 android:id="@+id/skbar_replay"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
+                android:layout_height="12dp"
                 android:thumb="@drawable/ic_thumb_seekbar"
                 android:indeterminate="false"
                 android:layout_marginTop="8dp"
@@ -230,7 +230,7 @@
                     android:id="@+id/timecurrent_replay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_weight="1"
                     android:textColor="?attr/textColor"
                     android:gravity="left"
@@ -241,7 +241,7 @@
                     android:id="@+id/timetotal_replay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textColor="?attr/textColor"
                     android:layout_weight="1"
                     android:gravity="right"

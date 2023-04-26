@@ -71,6 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="?attr/textColor"
             android:layout_toRightOf="@id/home_item_icon_audio"
             android:text="Đại học Khoa học tự nhiên"
@@ -130,12 +132,12 @@
             android:layout_below="@id/home_item_time_of_audio"
             android:layout_marginTop="10dp"
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/bg_solid_bottom_filter_folder"
-            android:layout_below="@id/home_item_time_of_audio"
-            android:layout_marginTop="6dp"
-            />
     </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/bg_solid_bottom_filter_folder"
+        android:layout_below="@id/home_item_time_of_audio"
+        android:layout_marginTop="6dp"
+        />
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

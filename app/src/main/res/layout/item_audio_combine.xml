@@ -2,9 +2,6 @@
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:orientation="vertical"
     android:background="?attr/backgroundColor"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -14,6 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:background="?attr/backgroundColor">
 
         <LinearLayout
@@ -23,10 +22,10 @@
 
             <TextView
                 android:id="@+id/combine_txt_name_item"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:textSize="16sp"
+                android:paddingLeft="20dp"
+                android:textSize="14sp"
                 android:textColor="?attr/textColor"
                 android:gravity="left"
                 android:text="08_08_56, ngày 18 tháng 3, 2023"
@@ -42,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textColor="@color/x1_text"
                     android:layout_gravity="center"
                     android:gravity="center_horizontal"
@@ -53,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="20dp"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textColor="@color/x1_text"
                     android:layout_gravity="center"
                     android:gravity="center_horizontal"
@@ -66,5 +65,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/bg_solid_bottom_item_home"
+        android:layout_below="@id/home_item_time_of_audio"
+        android:layout_marginTop="5dp"
+        />
 
 </LinearLayout>
