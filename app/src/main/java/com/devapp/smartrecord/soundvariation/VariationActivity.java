@@ -44,7 +44,7 @@ public class VariationActivity extends AppCompatActivity {
     private Chronometer currTime;
     private ImageView   btnPlay;
     private TextView timeMax;
-    private ImageView variationAvatarViewNone, variationAvatarImageRobot, variationAvatarImageChild;
+    private ImageView variationAvatarViewNone, variationAvatarImageRobot, variationAvatarImageChild, getVariationAvatarImageOldMan;
     private ImageButton variationBtnSave;
     private boolean isPlay = false;
     private final int currPosition = 0;
@@ -218,6 +218,8 @@ public class VariationActivity extends AppCompatActivity {
         variationAvatarViewNone = this.findViewById(R.id.variation_avatar_image_view_none);
         variationAvatarImageRobot = this.findViewById(R.id.variation_avatar_image_view_robot);
         variationAvatarImageChild = this.findViewById(R.id.variation_avatar_image_view_child);
+        getVariationAvatarImageOldMan = this.findViewById(R.id.variation_avatar_image_view_old_man);
+
         variationBtnSave = this.findViewById(R.id.variation_btn_save);
 
         btnBack = findViewById(R.id.variation_back);
@@ -284,7 +286,7 @@ public class VariationActivity extends AppCompatActivity {
                 File tempWavFilePath = new File(destinationFolder, "tmp" + FilenameUtils.removeExtension(fileName) + ".wav");
                 File tempModifiedWavFilePath = new File(destinationFolder, "tmpModified" + FilenameUtils.removeExtension(fileName) + ".wav");
                 changeAudioFrequency(String.valueOf(sourceFile), String.valueOf(destinationFile), String.valueOf(tempWavFilePath),
-                        String.valueOf(tempModifiedWavFilePath),32000);
+                        String.valueOf(tempModifiedWavFilePath),22050);
 
                 try {
                     mediaPlayer.reset();
@@ -300,7 +302,6 @@ public class VariationActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
-
         });
 
         variationAvatarImageChild.setOnClickListener(new View.OnClickListener() {
@@ -338,6 +339,47 @@ public class VariationActivity extends AppCompatActivity {
                 }
             }
         });
+
+        getVariationAvatarImageOldMan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File sourceFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/");
+                destinationFolder = new File(Environment.getExternalStorageDirectory() + "/Recordings/TmpAudio/");
+
+                // Tạo thư mục thùng rác nếu chưa tồn tại
+                if (!destinationFolder.exists()) {
+                    destinationFolder.mkdir();
+                }
+
+                cntBtn = 0;
+
+                File sourceFile = new File(sourceFolder, fileName); // Đường dẫn tệp âm thanh gốc
+                destinationFile = new File(destinationFolder, "Old " + fileName); // Đường dẫn tệp âm thanh đích
+                File tempWavFilePath1 = new File(destinationFolder, "tmpOld" + FilenameUtils.removeExtension(fileName) + ".wav");
+                File tempModifiedWavFilePath1 = new File(destinationFolder, "tmpModifiedOld" + FilenameUtils.removeExtension(fileName) + ".wav");
+                changeAudioFrequency(String.valueOf(sourceFile), String.valueOf(destinationFile), String.valueOf(tempWavFilePath1),
+                        String.valueOf(tempModifiedWavFilePath1), 32000);
+
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(destinationFile.getAbsolutePath());
+                    mediaPlayer.prepare();
+                    seekBarTime.setMax(mediaPlayer.getDuration());
+                    btnPlay.setImageResource(R.drawable.ic_play_combine_main);
+                    variationAvatarViewNone.setEnabled(true);
+                    variationAvatarImageRobot.setEnabled(true);
+                    variationAvatarImageChild.setEnabled(false);
+                    isPlay = false;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+
+
+
+
         variationBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
