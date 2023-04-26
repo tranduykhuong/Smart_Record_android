@@ -291,7 +291,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
 
                 // Tạo Dialog để nhập tên mới
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Đổi tên tệp");
+                builder.setTitle(view1.getContext().getString(R.string.rename_file_dialog));
 
                 // Thiết kế giao diện Dialog
                 final EditText input = new EditText(context);
@@ -300,7 +300,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                 builder.setView(input);
 
                 // Xử lý khi người dùng chọn OK
-                builder.setPositiveButton("OK", (dialog, which) -> {
+                builder.setPositiveButton(view1.getContext().getString(R.string.announce_ok), (dialog, which) -> {
                     // Lấy tên mới và kiểm tra tính hợp lệ
                     String newFileName = input.getText().toString() + fileExtension;
                     File newFilePath = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/" + newFileName);
@@ -330,7 +330,7 @@ public class HomeAudioAdapter extends RecyclerView.Adapter<HomeAudioAdapter.Home
                 });
 
                 // Xử lý khi người dùng chọn Cancel
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                builder.setNegativeButton(view1.getContext().getString(R.string.cancel_announce), (dialog, which) -> dialog.cancel());
 
                 // Hiển thị Dialog
                 builder.show();

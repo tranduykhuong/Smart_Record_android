@@ -70,7 +70,7 @@
         android:padding="18dp"
         android:textSize="20dp"
         android:textColor="@color/pink_500"
-        android:text="Hủy"
+        android:text="@string/cancel_announce"
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_radius_white_filter_folder"

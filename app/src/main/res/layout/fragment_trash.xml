@@ -9,6 +9,7 @@
     android:layout_marginTop="120dp">
 
     <RelativeLayout
+        android:id="@+id/trash_wrap_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
@@ -41,6 +42,21 @@
                 android:layout_marginBottom="14dp"
                 android:layout_marginLeft="26dp"
                 >
+                <ImageView
+                    android:id="@+id/trash_total_choice"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@null"
+                    />
+                <TextView
+                    android:id="@+id/trash_select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dp"
+                    android:text=""
+                    android:layout_toRightOf="@id/trash_total_choice"
+                    />
                 <TextView
                     android:id="@+id/trash_amount_audio"
                     android:layout_width="wrap_content"
@@ -48,15 +64,16 @@
                     android:textSize="15sp"
                     android:text="2"
                     />
+
                 <TextView
                     android:id="@+id/trash_title_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bản ghi - "
-                    android:layout_marginLeft="5dp"
-                    android:textSize="15sp"
+                    android:layout_marginLeft="-1dp"
                     android:layout_toRightOf="@id/trash_amount_audio"
-                    />
+                    android:text="Bản ghi - "
+                    android:textSize="15sp" />
+
                 <TextView
                     android:id="@+id/trash_capacity_audio"
                     android:layout_width="wrap_content"
@@ -87,8 +104,6 @@
             android:background="?attr/backgroundColor"
             android:layout_alignParentBottom="true"
             ></androidx.recyclerview.widget.RecyclerView>
-
-
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

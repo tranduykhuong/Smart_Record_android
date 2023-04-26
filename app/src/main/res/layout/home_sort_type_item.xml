@@ -23,7 +23,7 @@
             android:padding="8dp"
             android:textColor="?attr/textColor"
             android:gravity="center"
-            android:text="Sắp xếp theo"
+            android:text="@string/sort_by"
             />
         <TextView
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:padding="20dp"
             android:textSize="20dp"
             android:textColor="@color/pink_500"
-            android:text="Ngày"
+            android:text="@string/sort_by_date"
             android:gravity="center"
             />
         <TextView
@@ -54,7 +54,7 @@
             android:padding="20dp"
             android:textSize="20dp"
             android:textColor="@color/pink_500"
-            android:text="Tên"
+            android:text="@string/sort_by_name"
             android:gravity="center"
             />
         <TextView
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:textColor="@color/pink_500"
-            android:text="Kích thước"
+            android:text="@string/sort_by_size"
             android:padding="20dp"
             android:gravity="center"
             />
@@ -85,7 +85,7 @@
         android:padding="18dp"
         android:textSize="20dp"
         android:textColor="@color/pink_500"
-        android:text="Hủy"
+        android:text="@string/cancel_announce"
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_radius_white_sort_type_home"

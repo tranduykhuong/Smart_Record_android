@@ -17,7 +17,7 @@
             android:id="@+id/trash_delete_multi_choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical"
             android:gravity="center"
             android:paddingVertical="6dp"
@@ -33,32 +33,6 @@
                 android:text="@string/combine_cancel"
                 android:textColor="@color/black_light"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:paddingVertical="12dp"
-            android:textColor="@color/black_light"
-            android:background="@drawable/bg_solid_right_folder"
-            />
-        <LinearLayout
-            android:id="@+id/trash_move_multi_choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingVertical="6dp"
-            android:layout_weight="1">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/ic_move"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/modal_multi_restore"
-                android:textColor="@color/black_light"/>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

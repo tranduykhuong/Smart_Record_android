@@ -23,7 +23,7 @@
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Thêm lời nhắc"
+            android:text="@string/add_remind"
             android:gravity="center"
             />
         <TextView
@@ -39,7 +39,7 @@
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Đổi tên"
+            android:text="@string/rename"
             android:gravity="center"
             />
         <TextView
@@ -55,7 +55,7 @@
             android:padding="18dp"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Chuyển đổi sang..."
+            android:text="@string/convert_file"
             android:gravity="center"
             />
         <TextView
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:textSize="18dp"
             android:textColor="@color/pink_500"
-            android:text="Di chuyển đến..."
+            android:text="@string/move_file_to"
             android:padding="18dp"
             android:gravity="center"
             />
@@ -92,7 +92,7 @@
         android:padding="18dp"
         android:textSize="20dp"
         android:textColor="@color/pink_500"
-        android:text="Hủy"
+        android:text="@string/cancel_announce"
         android:textStyle="bold"
         android:gravity="center"
         android:background="@drawable/bg_radius_white_filter_folder"
