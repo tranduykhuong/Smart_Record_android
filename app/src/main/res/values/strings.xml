@@ -128,6 +128,7 @@
     <string name="adjust_speed">Speed</string>
 
     <string name="modal_multi_folder_private">Move private folder</string>
+    <string name="modal_multi_restore">Restore</string>
     <string name="harmonic_title">Harmonic</string>
     <string name="harmonic_success">Successfully Harmonic</string>
     

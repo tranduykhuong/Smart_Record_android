@@ -37,7 +37,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
 
     public interface OnItemClickListenerTrash {
         void onItemClick(int position);
-        void playSound(String name);
+        void playSound(String name, int position);
     }
     @NonNull
     @Override
@@ -136,11 +136,12 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
         });
 
         holder.icAudioTrash.setImageResource(item.getImage());
-        holder.icAudioTrash.setOnClickListener(view -> listener.playSound(itemList.get(holder.getAbsoluteAdapterPosition()).getName()));
+        holder.icAudioTrash.setOnClickListener(view -> listener.playSound(itemList.get(holder.getAbsoluteAdapterPosition()).getName(), holder.getAbsoluteAdapterPosition()));
         holder.nameItem.setText(item.getName());
         holder.timeOfItem.setText(item.getTimeOfAudio());
         holder.sizeItem.setText(item.getSize());
         holder.createDateItem.setText(item.getCreateDate());
+        holder.relativeLayout.setOnClickListener(view -> listener.playSound(itemList.get(holder.getAbsoluteAdapterPosition()).getName(), holder.getAbsoluteAdapterPosition()));
     }
 
     @Override
@@ -160,6 +161,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
     public static class TrashHolder extends RecyclerView.ViewHolder {
         private final TextView nameItem, timeOfItem, sizeItem, createDateItem;
         private final SwipeRevealLayout swipeRevealLayout;
+        private final RelativeLayout relativeLayout;
         private final ImageView permanentlyDeleteBtn, trashRestoreBtn, icAudioTrash;
 
         public TrashHolder(@NonNull View itemView) {
@@ -171,7 +173,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashHolder>
             sizeItem = itemView.findViewById(R.id.trash_item_size);
             createDateItem = itemView.findViewById(R.id.trash_item_create_date);
             swipeRevealLayout = itemView.findViewById(R.id.swipe_reveal_trash_layout);
-            RelativeLayout relativeLayout = itemView.findViewById(R.id.item_audio_trash);
+            relativeLayout = itemView.findViewById(R.id.item_audio_trash);
             permanentlyDeleteBtn = itemView.findViewById(R.id.trash_btn_delete);
             trashRestoreBtn = itemView.findViewById(R.id.trash_btn_restore);
         }

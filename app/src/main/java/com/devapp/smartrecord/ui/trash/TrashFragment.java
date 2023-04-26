@@ -185,7 +185,7 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     }
 
     @Override
-    public void playSound(String name) {
+    public void playSound(String name, int position) {
         Intent intent = new Intent(getActivity(), ReplayActivity.class);
         intent.putExtra("NameTrash", name);
         intent.setAction("FromTrash");
