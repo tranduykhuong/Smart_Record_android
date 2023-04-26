@@ -18,6 +18,17 @@
     <string name="title_character_child">Child</string>
     <string name="title_character_old_man">Old man</string>
 
+    <string name="add_remind">Add a reminder</string>
+    <string name="rename">Rename</string>
+    <string name="rename_file_dialog">Rename file</string>
+    <string name="convert_file">Convert file format</string>
+    <string name="move_file_to">Move to...</string>
+    <string name="announce_ok">OK</string>
+
+    <string name="sort_by">Sort by</string>
+    <string name="sort_by_date">Date</string>
+    <string name="sort_by_name">Name</string>
+    <string name="sort_by_size">Size</string>
 
     <string name="title_search">Search</string>
     <string name="question_delete">Are you sure you want to move it to the trash?</string>
