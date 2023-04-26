@@ -653,7 +653,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
             File[] folders = recordingsDirectory.listFiles();
             if (folders != null) {
                 for (File folder : folders) {
-                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("TrashAudio")){
+                    if (folder.getName().equalsIgnoreCase("Thư mục riêng tư") || folder.getName().equalsIgnoreCase("TrashAudio") || folder.getName().equalsIgnoreCase("TmpAudio")){
                         continue;
                     }
                     int amount = 0;

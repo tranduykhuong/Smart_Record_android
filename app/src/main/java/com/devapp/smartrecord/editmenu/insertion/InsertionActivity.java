@@ -89,16 +89,16 @@ public class InsertionActivity extends AppCompatActivity {
 
         if(inserted)
         {
-//            if (!exported){
-//                File fileDl = new File(tempPath + finalNameFile);
-//                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
-//                if (fileDel.exists()) {
-//                    fileDel.delete();
-//                }
-//            }
-//            else{
-//                Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
-//            }
+            if (!exported){
+                File fileDl = new File(tempPath + finalNameFile);
+                File fileDel = new File(String.valueOf(fileDl.getAbsoluteFile()));
+                if (fileDel.exists()) {
+                    fileDel.delete();
+                }
+            }
+            else{
+                Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -145,7 +145,10 @@ public class InsertionActivity extends AppCompatActivity {
                     onBackPressed();
                     exported = true;
                 }
-                exported = false;
+                else{
+                    exported = false;
+                    Toast.makeText(InsertionActivity.this, getApplicationContext().getText(R.string.insert_not_file), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -162,9 +165,9 @@ public class InsertionActivity extends AppCompatActivity {
                     Intent intent = new Intent(InsertionActivity.this, InsertionListFile.class);
                     startActivityForResult(intent, 1);
                 }
-                else{
-                    btnInsert.setEnabled(true);
-                }
+//                else{
+//                    btnInsert.setEnabled(true);
+//                }
             }
         });
 
