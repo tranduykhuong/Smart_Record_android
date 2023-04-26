@@ -125,6 +125,7 @@
     <string name="adjust_speed">Tốc độ</string>
 
     <string name="modal_multi_folder_private">Di chuyển riêng tư</string>
+    <string name="modal_multi_restore">Khôi phục</string>
     <string name="harmonic_title">Hòa âm</string>
     <string name="harmonic_success">Hòa âm hoàn tất</string>
 

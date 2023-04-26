@@ -208,6 +208,17 @@ public class HomeActivity extends AppCompatActivity implements FolderFragment.On
                             btn_edit.setImageResource(R.drawable.ic_edit);
                         }
 
+                    } else if (currentFragmentId == R.id.navigation_home){
+                        Bundle args = new Bundle();
+                        args.putBoolean("isEditHome", currEdit);
+                        navController.navigate(R.id.navigation_home, args);
+                        if (currEdit){
+                            btn_edit.setImageResource(R.drawable.ic_close);
+                        }
+                        else{
+                            btn_edit.setImageResource(R.drawable.ic_edit);
+                        }
+
                     }
 
                     // Xử lý ở các fragment còn lại
