@@ -22,7 +22,7 @@
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="Ghi chú"
-            android:textColor="@color/black"
+            android:textColor="?attr/textColor"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -30,18 +30,18 @@
             android:id="@+id/record_note_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_edt_private_folder"
+            android:drawablePadding="16dp"
             android:hint="Nhập ghi chú"
             android:inputType="text"
-            android:textSize="16sp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:padding="10dp"
-            android:drawablePadding="16dp"
             android:textCursorDrawable="@null"
-            android:background="@drawable/bg_edt_private_folder"
-            />
+            android:textSize="16sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
