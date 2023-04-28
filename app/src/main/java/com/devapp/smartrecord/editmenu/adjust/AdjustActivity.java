@@ -27,13 +27,19 @@ import androidx.annotation.Nullable;
 
 import com.devapp.smartrecord.EditMenuActivity;
 import com.devapp.smartrecord.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +50,7 @@ public class AdjustActivity extends AppCompatActivity {
     private Chronometer currTime;
     private ImageButton btnPlay;
     private TextView timeMax;
-    private boolean isPlay = true;
+    private boolean isPlay = true, isDone = false, isExist = false;
     private SeekBar adjustSeekBarSpeed, adjustSeekBarVolume, adjustSeekBarFoolproof;
     private int currPosition = 0;
     private int currentPosition = 0;
@@ -52,6 +58,12 @@ public class AdjustActivity extends AppCompatActivity {
     private String pathSound;
     private Handler mainHandler;
     private Runnable updateSeekBarRunnable;
+    private ArrayList<String> listAudioAdjusted;
+    private String addListAdjusted = "";
+    private Gson gson = new Gson();
+    private String nameFile;
+    private int position = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,23 +91,56 @@ public class AdjustActivity extends AppCompatActivity {
         adjustSeekBarVolume = this.findViewById(R.id.adjust_seekbar_volume);
         adjustSeekBarSpeed = this.findViewById(R.id.adjust_seekbar_speed);
 
-        titleFile.setText(pathSound.substring(pathSound.lastIndexOf("/") + 1));
+        nameFile = pathSound.substring(pathSound.lastIndexOf("/") + 1);
+        titleFile.setText(nameFile);
 
-//        SharedPreferences adjustMemories = getSharedPreferences("adjustMemories", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = adjustMemories.edit();
-//        boolean isFirstTime = adjustMemories.getBoolean("isFirstTime", true);
+        SharedPreferences adjustMemories = getSharedPreferences("adjustMemories", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = adjustMemories.edit();
 
-//        if (isFirstTime){
-//            adjustSeekBarFoolproof.setProgress(0);
-//            adjustSeekBarVolume.setProgress(0);
-//            adjustSeekBarSpeed.setProgress(0);
-//        }
-//        else{
-//            adjustSeekBarFoolproof.setProgress(adjustMemories.getInt("adjustFoolproof", 0));
-//            adjustSeekBarVolume.setProgress(adjustMemories.getInt("adjustVolume", 0));
-//            adjustSeekBarSpeed.setProgress(adjustMemories.getInt("adjustSpeed", 0));
-//        }
+        String json = adjustMemories.getString("listAdjusted", null);
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            listAudioAdjusted = gson.fromJson(json, type);
 
+            for (int i = 0; i < listAudioAdjusted.size(); i++) {
+                String name = listAudioAdjusted.get(i).split("\\|")[0];
+
+                if (nameFile.equalsIgnoreCase(name)) {
+                    isDone = true;
+                    isExist = true;
+                    position = i;
+                    int foolProof = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[1]);
+                    int volume = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[2]);
+                    int speed = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[3]);
+
+                    adjustSeekBarFoolproof.setProgress(foolProof);
+                    adjustSeekBarVolume.setProgress(volume);
+                    adjustSeekBarSpeed.setProgress(speed);
+                }
+            }
+            if (!isDone){
+                adjustSeekBarFoolproof.setProgress(0);
+                adjustSeekBarVolume.setProgress(0);
+                adjustSeekBarSpeed.setProgress(0);
+            }
+
+//            if (myStringArray.size() != 0) {
+//
+//            }
+//            else{
+//                adjustSeekBarFoolproof.setProgress(0);
+//                adjustSeekBarVolume.setProgress(0);
+//                adjustSeekBarSpeed.setProgress(0);
+//            }
+        }
+        else{
+            Toast.makeText(this, "heloo2", Toast.LENGTH_SHORT).show();
+
+            listAudioAdjusted = new ArrayList<>();
+            adjustSeekBarFoolproof.setProgress(0);
+            adjustSeekBarVolume.setProgress(0);
+            adjustSeekBarSpeed.setProgress(0);
+        }
 
         adjustSeekBarFoolproof.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -114,10 +159,16 @@ public class AdjustActivity extends AppCompatActivity {
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                mediaPlayer.pause();
+                currTime.stop();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                mediaPlayer.pause();
+                currTime.stop();
             }
         });
 
@@ -139,10 +190,16 @@ public class AdjustActivity extends AppCompatActivity {
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                mediaPlayer.pause();
+                currTime.stop();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                mediaPlayer.pause();
+                currTime.stop();
             }
         });
 
@@ -175,10 +232,16 @@ public class AdjustActivity extends AppCompatActivity {
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                mediaPlayer.pause();
+                currTime.stop();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                btnPlay.setImageResource(R.drawable.ic_play_adjust);
+                mediaPlayer.pause();
+                currTime.stop();
             }
         });
 
@@ -207,22 +270,16 @@ public class AdjustActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if(!isPlay)
-                {
-                    btnPlay.setImageResource(R.drawable.ic_play_adjust);
-                    mediaPlayer.pause();
-                    currTime.stop();
-                }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(!isPlay)
-                {
-                    btnPlay.setImageResource(R.drawable.ic_adjust_replay);
-                    mediaPlayer.start();
-                    currTime.start();
-                }
+//                if(!isPlay)
+//                {
+//                    btnPlay.setImageResource(R.drawable.ic_adjust_replay);
+//                    mediaPlayer.start();
+//                    currTime.start();
+//                }
             }
         });
 
@@ -301,13 +358,24 @@ public class AdjustActivity extends AppCompatActivity {
         bntAdjust.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                editor.putBoolean("isFirstTime", false);
-//                editor.putInt("adjustFoolproof", adjustSeekBarFoolproof.getProgress());
-//                editor.putInt("adjustVolume", adjustSeekBarVolume.getProgress());
-//                editor.putInt("adjustSpeed", adjustSeekBarSpeed.getProgress());
-//                editor.commit();
+                if (isExist){
+                    addListAdjusted += nameFile + "|";
+                    addListAdjusted += adjustSeekBarFoolproof.getProgress() + "|";
+                    addListAdjusted += adjustSeekBarVolume.getProgress() + "|";
+                    addListAdjusted += adjustSeekBarSpeed.getProgress();
+                    listAudioAdjusted.set(position, addListAdjusted);
+                }
+                else{
+                    addListAdjusted += nameFile + "|";
+                    addListAdjusted += adjustSeekBarFoolproof.getProgress() + "|";
+                    addListAdjusted += adjustSeekBarVolume.getProgress() + "|";
+                    addListAdjusted += adjustSeekBarSpeed.getProgress();
+                    listAudioAdjusted.add(addListAdjusted);
+                }
 
-                //Lưu lại các thay đổi vào tệp mới
+                String json = gson.toJson(listAudioAdjusted);
+                editor.putString("listAdjusted", json);
+                editor.commit();
 
                 mediaPlayer.stop();
                 mediaPlayer.release();

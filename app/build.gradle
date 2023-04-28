@@ -68,4 +68,6 @@ dependencies {
     implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'javazoom:jlayer:1.0.1'
+
+    implementation 'com.google.code.gson:gson:2.8.8'
 }
