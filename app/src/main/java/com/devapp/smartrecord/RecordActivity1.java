@@ -69,10 +69,19 @@ public class RecordActivity1 extends AppCompatActivity {
         btnPlay = findViewById(R.id.record_btn_play);
         txtRecordName = findViewById(R.id.record_name);
         graphView = findViewById(R.id.graphView);
-        graphView.setGraphColor(Color.rgb(18, 17, 17));
-        graphView.setCanvasColor(Color.rgb(255, 255, 255));
-        graphView.setTimeColor(Color.rgb(0, 0, 0));
         graphView.setWaveLengthPX(13);
+
+        ConfigurationClass config = new ConfigurationClass(this);
+        config.getConfig();
+        if (config.getThemeMode() == 1) {
+            graphView.setGraphColor(Color.WHITE);
+            graphView.setCanvasColor(Color.BLACK);
+            graphView.setTimeColor(Color.WHITE);
+        } else {
+            graphView.setGraphColor(Color.BLACK);
+            graphView.setCanvasColor(Color.WHITE);
+            graphView.setTimeColor(Color.BLACK);
+        }
 
         if (graphView != null) {
             graphView.setMasterList(pointList);

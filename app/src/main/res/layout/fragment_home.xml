@@ -69,7 +69,7 @@
                     android:id="@+id/home_title_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bản ghi - "
+                    android:text="@string/folder_file"
                     android:layout_marginLeft="5dp"
                     android:textSize="15sp"
                     android:layout_toRightOf="@id/home_amount_audio"
