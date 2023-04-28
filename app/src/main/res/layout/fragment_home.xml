@@ -110,11 +110,10 @@
                         />
                     <ImageView
                         android:id="@+id/home_icon_cvd_sort_type"
-                        android:layout_width="30dp"
-                        android:layout_height="20dp"
+                        android:layout_width="40dp"
+                        android:layout_height="24dp"
                         android:background="@null"
                         android:src="@drawable/ic_drop_down"
-
                         />
                 </LinearLayout>
             </RelativeLayout>

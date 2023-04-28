@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     private LinearLayout btnFileFormat;
     private TextView twLanguage;
     private TextView twFileFormat;
+    private ImageView imgMascot;
     private Switch sw;
     private ImageButton btnBack;
 
@@ -70,6 +72,11 @@ public class SettingActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.setting_btn_back);
         btnBack.setOnClickListener(view -> this.onBackPressed());
+
+        imgMascot = findViewById(R.id.img_mascot);
+        if (config.getThemeMode() == 1) {
+            imgMascot.setImageResource(R.drawable.img_mascot_black);
+        }
     }
 
     private void changeLanguage(String language){

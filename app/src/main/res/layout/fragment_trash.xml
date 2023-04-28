@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="-1dp"
                     android:layout_toRightOf="@id/trash_amount_audio"
-                    android:text="Bản ghi - "
+                    android:text="@string/folder_file"
                     android:textSize="15sp" />
 
                 <TextView
