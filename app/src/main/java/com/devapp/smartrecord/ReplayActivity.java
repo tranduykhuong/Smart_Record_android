@@ -76,6 +76,7 @@ public class ReplayActivity  extends AppCompatActivity {
     private float rate1, rate2, rate3;
     private Runnable highlight;
     private String nameSound;
+    private ConfigurationClass config;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,9 @@ public class ReplayActivity  extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         progressWidth = displayMetrics.widthPixels;
         realWidth = displayMetrics.widthPixels;
+
+        config = new ConfigurationClass(this);
+        config.getConfig();
 
         getFiles();
         entries = new ArrayList<>();
@@ -158,7 +162,11 @@ public class ReplayActivity  extends AppCompatActivity {
         chart.setVisibleXRangeMinimum(60 * 1000f);
 
         chart.setDrawGridBackground(true);
-        chart.setGridBackgroundColor(Color.WHITE);
+        if (config.getThemeMode() == 1) {
+            chart.setGridBackgroundColor(Color.parseColor("#24272C"));
+        } else {
+            chart.setGridBackgroundColor(Color.WHITE);
+        }
 
         chart.getXAxis().setGranularity(1000f);
         chart.getXAxis().setSpaceMin(1000f);
@@ -486,11 +494,15 @@ public class ReplayActivity  extends AppCompatActivity {
         LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setDrawValues(false);
         dataSet.setDrawCircles(false);
-        dataSet.setColor(Color.BLACK);
         dataSet.setLineWidth(1f);
         dataSet.setHighlightLineWidth(2f);
         dataSet.setDrawHorizontalHighlightIndicator(false);
         LineData lineData = new LineData(dataSet);
+        if (config.getThemeMode() == 1) {
+            dataSet.setColor(Color.WHITE);
+        } else {
+            dataSet.setColor(Color.BLACK);
+        }
         chart.setData(lineData);
         chart.invalidate();
 
