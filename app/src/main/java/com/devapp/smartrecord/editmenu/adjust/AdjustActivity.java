@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaFormat;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.media.audiofx.Visualizer;
@@ -28,7 +29,11 @@ import com.devapp.smartrecord.EditMenuActivity;
 import com.devapp.smartrecord.R;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -76,20 +81,20 @@ public class AdjustActivity extends AppCompatActivity {
 
         titleFile.setText(pathSound.substring(pathSound.lastIndexOf("/") + 1));
 
-        SharedPreferences adjustMemories = getSharedPreferences("adjustMemories", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = adjustMemories.edit();
-        boolean isFirstTime = adjustMemories.getBoolean("isFirstTime", true);
+//        SharedPreferences adjustMemories = getSharedPreferences("adjustMemories", Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = adjustMemories.edit();
+//        boolean isFirstTime = adjustMemories.getBoolean("isFirstTime", true);
 
-        if (isFirstTime){
-            adjustSeekBarFoolproof.setProgress(0);
-            adjustSeekBarVolume.setProgress(0);
-            adjustSeekBarSpeed.setProgress(0);
-        }
-        else{
-            adjustSeekBarFoolproof.setProgress(adjustMemories.getInt("adjustFoolproof", 0));
-            adjustSeekBarVolume.setProgress(adjustMemories.getInt("adjustVolume", 0));
-            adjustSeekBarSpeed.setProgress(adjustMemories.getInt("adjustSpeed", 0));
-        }
+//        if (isFirstTime){
+//            adjustSeekBarFoolproof.setProgress(0);
+//            adjustSeekBarVolume.setProgress(0);
+//            adjustSeekBarSpeed.setProgress(0);
+//        }
+//        else{
+//            adjustSeekBarFoolproof.setProgress(adjustMemories.getInt("adjustFoolproof", 0));
+//            adjustSeekBarVolume.setProgress(adjustMemories.getInt("adjustVolume", 0));
+//            adjustSeekBarSpeed.setProgress(adjustMemories.getInt("adjustSpeed", 0));
+//        }
 
 
         adjustSeekBarFoolproof.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -296,11 +301,13 @@ public class AdjustActivity extends AppCompatActivity {
         bntAdjust.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editor.putBoolean("isFirstTime", false);
-                editor.putInt("adjustFoolproof", adjustSeekBarFoolproof.getProgress());
-                editor.putInt("adjustVolume", adjustSeekBarVolume.getProgress());
-                editor.putInt("adjustSpeed", adjustSeekBarSpeed.getProgress());
-                editor.commit();
+//                editor.putBoolean("isFirstTime", false);
+//                editor.putInt("adjustFoolproof", adjustSeekBarFoolproof.getProgress());
+//                editor.putInt("adjustVolume", adjustSeekBarVolume.getProgress());
+//                editor.putInt("adjustSpeed", adjustSeekBarSpeed.getProgress());
+//                editor.commit();
+
+                //Lưu lại các thay đổi vào tệp mới
 
                 mediaPlayer.stop();
                 mediaPlayer.release();
