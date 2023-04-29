@@ -69,7 +69,7 @@
                     android:id="@+id/home_title_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bản ghi - "
+                    android:text="@string/folder_file"
                     android:layout_marginLeft="5dp"
                     android:textSize="15sp"
                     android:layout_toRightOf="@id/home_amount_audio"
@@ -110,11 +110,10 @@
                         />
                     <ImageView
                         android:id="@+id/home_icon_cvd_sort_type"
-                        android:layout_width="30dp"
-                        android:layout_height="20dp"
+                        android:layout_width="40dp"
+                        android:layout_height="24dp"
                         android:background="@null"
                         android:src="@drawable/ic_drop_down"
-
                         />
                 </LinearLayout>
             </RelativeLayout>

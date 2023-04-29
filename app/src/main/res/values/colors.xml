@@ -26,6 +26,7 @@
     <color name="gray">#CCCCCC</color>
     <color name="bg_menu_folder">#80000000</color>
     <color name="name_container">#16181A</color>
+    <color name="black_foreground">#24272C</color>
 
     <color name="bg_color">#F8F6F7</color>
     <color name="x1_text">#645D5D</color>

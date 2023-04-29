@@ -13,9 +13,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="20dp"
             android:background="?attr/actionBarColor" >
+
             <ImageButton
                 android:id="@+id/setting_btn_back"
                 android:layout_width="wrap_content"
@@ -52,6 +52,7 @@
                 android:orientation="vertical"
                 >
                 <ImageView
+                    android:id="@+id/img_mascot"
                     android:layout_width="wrap_content"
                     android:layout_height="140dp"
                     android:src="@drawable/img_mascot"
@@ -177,9 +178,9 @@
                     android:paddingRight="4dp"
                     android:textColor="@color/black_light" />
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_arrow"
+                    android:layout_width="18dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_arrow_next"
                     />
             </LinearLayout>
 
@@ -224,9 +225,9 @@
                     android:paddingRight="4dp"
                     android:textColor="@color/black_light" />
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_expand_arrow"
+                    android:layout_width="18dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_arrow_next"
                     />
             </LinearLayout>
         </LinearLayout>

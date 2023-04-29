@@ -130,7 +130,7 @@
             android:id="@+id/replay_chart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="?attr/foregroundColor"
             tools:ignore="MissingClass" />
     </HorizontalScrollView>
 
