@@ -265,7 +265,7 @@ public class FolderFragment extends Fragment implements FolderClassContentAdapte
 
             imageTotalChoice = binding.folderTotalChoice;
             imageTotalChoice.setImageResource(R.drawable.ic_circle_folder);
-            totalFolder.setText("Chọn tất cả");
+            totalFolder.setText(getContext().getText(R.string.folder_multi_choice).toString());
             totalFolder.setTextSize(16);
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) infoLayout.getLayoutParams();
