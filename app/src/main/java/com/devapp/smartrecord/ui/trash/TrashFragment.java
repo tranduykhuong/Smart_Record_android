@@ -350,16 +350,20 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
                         listItemChoice[i] -= count;
                     }
                     Item folder = itemList.get(listItemChoice[i]);
-                    String folderName = folder.getName();
-                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
+                    File fileDelete = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + folder.getName());
 
                     try {
-                        itemList.remove(listItemChoice[i]);
-                        trashAdapter.notifyItemRemoved(listItemChoice[i]);
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                        if (fileDelete.exists()) { // Xóa tệp và kiểm tra kết quả
+                            itemList.remove(listItemChoice[i]);
+                            fileDelete.delete();
+                            trashAdapter.notifyItemRemoved(listItemChoice[i]);
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_deleted_successfully), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_deleted_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     count++;
