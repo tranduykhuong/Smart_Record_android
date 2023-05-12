@@ -1,5 +1,7 @@
 package com.devapp.smartrecord.editmenu.adjust;
 
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.arthenica.mobileffmpeg.FFmpeg;
 import com.devapp.smartrecord.EditMenuActivity;
 import com.devapp.smartrecord.R;
 import com.google.gson.Gson;
@@ -50,7 +53,7 @@ public class AdjustActivity extends AppCompatActivity {
     private Chronometer currTime;
     private ImageButton btnPlay;
     private TextView timeMax;
-    private boolean isPlay = true, isDone = false, isExist = false;
+    private boolean isPlay = true, isDone = false, isExist = false, isSave = false;
     private SeekBar adjustSeekBarSpeed, adjustSeekBarVolume, adjustSeekBarFoolproof;
     private int currPosition = 0;
     private int currentPosition = 0;
@@ -63,7 +66,9 @@ public class AdjustActivity extends AppCompatActivity {
     private Gson gson = new Gson();
     private String nameFile;
     private int position = 0;
-
+    private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
+    private File outputFile;
+    private float volume, foolProof, speed;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,19 +128,8 @@ public class AdjustActivity extends AppCompatActivity {
                 adjustSeekBarVolume.setProgress(0);
                 adjustSeekBarSpeed.setProgress(0);
             }
-
-//            if (myStringArray.size() != 0) {
-//
-//            }
-//            else{
-//                adjustSeekBarFoolproof.setProgress(0);
-//                adjustSeekBarVolume.setProgress(0);
-//                adjustSeekBarSpeed.setProgress(0);
-//            }
         }
         else{
-            Toast.makeText(this, "heloo2", Toast.LENGTH_SHORT).show();
-
             listAudioAdjusted = new ArrayList<>();
             adjustSeekBarFoolproof.setProgress(0);
             adjustSeekBarVolume.setProgress(0);
@@ -147,7 +141,7 @@ public class AdjustActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     try {
-                        float foolProof = (float) progress / seekBar.getMax();
+                        foolProof = (float) progress / seekBar.getMax();
                         if (foolProof < -0.5f) foolProof = -0.5f;
                         params.setPitch(1f + foolProof); // Điều chỉnh cao độ
                         mediaPlayer.setPlaybackParams(params);
@@ -178,7 +172,7 @@ public class AdjustActivity extends AppCompatActivity {
                 if (fromUser) {
                     try {
                         if (fromUser) {
-                            float volume = (float) progress / seekBar.getMax();
+                            volume = (float) progress / seekBar.getMax();
                             if (volume < -0.5f) volume = -0.5f;
                             mediaPlayer.setVolume(0.5f + volume, 0.5f + volume);
                         }
@@ -210,18 +204,23 @@ public class AdjustActivity extends AppCompatActivity {
                     try {
                         if (progress == 1){
                             params.setSpeed(2f);
+                            speed = 2f;
                         }
                         else if (progress == 2){
                             params.setSpeed(3f);
+                            speed = 3f;
                         }
                         else if (progress == -1){
                             params.setSpeed(0.5f);
+                            speed = 0.5f;
                         }
                         else if (progress == -2){
                             params.setSpeed(0.25f);
+                            speed = 0.25f;
                         }
                         else {
                             params.setSpeed(1f);
+                            speed = 1f;
                         }
                         mediaPlayer.setPlaybackParams(params);
                     } catch (Exception e) {
@@ -248,6 +247,11 @@ public class AdjustActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                File fileDl1 = new File(tempPath + nameFile.split("\\.")[0]);
+                File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
+                if (fileDel1.exists()) {
+                    fileDel1.delete();
+                }
                 onBackPressed();
             }
         });
@@ -351,13 +355,24 @@ public class AdjustActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mainHandler.removeCallbacksAndMessages(null);
-                    onBackPressed();
+
+                File fileDl1 = new File(tempPath + nameFile.split("\\.")[0]);
+                File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
+                if (fileDel1.exists()) {
+                    fileDel1.delete();
+                }
+
+                onBackPressed();
             }
         });
 
         bntAdjust.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (speed == 0 && volume == 0 && foolProof == 0){
+                    isSave = false;
+                }
+
                 if (isExist){
                     addListAdjusted += nameFile + "|";
                     addListAdjusted += adjustSeekBarFoolproof.getProgress() + "|";
@@ -373,12 +388,32 @@ public class AdjustActivity extends AppCompatActivity {
                     listAudioAdjusted.add(addListAdjusted);
                 }
 
+//                outputFile = new File(tempPath, "Adjust_" + nameFile.split("\\.")[0]);
+//                Log.d("name", outputFile.getAbsolutePath());
+//                String[] Command = {"-i", pathSound, "-filter:a", "atempo=1.5, volume=2, asetrate=44100*1.25", "-f", "mp3", outputFile.getAbsolutePath()};
+//
+//                int rc = FFmpeg.execute(Command);
+//
+//                if (rc == RETURN_CODE_SUCCESS){
+//                    Log.d("TAG", "cc");
+//                }
+//                else {
+//                    Log.d("TAG", "đm");
+//                }
+//
+//                if (outputFile.exists()) {
+//                    Log.d("TAG", "Output file exists: " + outputFile.getAbsolutePath());
+//                } else {
+//                    Log.d("TAG", "Output file does not exist");
+//                }
+
                 String json = gson.toJson(listAudioAdjusted);
                 editor.putString("listAdjusted", json);
                 editor.commit();
 
                 mediaPlayer.stop();
                 mediaPlayer.release();
+                Toast.makeText(AdjustActivity.this, getText(R.string.announce_save_successfully), Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });
@@ -425,5 +460,13 @@ public class AdjustActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+
+//        if (!isSave){
+//            File fileDl1 = new File(tempPath + nameFile.split("\\.")[0]);
+//            File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
+//            if (fileDel1.exists()) {
+//                fileDel1.delete();
+//            }
+//        }
     }
 }
