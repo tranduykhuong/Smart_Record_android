@@ -48,6 +48,7 @@ public class RecordActivity1 extends AppCompatActivity {
     private JSONArray jsonArray;
     private final List<WaveSample> pointList = new ArrayList<>();
     private String timeWhenNote, fileName;
+    private int count = 0;
 
     @SuppressLint({"ClickableViewAccessibility", "MissingInflatedId"})
     @Override
@@ -222,7 +223,6 @@ public class RecordActivity1 extends AppCompatActivity {
     }
 
     public void ResumeRecord(){
-        // Toast.makeText(this, this.getString(R.string.resume_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_pause_record);
 
         if (graphView != null) {
@@ -238,7 +238,6 @@ public class RecordActivity1 extends AppCompatActivity {
     }
     public void PauseRecord()
     {
-        // Toast.makeText(this, this.getString(R.string.pause_announce), Toast.LENGTH_SHORT).show();
         btnPlay.setImageResource(R.drawable.ic_play_record);
 
         if (graphView != null) {
@@ -261,7 +260,15 @@ public class RecordActivity1 extends AppCompatActivity {
     };
 
     protected void onResume() {
+        count++;
         super.onResume();
+        if(count > 1)
+        {
+            if (graphView != null) {
+                graphView.startPlotting();
+                graphView.resume();
+            }
+        }
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }

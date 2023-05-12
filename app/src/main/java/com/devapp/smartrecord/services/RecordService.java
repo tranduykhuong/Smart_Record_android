@@ -44,7 +44,6 @@ import java.util.Locale;
 
 public class RecordService extends Service {
     private MediaRecorder mediaRecorder;
-
     private long startTime = 0;
     private String finalName;
     private String fileName;
