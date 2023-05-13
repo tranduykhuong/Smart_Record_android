@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
+import com.devapp.smartrecord.ConfigurationClass;
 import com.devapp.smartrecord.R;
 import com.devapp.smartrecord.ui.home.Audio;
 import com.github.mikephil.charting.charts.LineChart;
@@ -74,6 +75,8 @@ public class InsertionActivity extends AppCompatActivity {
     private String audioFilePath, fileNameRoot, finalNameFile;
     private String[] nameFile;
     private int currPosition = 0;
+    private ConfigurationClass config;
+
 
     @Override
     protected void onDestroy() {
@@ -103,6 +106,9 @@ public class InsertionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_insertion);
         getSupportActionBar().hide();
+
+        config = new ConfigurationClass(this);
+        config.getConfig();
 
         btnBack = findViewById(R.id.edt_insert_btn_back);
         btnBack.setOnClickListener(view -> {
@@ -243,7 +249,12 @@ public class InsertionActivity extends AppCompatActivity {
         chart.setVisibleXRangeMinimum(60 * 1000f);
         // Vẽ lưới nền và thiết lập màu nền cho lưới
         chart.setDrawGridBackground(true);
-        chart.setGridBackgroundColor(Color.WHITE);
+//        chart.setGridBackgroundColor(Color.WHITE);
+        if (config.getThemeMode() == 1) {
+            chart.setGridBackgroundColor(Color.parseColor("#24272C"));
+        } else {
+            chart.setGridBackgroundColor(Color.WHITE);
+        }
 
         // Thiết lập khoảng cách giữa các đường lưới trên trục X và Y
         chart.getXAxis().setGranularity(1000f);
@@ -424,6 +435,11 @@ public class InsertionActivity extends AppCompatActivity {
         dataSet.setHighlightLineWidth(2f);
         dataSet.setDrawHorizontalHighlightIndicator(false);
         LineData lineData = new LineData(dataSet);
+        if (config.getThemeMode() == 1) {
+            dataSet.setColor(Color.WHITE);
+        } else {
+            dataSet.setColor(Color.BLACK);
+        }
         chart.setData(lineData);
         chart.invalidate();
 

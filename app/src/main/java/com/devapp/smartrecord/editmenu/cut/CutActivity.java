@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devapp.smartrecord.ConfigurationClass;
 import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
 import com.arthenica.mobileffmpeg.Config;
@@ -65,7 +66,8 @@ public class CutActivity extends AppCompatActivity {
     ArrayList<Float> wf;
     private HorizontalScrollView hrzScrollView;
     private List<Entry> entries;
-//    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
+    private ConfigurationClass config;
+    //    String audioFilePath = "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3";
     String audioFilePath;
 
     @SuppressLint("MissingInflatedId")
@@ -77,6 +79,9 @@ public class CutActivity extends AppCompatActivity {
             actionBar.hide();
         }
         setContentView(R.layout.activity_cut);
+
+        config = new ConfigurationClass(this);
+        config.getConfig();
         
         btnCut = findViewById(R.id.btn_cut);
 
@@ -141,7 +146,13 @@ public class CutActivity extends AppCompatActivity {
         chart.setVisibleXRangeMinimum(60 * 1000f);
         // Vẽ lưới nền và thiết lập màu nền cho lưới
         chart.setDrawGridBackground(true);
-        chart.setGridBackgroundColor(Color.WHITE);
+//        chart.setGridBackgroundColor(Color.WHITE);
+
+        if (config.getThemeMode() == 1) {
+            chart.setGridBackgroundColor(Color.parseColor("#24272C"));
+        } else {
+            chart.setGridBackgroundColor(Color.WHITE);
+        }
 
         // Thiết lập khoảng cách giữa các đường lưới trên trục X và Y
         chart.getXAxis().setGranularity(1000f);
@@ -309,8 +320,16 @@ public class CutActivity extends AppCompatActivity {
             Log.e(TAG, "Response FFmpge: " + responseCode);
             if (responseCode == 0) {
                 Toast.makeText(this, getString(R.string.cut_success) + " " + nameTmp[nameTmp.length - 1], Toast.LENGTH_SHORT).show();
-                Intent intentBackHome = new Intent(this, HomeActivity.class);
-                startActivity(intentBackHome);
+                // Dừng phát âm thanh và giải phóng tài nguyên
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                }
+                handler.removeCallbacks(highlight);
+                onBackPressed();
+//                Intent intentBackHome = new Intent(this, HomeActivity.class);
+//                startActivity(intentBackHome);
             } else {
                 Toast.makeText(this, getString(R.string.cut_fail), Toast.LENGTH_SHORT).show();
             }
@@ -393,6 +412,11 @@ public class CutActivity extends AppCompatActivity {
         dataSet.setHighlightLineWidth(2f);
         dataSet.setDrawHorizontalHighlightIndicator(false);
         LineData lineData = new LineData(dataSet);
+        if (config.getThemeMode() == 1) {
+            dataSet.setColor(Color.WHITE);
+        } else {
+            dataSet.setColor(Color.BLACK);
+        }
         chart.setData(lineData);
         chart.invalidate();
 
@@ -404,7 +428,7 @@ public class CutActivity extends AppCompatActivity {
         super.onDestroy();
 
         // Dừng phát âm thanh và giải phóng tài nguyên
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;

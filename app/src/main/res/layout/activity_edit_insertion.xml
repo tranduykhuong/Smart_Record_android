@@ -64,7 +64,7 @@
             android:id="@+id/insert_wrap_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/backgroundColor"
+            android:background="?attr/foregroundColor"
             android:orientation="vertical"
             android:layout_below="@+id/insert_file_name"
             android:layout_above="@+id/insert_wrap_adjust"

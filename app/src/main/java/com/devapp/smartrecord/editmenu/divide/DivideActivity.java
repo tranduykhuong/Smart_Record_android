@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.arthenica.mobileffmpeg.FFmpeg;
+import com.devapp.smartrecord.ConfigurationClass;
 import com.devapp.smartrecord.HomeActivity;
 import com.devapp.smartrecord.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -85,6 +86,8 @@ public class DivideActivity extends AppCompatActivity {
     private Runnable highlight;
     private Executor executor = Executors.newFixedThreadPool(2);
     private Handler mainHandler = new Handler(Looper.getMainLooper());
+    private ConfigurationClass config;
+
     public DivideActivity() {
     }
 
@@ -96,6 +99,9 @@ public class DivideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_divide);
         getSupportActionBar().hide();
+
+        config = new ConfigurationClass(this);
+        config.getConfig();
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -159,7 +165,12 @@ public class DivideActivity extends AppCompatActivity {
         chart.setVisibleXRangeMinimum(60 * 1000f);
         // Vẽ lưới nền và thiết lập màu nền cho lưới
         chart.setDrawGridBackground(true);
-        chart.setGridBackgroundColor(Color.WHITE);
+//        chart.setGridBackgroundColor(Color.WHITE);
+        if (config.getThemeMode() == 1) {
+            chart.setGridBackgroundColor(Color.parseColor("#24272C"));
+        } else {
+            chart.setGridBackgroundColor(Color.WHITE);
+        }
 
         // Thiết lập khoảng cách giữa các đường lưới trên trục X và Y
         chart.getXAxis().setGranularity(1000f);
@@ -367,8 +378,10 @@ public class DivideActivity extends AppCompatActivity {
                         }
                         Toast.makeText(getApplicationContext(), view.getContext().getString(R.string.announce_divide_successfully), Toast.LENGTH_SHORT).show();
                         mediaPlayer.stop();
-                        Intent intentBackHome = new Intent(getApplicationContext(), HomeActivity.class);
-                        startActivity(intentBackHome);
+
+                        onBackPressed();
+//                        Intent intentBackHome = new In?tent(getApplicationContext(), HomeActivity.class);
+//                        startActivity(intentBackHome);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -416,6 +429,11 @@ public class DivideActivity extends AppCompatActivity {
         dataSet.setDrawHorizontalHighlightIndicator(false);
 
         LineData lineData = new LineData(dataSet);
+        if (config.getThemeMode() == 1) {
+            dataSet.setColor(Color.WHITE);
+        } else {
+            dataSet.setColor(Color.BLACK);
+        }
         chart.setData(lineData);
         chart.invalidate();
 
