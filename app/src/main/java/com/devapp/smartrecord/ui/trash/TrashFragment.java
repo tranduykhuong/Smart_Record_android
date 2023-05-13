@@ -34,6 +34,7 @@ import com.devapp.smartrecord.ui.home.HomeChildFragment;
 import com.devapp.smartrecord.ui.home.HomeFragment;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -117,9 +118,19 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         recyclerView.setAdapter(trashAdapter);
 
         showMultiFolder();
+        if (trashDirectory != null && trashDirectory.listFiles() != null) {
+            File[] files = trashDirectory.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.isFile(); // Chỉ chấp nhận các tệp (file) và không chấp nhận thư mục (folder)
+                }
+            });
 
-        if (trashDirectory != null && trashDirectory.listFiles() != null)
-            totalAmountAudio.setText(String.valueOf(Objects.requireNonNull(trashDirectory.listFiles()).length));
+            if (files != null) {
+                totalAmountAudio.setText(String.valueOf(files.length));
+            }
+        }
+
         if(sumCapacity >= 1024) {
             totalCapacityItem.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -142,7 +153,6 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
         if (!trashDirectory.exists()) {
             trashDirectory.mkdir();
         }
-        Log.e("sdnfsdhfk", String.valueOf(trashDirectory));
         if (trashDirectory != null && trashDirectory.listFiles() != null)
             size = trashDirectory.listFiles().length;
 
@@ -214,8 +224,23 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
     @Override
     public void onItemClick(int position) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        if (trashDirectory != null && trashDirectory.listFiles() != null)
-            totalAmountAudio.setText(String.valueOf(Objects.requireNonNull(trashDirectory.listFiles()).length));
+        getItemList();
+
+        if (trashDirectory != null && trashDirectory.listFiles() != null) {
+            File[] files = trashDirectory.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.isFile(); // Chỉ chấp nhận các tệp (file) và không chấp nhận thư mục (folder)
+                }
+            });
+
+            if (files != null) {
+                totalAmountAudio.setText(String.valueOf(files.length));
+            }
+        }
+
+        getItemList();
+
         if(sumCapacity >= 1024) {
             totalCapacityItem.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -350,16 +375,20 @@ public class TrashFragment extends Fragment implements TrashAdapter.OnItemClickL
                         listItemChoice[i] -= count;
                     }
                     Item folder = itemList.get(listItemChoice[i]);
-                    String folderName = folder.getName();
-                    File sourceFile  = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + folderName); // Lấy đường dẫn đầy đủ đến tệp
+                    File fileDelete = new File(Environment.getExternalStorageDirectory().toString() + "/Recordings/TrashAudio/" + folder.getName());
 
                     try {
-                        itemList.remove(listItemChoice[i]);
-                        trashAdapter.notifyItemRemoved(listItemChoice[i]);
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_successfully), Toast.LENGTH_SHORT).show();
+                        if (fileDelete.exists()) { // Xóa tệp và kiểm tra kết quả
+                            itemList.remove(listItemChoice[i]);
+                            fileDelete.delete();
+                            trashAdapter.notifyItemRemoved(listItemChoice[i]);
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_deleted_successfully), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getView().getContext().getString(R.string.annouce_file_not_exist), Toast.LENGTH_SHORT).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_moved_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getView().getContext().getString(R.string.announce_deleted_unsuccessfully) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     count++;

@@ -500,8 +500,21 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
     @Override
     public void onItemClick(int position) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null)
-            totalAmountAudio.setText(String.valueOf(recordingsDirectory.listFiles().length));
+        if (recordingsDirectory != null && recordingsDirectory.listFiles() != null) {
+            File[] files = recordingsDirectory.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.isFile(); // Chỉ chấp nhận các tệp (file) và không chấp nhận thư mục (folder)
+                }
+            });
+
+            if (files != null) {
+                totalAudio.setText(String.valueOf(files.length));
+            }
+        }
+
+        getAudioList();
+
         if(sumCapacity >= 1024) {
             totalCapacityAudio.setText(decimalFormat.format(sumCapacity / (1.0 * 1024)));
             capacityUnit.setText("MB");
@@ -560,7 +573,6 @@ public class HomeFragment extends Fragment implements HomeAudioAdapter.OnItemCli
                 double tempCapacity = 0;
                 for (File file : files) {
                     if (file.isFile() && file.getName().endsWith(".mp3") || file.getName().endsWith(".m4a") || file.getName().endsWith(".aac")) {
-                        Log.e("file", file.getName());
                         String fileName = file.getName();
                         String fileSize = decimalFormat.format(1.0 * file.length() / 1024);
                         tempCapacity += (1.0 * file.length() / (1024 * 1.0));
