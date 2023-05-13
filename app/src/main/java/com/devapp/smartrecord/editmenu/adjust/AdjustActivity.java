@@ -65,7 +65,7 @@ public class AdjustActivity extends AppCompatActivity {
     private String addListAdjusted = "";
     private Gson gson = new Gson();
     private String nameFile;
-    private int position = 0;
+    private int position = 0, foolProofInit, volumeInit, speedInit;
     private final String tempPath = Environment.getExternalStorageDirectory().toString() + "/Recordings/";
     private File outputFile;
     private float volume, foolProof, speed;
@@ -114,13 +114,13 @@ public class AdjustActivity extends AppCompatActivity {
                     isDone = true;
                     isExist = true;
                     position = i;
-                    int foolProof = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[1]);
-                    int volume = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[2]);
-                    int speed = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[3]);
+                    foolProofInit = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[1]);
+                    volumeInit = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[2]);
+                    speedInit = Integer.parseInt(listAudioAdjusted.get(i).split("\\|")[3]);
 
-                    adjustSeekBarFoolproof.setProgress(foolProof);
-                    adjustSeekBarVolume.setProgress(volume);
-                    adjustSeekBarSpeed.setProgress(speed);
+                    adjustSeekBarFoolproof.setProgress(foolProofInit);
+                    adjustSeekBarVolume.setProgress(volumeInit);
+                    adjustSeekBarSpeed.setProgress(speedInit);
                 }
             }
             if (!isDone){
@@ -141,7 +141,7 @@ public class AdjustActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     try {
-                        foolProof = (float) progress / seekBar.getMax();
+                        foolProof = (float) progress / seekBar.getMax() + 0.25f;
                         if (foolProof < -0.5f) foolProof = -0.5f;
                         params.setPitch(1f + foolProof); // Điều chỉnh cao độ
                         mediaPlayer.setPlaybackParams(params);
@@ -173,7 +173,7 @@ public class AdjustActivity extends AppCompatActivity {
                     try {
                         if (fromUser) {
                             volume = (float) progress / seekBar.getMax();
-                            if (volume < -0.5f) volume = -0.5f;
+                            if (volume <= -0.5f) volume = -0.5f;
                             mediaPlayer.setVolume(0.5f + volume, 0.5f + volume);
                         }
                     } catch (Exception e) {
@@ -247,11 +247,6 @@ public class AdjustActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File fileDl1 = new File(tempPath + nameFile.split("\\.")[0]);
-                File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
-                if (fileDel1.exists()) {
-                    fileDel1.delete();
-                }
                 onBackPressed();
             }
         });
@@ -278,12 +273,6 @@ public class AdjustActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-//                if(!isPlay)
-//                {
-//                    btnPlay.setImageResource(R.drawable.ic_adjust_replay);
-//                    mediaPlayer.start();
-//                    currTime.start();
-//                }
             }
         });
 
@@ -356,12 +345,6 @@ public class AdjustActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mainHandler.removeCallbacksAndMessages(null);
 
-                File fileDl1 = new File(tempPath + nameFile.split("\\.")[0]);
-                File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
-                if (fileDel1.exists()) {
-                    fileDel1.delete();
-                }
-
                 onBackPressed();
             }
         });
@@ -369,10 +352,6 @@ public class AdjustActivity extends AppCompatActivity {
         bntAdjust.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (speed == 0 && volume == 0 && foolProof == 0){
-                    isSave = false;
-                }
-
                 if (isExist){
                     addListAdjusted += nameFile + "|";
                     addListAdjusted += adjustSeekBarFoolproof.getProgress() + "|";
@@ -388,31 +367,21 @@ public class AdjustActivity extends AppCompatActivity {
                     listAudioAdjusted.add(addListAdjusted);
                 }
 
-//                outputFile = new File(tempPath, "Adjust_" + nameFile.split("\\.")[0]);
-//                Log.d("name", outputFile.getAbsolutePath());
-//                String[] Command = {"-i", pathSound, "-filter:a", "atempo=1.5, volume=2, asetrate=44100*1.25", "-f", "mp3", outputFile.getAbsolutePath()};
-//
-//                int rc = FFmpeg.execute(Command);
-//
-//                if (rc == RETURN_CODE_SUCCESS){
-//                    Log.d("TAG", "cc");
-//                }
-//                else {
-//                    Log.d("TAG", "đm");
-//                }
-//
-//                if (outputFile.exists()) {
-//                    Log.d("TAG", "Output file exists: " + outputFile.getAbsolutePath());
-//                } else {
-//                    Log.d("TAG", "Output file does not exist");
-//                }
+                outputFile = new File(tempPath, "Adjust_" + nameFile);
+                String speedValue = String.format("atempo=" + speed).replace(",", ".");
+                String volumeValue = String.format("volume="+ (volume + 0.5f)).replace(",", ".");
+                String foolProofValue = String.format("asetrate=44100*"+ (foolProof + 1f)).replace(",", ".");
+                String valueFormat = speedValue + ", " + volumeValue + ", " + foolProofValue;
+                Log.d("name", valueFormat);
+//                String[] command = {"-i", pathSound, "-filter:a", String.format("atempo=%.2f, volume=%.2f, asetrate=%.2f*44100", speed, volume, foolProof), "-f", "mp3", outputFile.getAbsolutePath()};
+                String[] command = {"-i", pathSound, "-filter:a", valueFormat, "-f", "mp3", outputFile.getAbsolutePath()};
+
+                int rc = FFmpeg.execute(command);
 
                 String json = gson.toJson(listAudioAdjusted);
                 editor.putString("listAdjusted", json);
                 editor.commit();
 
-                mediaPlayer.stop();
-                mediaPlayer.release();
                 Toast.makeText(AdjustActivity.this, getText(R.string.announce_save_successfully), Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
@@ -428,9 +397,46 @@ public class AdjustActivity extends AppCompatActivity {
             currTime.stop();
             timeMax.setText(getTotalTime());
             params = mediaPlayer.getPlaybackParams();
-            mediaPlayer.setVolume(0.5f, 0.5f);
-            params.setPitch(1f);
-            mediaPlayer.setPlaybackParams(params);
+
+            if (isExist){
+                volume = 0.5f + (float) volumeInit/adjustSeekBarVolume.getMax();
+                if (volume <= -0.5f) volume = -0.5f;
+
+                foolProof = 0.25f + (float) foolProofInit/adjustSeekBarFoolproof.getMax();
+                if (foolProof < -0.5f) foolProof = -0.5f;
+
+                if (speedInit == 1){
+                    params.setSpeed(2f);
+                    speed = 2f;
+                }
+                else if (speedInit == 2){
+                    params.setSpeed(3f);
+                    speed = 3f;
+                }
+                else if (speedInit == -1){
+                    params.setSpeed(0.5f);
+                    speed = 0.5f;
+                }
+                else if (speedInit == -2){
+                    params.setSpeed(0.25f);
+                    speed = 0.25f;
+                }
+                else {
+                    params.setSpeed(1f);
+                    speed = 1f;
+                }
+
+                mediaPlayer.setVolume(0.5f + volume, 0.5f + volume);
+                params.setPitch(1f + foolProof);
+                params.setSpeed(speed);
+                mediaPlayer.setPlaybackParams(params);
+            }
+            else{
+                mediaPlayer.setVolume(0.5f, 0.5f);
+                params.setPitch(1f);
+                mediaPlayer.setPlaybackParams(params);
+            }
+
             mediaPlayer.pause();
         } catch (IOException e) {
             Log.e("MediaPlayer", "prepare() failed");
@@ -460,13 +466,5 @@ public class AdjustActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
         }
-
-//        if (!isSave){
-//            File fileDl1 = new File(tempPath + nameFile.split("\\.")[0]);
-//            File fileDel1 = new File(String.valueOf(fileDl1.getAbsoluteFile()));
-//            if (fileDel1.exists()) {
-//                fileDel1.delete();
-//            }
-//        }
     }
 }
